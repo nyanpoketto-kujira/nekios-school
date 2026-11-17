@@ -40,3 +40,35 @@ khusus dilebur ke `StatusSekolah.khusus` karena pola tampilannya sama
 (hero). Jendela timeline mengikuti pola Varian H/J yang dipilih:
 maksimal 5 slot (2 sebelum, aktif, 2 sesudah); sebelum masuk = 5 slot
 pertama, pulang = 5 slot terakhir.
+
+## ADR-004: DisplayStore + event + sumber data (2026-11-17)
+
+Konteks: UI butuh satu snapshot state yang bisa berasal dari mana
+saja (asset lokal sekarang, WebSocket nekios-remote kelak) tanpa UI
+tahu sumbernya (ADR-001).
+
+Keputusan:
+- Semua input adalah `DisplayEvent` (sealed class di
+  `lib/sources/events.dart`): `ScheduleReplaced(JadwalData)`,
+  `MadingChanged(String)`, `ClockSimulated(Duration offset)`,
+  `ClockSimulationCleared()`. Simulasi jam dari remote adalah event
+  offset terhadap jam sistem — bukan jam palsu yang ditimpa — supaya
+  membatalkannya cukup meng-nol-kan offset.
+- Sumber data mengimplementasikan `ScheduleSource`
+  (`Stream<DisplayEvent> events`, `start()`, `dispose()`). MVP:
+  `AssetScheduleSource` memuat `assets/jadwal-tkj.json` dan meng-emit
+  satu `ScheduleReplaced` saat start; fungsi pemuatnya bisa diinjeksi
+  untuk test.
+- `DisplayStore` (ChangeNotifier, `lib/state/display_store.dart`)
+  menerapkan event lewat `terima(...)` dan memajukan waktu lewat
+  `tick(nowSistem)` yang dipanggil berkala oleh lapisan aplikasi;
+  `nowEfektif = nowSistem + offsetSimulasi` lalu
+  `keadaan = hitungKeadaan(data, nowEfektif)`.
+- Kebijakan notify: `terima` selalu `notifyListeners` (event jarang
+  dan selalu bermakna). `tick` hanya notify bila snapshot berubah
+  pada resolusi detik (status / indeks slot aktif / sisa bel /
+  progres) — cukup untuk countdown per detik, dan mencegah rebuild
+  saat tick dipanggil lebih rapat daripada perubahan tampilannya.
+
+Konsekuensi: mengganti sumber (mis. WebSocket) = menulis satu kelas
+`ScheduleSource` baru; store, mesin, dan UI tidak berubah.

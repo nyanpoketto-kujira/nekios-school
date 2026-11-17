@@ -6,3 +6,5 @@
 /// ADR-001. UI hanya membaca layer ini; UI tidak pernah menyentuh
 /// sumber data secara langsung.
 library;
+
+export 'display_store.dart';
