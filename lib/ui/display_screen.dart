@@ -97,7 +97,14 @@ class DisplayScreen extends StatelessWidget {
     if (keadaan.status == StatusSekolah.pelajaran) {
       return _LayarPelajaran(store: store, data: data, keadaan: keadaan);
     }
-    // Status lain: header + strip + hero + timeline statis.
+    // Status lain: header + hero + timeline statis. StripStatusBel
+    // SENGAJA tidak dirender di sini (ADR-008): isinya — nama status,
+    // countdown, bel berikutnya — sama persis dengan yang ditampilkan
+    // hero, jadi fungsi dobel. Strip hanya tampil di layout
+    // Pelajaran.
+    // HeaderSekolah juga dipanggil tanpa logoBytes (default null):
+    // logo sekolah dari state/remote belum ada — jalurnya disiapkan
+    // di HeaderSekolah, pengisiannya fase berikutnya (ADR-008).
     final s = SkalaTampilan.of(context);
     final halaman = halamanRotasi(data.kelas);
     return Padding(
@@ -107,11 +114,16 @@ class DisplayScreen extends StatelessWidget {
         children: [
           HeaderSekolah(data: data, sekarang: keadaan.sekarang),
           SizedBox(height: 16 * s),
-          StripStatusBel(keadaan: keadaan),
-          SizedBox(height: 18 * s),
-          HeroStatus(keadaan: keadaan),
+          // Hero menyerap ruang yang dulu dipakai strip lewat flex,
+          // berbagi sisa ruang dengan timeline (4:7, sama seperti
+          // layout Pelajaran) — tidak ada tinggi pengganti yang kaku.
+          Expanded(
+            flex: 4,
+            child: HeroStatus(keadaan: keadaan),
+          ),
           SizedBox(height: 16 * s),
           Expanded(
+            flex: 7,
             child: TimelineJendela(
               data: data,
               keadaan: keadaan,

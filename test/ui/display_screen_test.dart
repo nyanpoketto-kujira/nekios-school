@@ -49,9 +49,10 @@ void main() {
       );
       await tester.pump();
 
-      // Header + strip.
+      // Header + strip (strip HANYA di layout Pelajaran, ADR-008).
       expect(find.text('SMKN 1 UKUI'), findsOneWidget);
       expect(find.text('09:20:24'), findsOneWidget);
+      expect(find.byType(StripStatusBel), findsOneWidget);
       expect(find.text('24:36'), findsOneWidget);
       // Chip strip + label baris aktif di timeline.
       expect(find.text('SEDANG BERLANGSUNG'), findsNWidgets(2));
@@ -70,8 +71,9 @@ void main() {
       expect(find.text('Ilmu Pengetahuan Alam dan Sosial'), findsNothing);
     });
 
-    testWidgets('Selasa 12:20 ISOMA: hero status tampil, tidak crash',
-        (tester) async {
+    testWidgets(
+        'Selasa 12:20 ISOMA: hero tampil TANPA strip — info tidak dobel '
+        '(ADR-008)', (tester) async {
       aturLayarTv(tester);
       final store = storePada(DateTime(2026, 11, 17, 12, 20, 24));
       addTearDown(store.dispose);
@@ -81,8 +83,15 @@ void main() {
       );
       await tester.pump();
 
+      // Hero tetap tampil dengan kata statusnya.
+      expect(find.text('ISOMA'), findsOneWidget);
       expect(find.textContaining('ISOMA'), findsWidgets);
-      expect(find.text('24:36'), findsWidgets);
+      // Strip TIDAK dirender pada status hero: countdown kini muncul
+      // SEKALI (di hero) dan chip bel milik strip tidak ada. (Dulu
+      // '24:36' findsWidgets karena strip + hero sama-sama tampil.)
+      expect(find.byType(StripStatusBel), findsNothing);
+      expect(find.text('24:36'), findsOneWidget);
+      expect(find.text('BEL • 12.45'), findsNothing);
     });
 
     testWidgets('Selasa 15:50 pulang: hero tampil, tidak crash',

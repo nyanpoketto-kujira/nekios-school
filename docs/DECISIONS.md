@@ -205,3 +205,40 @@ Konsekuensi: satu-satunya bar progres di nekios-school sekarang
 komponen yang sama dengan overlay azan/khutbah nekios-mosque;
 perubahan gaya bar kelak cukup dilakukan sejajar di dua repo
 (sampai nekios-core lahir dan komponen ini diangkat ke sana).
+
+## ADR-008: Logo opsional tanpa placeholder + strip khusus Pelajaran (2026-11-18)
+
+Konteks: dua koreksi nyanpo setelah melihat redesign live.
+(1) Kotak placeholder berisi huruf "S" di HeaderSekolah terlihat
+generik ("kayak AI"): tidak ada logo kok dipaksa ada kotak logo.
+masjid-you sudah menyelesaikan ini di ADR-032 — HeaderClock hanya
+menampilkan kotak logo bila DKM memasang logo; tanpa logo, header
+tampil bersih dan nama mulai mentok kiri.
+(2) Pada status hero (ISOMA, sebelum masuk, pulang, khusus),
+StripStatusBel mengulang persis info hero (nama status, countdown,
+bel berikutnya) — fungsi dobel. Pada status Pelajaran strip justru
+disukai karena melengkapi kartu + progres, bukan mengulang.
+
+Keputusan:
+- Placeholder inisial "S" DIHAPUS total. HeaderSekolah menerima
+  parameter opsional `logoBytes` (Uint8List?) meniru HeaderClock
+  masjid-you: non-null → kotak logo 1:1 (key 'header-logo', fit
+  cover, fallback ikon sekolah bila bytes rusak); null → tidak ada
+  kotak apa pun, kolom nama/subjudul mulai mentok kiri.
+- DisplayScreen belum mengoper logo (default null). Jalur dari
+  state/remote (event + field state seperti `mosqueLogo` di
+  masjid-you) adalah fase berikutnya — tidak dibuat sekarang agar
+  tidak ada state mati.
+- StripStatusBel hanya dirender pada layout Pelajaran. Layout hero:
+  header → hero → timeline. Ruang yang bebas diserap hero lewat
+  flex (hero:timeline = 4:7, pola yang sama dengan layout
+  Pelajaran), bukan SizedBox/tinggi pengganti yang kaku.
+- Test disesuaikan: skenario ISOMA kini menegaskan countdown
+  '24:36' muncul SEKALI (sebelumnya findsWidgets dari strip+hero),
+  chip 'BEL • 12.45' tidak ada, dan StripStatusBel absen di hero
+  tetapi hadir di Pelajaran; test baru HeaderSekolah mengunci
+  perilaku logo null vs terpasang.
+
+Konsekuensi: header sekolah dan header masjid memakai pola logo
+yang sama persis; saat fitur logo sekolah dikerjakan kelak, cukup
+mengisi `logoBytes` dari state tanpa mengubah widget header.

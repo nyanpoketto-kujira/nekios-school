@@ -96,6 +96,9 @@ void main() {
       await _pumpLayar(tester, store);
       expect(tester.takeException(), isNull);
       expect(find.textContaining('ISOMA'), findsWidgets);
+      // Layout hero tanpa strip (ADR-008): countdown hanya di hero.
+      expect(find.byType(StripStatusBel), findsNothing);
+      expect(find.text('24:36'), findsOneWidget);
     });
   });
 }

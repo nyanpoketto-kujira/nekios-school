@@ -1,7 +1,12 @@
 /// Header sekolah (ADR-006): Card ala HeaderClock masjid-you —
-/// kotak logo 1:1 + nama/subjudul sekolah di kiri, jam di dalam
-/// kapsul ArchBorder di kanan. Semua warna dari role skema tema.
+/// nama/subjudul sekolah di kiri, jam di dalam kapsul ArchBorder di
+/// kanan. Logo sekolah OPSIONAL (ADR-008, pola ADR-032 masjid-you):
+/// hanya tampil bila [logoBytes] diisi; tanpa logo tidak ada kotak
+/// apa pun dan kolom nama mulai mentok kiri. Semua warna dari role
+/// skema tema.
 library;
+
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
@@ -11,15 +16,26 @@ import 'format.dart';
 import 'skala_tampilan.dart';
 
 class HeaderSekolah extends StatelessWidget {
-  const HeaderSekolah({super.key, required this.data, required this.sekarang});
+  const HeaderSekolah({
+    super.key,
+    required this.data,
+    required this.sekarang,
+    this.logoBytes,
+  });
 
   final JadwalData data;
 
   /// Waktu efektif tampilan (sudah termasuk offset simulasi).
   final DateTime sekarang;
 
-  /// Ukuran sisi kotak logo (persegi 1:1), mengikuti HeaderClock
-  /// masjid-you. Kelak diisi logo sekolah asli; kini inisial.
+  /// Bytes gambar logo sekolah (ADR-008), sudah di-decode oleh
+  /// pemanggil. `null` = tidak ada logo: header tampil tanpa kotak
+  /// logo sama sekali. Bila ada, logo tampil sebagai kotak **1:1**
+  /// di kiri dan kolom nama/subjudul bergeser ke kanan.
+  final Uint8List? logoBytes;
+
+  /// Ukuran sisi kotak logo (persegi 1:1) saat logo dipasang,
+  /// mengikuti HeaderClock masjid-you.
   static const double logoSize = 76;
 
   /// Subjudul ringkas yang muat penuh di kolom nama: label semester
@@ -53,25 +69,34 @@ class HeaderSekolah extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 24 * s, vertical: 14 * s),
         child: Row(
           children: [
-            // Kotak logo 1:1 (placeholder inisial sekolah).
-            Container(
-              width: logoSize * s,
-              height: logoSize * s,
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
+            // Logo sekolah (ADR-008): hanya bila pemanggil memasang
+            // logo. Kotak 1:1 dengan fit cover (sumber non-persegi
+            // di-crop simetris); tanpa logo, baris ini tidak
+            // menyumbang apa pun dan tata letak nama/subjudul mulai
+            // mentok kiri persis seperti semula.
+            if (logoBytes != null) ...[
+              ClipRRect(
+                key: const Key('header-logo'),
                 borderRadius: BorderRadius.circular(14 * s),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                data.sekolah.isEmpty ? '?' : data.sekolah[0],
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  color: colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 36 * s,
+                child: Image.memory(
+                  logoBytes!,
+                  width: logoSize * s,
+                  height: logoSize * s,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    width: logoSize * s,
+                    height: logoSize * s,
+                    color: colorScheme.surfaceContainerHighest,
+                    child: Icon(
+                      Icons.school,
+                      size: 40 * s,
+                      color: colorScheme.primary,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(width: 16 * s),
+              SizedBox(width: 16 * s),
+            ],
             // Nama sekolah + subjudul jadwal.
             Expanded(
               child: Column(
