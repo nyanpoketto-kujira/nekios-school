@@ -28,3 +28,15 @@ Model di `lib/domain/models.dart` adalah cerminan persis
 `fromJson`/`toJson`, karena format yang sama menjadi payload packet.
 Status tampilan tidak disimpan di model; status diturunkan dari jam
 oleh mesin jadwal (Fase 2).
+
+## ADR-003: Mesin jadwal murni dengan `now` sebagai parameter (2026-11-17)
+
+`lib/domain/mesin.dart` menurunkan `KeadaanTampilan` (status, slot
+aktif, Jam ke-N, progres, countdown bel, jendela timeline 2–1–2,
+halaman rotasi) dari `JadwalData` + `DateTime now`. Mesin tidak pernah
+membaca jam sistem: simulasi jam/bel dari nekios-remote kelak cukup
+mengirim `now` versi simulasi lewat event state. Status upacara dan
+khusus dilebur ke `StatusSekolah.khusus` karena pola tampilannya sama
+(hero). Jendela timeline mengikuti pola Varian H/J yang dipilih:
+maksimal 5 slot (2 sebelum, aktif, 2 sesudah); sebelum masuk = 5 slot
+pertama, pulang = 5 slot terakhir.
