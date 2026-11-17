@@ -1,0 +1,1873 @@
+{
+  "meta": {
+    "sekolah": "SMKN 1 UKUI",
+    "judul": "Jadwal Pembelajaran Semester Ganjil",
+    "tahunPelajaran": "2026-2027",
+    "jurusan": "TKJ",
+    "sumber": "Foto jadwal induk cetak, decode 2026-11-17. Draf: nama dan kode bertanda terverifikasi=false belum dikonfirmasi sekolah.",
+    "arsitektur": "workspace/your_files/arsitektur-data-nekios-school.md"
+  },
+  "kelas": [
+    {
+      "id": "X-TKJ-A",
+      "nama": "X TKJ A",
+      "urutan": 1
+    },
+    {
+      "id": "X-TKJ-B",
+      "nama": "X TKJ B",
+      "urutan": 2
+    },
+    {
+      "id": "XI-TKJ-A",
+      "nama": "XI TKJ A",
+      "urutan": 3
+    },
+    {
+      "id": "XI-TKJ-B",
+      "nama": "XI TKJ B",
+      "urutan": 4
+    },
+    {
+      "id": "XII-TKJ-A",
+      "nama": "XII TKJ A",
+      "urutan": 5
+    },
+    {
+      "id": "XII-TKJ-B",
+      "nama": "XII TKJ B",
+      "urutan": 6
+    }
+  ],
+  "guru": [
+    {
+      "kg": 1,
+      "nama": "Elmon Pane, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 2,
+      "nama": "Eka Indira Buana, S.Pd.",
+      "terverifikasi": false
+    },
+    {
+      "kg": 3,
+      "nama": "Agus Priyono, S.T.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 4,
+      "nama": "Harrytos, S.T.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 5,
+      "nama": "Rini RS, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 6,
+      "nama": "Rudi, S.T.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 7,
+      "nama": "Eva, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 8,
+      "nama": "Agung S, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 9,
+      "nama": "Nurita KS, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 10,
+      "nama": "Edie S, S.Kom.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 11,
+      "nama": "Mutiara A.S, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 12,
+      "nama": "Erni YP, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 13,
+      "nama": "Astuti, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 14,
+      "nama": "Eka Ana W, S.Pd.I.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 15,
+      "nama": "Dosfriyati, S.Pd.",
+      "terverifikasi": false
+    },
+    {
+      "kg": 16,
+      "nama": "Sudirman, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 17,
+      "nama": "Yoyon S, S.Sy.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 18,
+      "nama": "Satria Rangga Buana, S.T.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 19,
+      "nama": "Putri Novianti, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 20,
+      "nama": "Sandra Y, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 21,
+      "nama": "Sumiati, S.Kom.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 22,
+      "nama": "Ulandari, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 23,
+      "nama": "Arry Wibowo, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 24,
+      "nama": "Yulia H, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 25,
+      "nama": "Anita Pratiwi, S.E.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 26,
+      "nama": "Fitriani, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 27,
+      "nama": "Meliana Dewi, S.T.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 28,
+      "nama": "Sinta, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 29,
+      "nama": "Fajarini, S.Pd., M.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 30,
+      "nama": "Lilian Lolanda, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 31,
+      "nama": "Suci Afrianti, S.T.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 32,
+      "nama": "Tria Del Yusfa, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 33,
+      "nama": "Yusuf Hendra, S.Kom.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 34,
+      "nama": "Meizialisa, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 35,
+      "nama": "Novriyanti, S.Pd.",
+      "terverifikasi": true
+    },
+    {
+      "kg": 36,
+      "nama": "Ayu Indah Sari, S.Ak.",
+      "terverifikasi": false
+    }
+  ],
+  "mapel": [
+    {
+      "kode": "IPAS",
+      "namaPanjang": "Ilmu Pengetahuan Alam dan Sosial",
+      "warna": "#F0A868"
+    },
+    {
+      "kode": "DDPK",
+      "namaPanjang": "Dasar-Dasar Program Keahlian",
+      "warna": "#F2CE4B"
+    },
+    {
+      "kode": "B.IND",
+      "namaPanjang": "Bahasa Indonesia",
+      "warna": "#9FC6E8"
+    },
+    {
+      "kode": "B.ING",
+      "namaPanjang": "Bahasa Inggris",
+      "warna": "#A79BC8"
+    },
+    {
+      "kode": "KK",
+      "namaPanjang": "Konsentrasi Keahlian TKJ",
+      "warna": "#D9A097"
+    },
+    {
+      "kode": "PJOK",
+      "namaPanjang": "Pendidikan Jasmani, Olahraga, dan Kesehatan",
+      "warna": "#5B7290"
+    },
+    {
+      "kode": "PAI",
+      "namaPanjang": "Pendidikan Agama Islam",
+      "warna": "#BCD3A8"
+    },
+    {
+      "kode": "PKK",
+      "namaPanjang": "Projek Kreatif dan Kewirausahaan",
+      "warna": "#B9CFE4"
+    },
+    {
+      "kode": "MTK",
+      "namaPanjang": "Matematika",
+      "warna": "#8FC48F"
+    },
+    {
+      "kode": "SENBUD",
+      "namaPanjang": "Seni Budaya",
+      "warna": "#7FA36B"
+    },
+    {
+      "kode": "BMR",
+      "namaPanjang": "Budaya Melayu Riau",
+      "warna": "#7FA8C9"
+    },
+    {
+      "kode": "PKN",
+      "namaPanjang": "Pendidikan Pancasila",
+      "warna": "#E8B04B"
+    },
+    {
+      "kode": "INFOR",
+      "namaPanjang": "Informatika",
+      "warna": "#B05A6B"
+    },
+    {
+      "kode": "SEJARAH",
+      "namaPanjang": "Sejarah",
+      "warna": "#C9B458"
+    },
+    {
+      "kode": "PEMINATAN",
+      "namaPanjang": "Mapel Peminatan Kejuruan",
+      "warna": "#D77FA1"
+    }
+  ],
+  "hari": [
+    {
+      "nama": "senin",
+      "statusDecode": "lengkap-dari-foto",
+      "catatan": "Data Senin dikoreksi/dilengkapi langsung oleh nyanpo 2026-11-17 (otoritatif). Slot pembuka 07.15-08.00 tipe upacara.",
+      "slots": [
+        {
+          "mulai": "07.15",
+          "selesai": "08.00",
+          "tipe": "upacara",
+          "label": "UPACARA / APEL BERSAMA"
+        },
+        {
+          "mulai": "08.00",
+          "selesai": "08.45",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "08.45",
+          "selesai": "09.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "09.30",
+          "selesai": "10.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "10.15",
+          "selesai": "10.30",
+          "tipe": "istirahat",
+          "label": "ISTIRAHAT"
+        },
+        {
+          "mulai": "10.30",
+          "selesai": "11.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 35
+            }
+          }
+        },
+        {
+          "mulai": "11.15",
+          "selesai": "12.00",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 35
+            }
+          }
+        },
+        {
+          "mulai": "12.00",
+          "selesai": "12.45",
+          "tipe": "isoma",
+          "label": "ISOMA"
+        },
+        {
+          "mulai": "12.45",
+          "selesai": "13.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "X-TKJ-B": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "PKN",
+              "kg": 2
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 35
+            }
+          }
+        },
+        {
+          "mulai": "13.30",
+          "selesai": "14.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "X-TKJ-B": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "PKN",
+              "kg": 2
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 33
+            }
+          }
+        },
+        {
+          "mulai": "14.15",
+          "selesai": "15.00",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "X-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TKJ-A": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TKJ-B": {
+              "mapel": "SEJARAH",
+              "kg": 36
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 33
+            }
+          }
+        },
+        {
+          "mulai": "15.00",
+          "selesai": "15.45",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "X-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TKJ-A": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TKJ-B": {
+              "mapel": "SEJARAH",
+              "kg": 36
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 33
+            }
+          }
+        }
+      ]
+    },
+    {
+      "nama": "selasa",
+      "statusDecode": "lengkap-dari-foto",
+      "catatan": "Kolom XII TKJ B: KG terisi 6 mengikuti pola KK di foto, perlu verifikasi.",
+      "slots": [
+        {
+          "mulai": "07.30",
+          "selesai": "08.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "08.15",
+          "selesai": "09.00",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "09.00",
+          "selesai": "09.45",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "09.45",
+          "selesai": "10.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "X-TKJ-B": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "XI-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "10.30",
+          "selesai": "10.45",
+          "tipe": "istirahat",
+          "label": "ISTIRAHAT"
+        },
+        {
+          "mulai": "10.45",
+          "selesai": "11.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "X-TKJ-B": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "XI-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "11.30",
+          "selesai": "12.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "X-TKJ-B": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "XI-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "12.15",
+          "selesai": "12.45",
+          "tipe": "isoma",
+          "label": "ISOMA"
+        },
+        {
+          "mulai": "12.45",
+          "selesai": "13.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "X-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "13.30",
+          "selesai": "14.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "X-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "14.15",
+          "selesai": "15.00",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "15.00",
+          "selesai": "15.45",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XI-TKJ-B": {
+              "mapel": "BMR",
+              "kg": 34
+            },
+            "XII-TKJ-A": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "nama": "rabu",
+      "statusDecode": "lengkap-dari-foto",
+      "catatan": "Data Rabu dari nyanpo 2026-11-17 (otoritatif).",
+      "slots": [
+        {
+          "mulai": "07.30",
+          "selesai": "08.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "X-TKJ-B": {
+              "mapel": "INFOR",
+              "kg": 24
+            },
+            "XI-TKJ-A": {
+              "mapel": "SEJARAH",
+              "kg": 15
+            },
+            "XI-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XII-TKJ-A": {
+              "mapel": "PEMINATAN",
+              "kg": 21
+            },
+            "XII-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 5
+            }
+          }
+        },
+        {
+          "mulai": "08.15",
+          "selesai": "09.00",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "X-TKJ-B": {
+              "mapel": "INFOR",
+              "kg": 24
+            },
+            "XI-TKJ-A": {
+              "mapel": "SEJARAH",
+              "kg": 15
+            },
+            "XI-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XII-TKJ-A": {
+              "mapel": "PEMINATAN",
+              "kg": 21
+            },
+            "XII-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 5
+            }
+          }
+        },
+        {
+          "mulai": "09.00",
+          "selesai": "09.45",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "X-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XII-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XII-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 5
+            }
+          }
+        },
+        {
+          "mulai": "09.45",
+          "selesai": "10.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "BMR",
+              "kg": 26
+            },
+            "X-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XII-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 5
+            }
+          }
+        },
+        {
+          "mulai": "10.30",
+          "selesai": "10.45",
+          "tipe": "istirahat",
+          "label": "ISTIRAHAT"
+        },
+        {
+          "mulai": "10.45",
+          "selesai": "11.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-TKJ-B": {
+              "mapel": "BMR",
+              "kg": 20
+            }
+          }
+        },
+        {
+          "mulai": "11.30",
+          "selesai": "12.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 24
+            }
+          }
+        },
+        {
+          "mulai": "12.15",
+          "selesai": "12.45",
+          "tipe": "isoma",
+          "label": "ISOMA"
+        },
+        {
+          "mulai": "12.45",
+          "selesai": "13.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "INFOR",
+              "kg": 32
+            },
+            "X-TKJ-B": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 24
+            }
+          }
+        },
+        {
+          "mulai": "13.30",
+          "selesai": "14.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "INFOR",
+              "kg": 32
+            },
+            "X-TKJ-B": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 24
+            }
+          }
+        },
+        {
+          "mulai": "14.15",
+          "selesai": "15.00",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "X-TKJ-B": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "PKN",
+              "kg": 1
+            }
+          }
+        },
+        {
+          "mulai": "15.00",
+          "selesai": "15.45",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "X-TKJ-B": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "PKN",
+              "kg": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "nama": "kamis",
+      "statusDecode": "lengkap-dari-foto",
+      "catatan": "Data Kamis dari nyanpo 2026-11-17 (otoritatif).",
+      "slots": [
+        {
+          "mulai": "07.30",
+          "selesai": "08.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-TKJ-A": {
+              "mapel": "BMR",
+              "kg": 20
+            },
+            "XII-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 13
+            }
+          }
+        },
+        {
+          "mulai": "08.15",
+          "selesai": "09.00",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "XII-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 13
+            }
+          }
+        },
+        {
+          "mulai": "09.00",
+          "selesai": "09.45",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "XII-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 13
+            }
+          }
+        },
+        {
+          "mulai": "09.45",
+          "selesai": "10.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "X-TKJ-B": {
+              "mapel": "DDPK",
+              "kg": 33
+            },
+            "XI-TKJ-A": {
+              "mapel": "BMR",
+              "kg": 34
+            },
+            "XI-TKJ-B": {
+              "mapel": "PEMINATAN",
+              "kg": 6
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "PEMINATAN",
+              "kg": 3
+            }
+          }
+        },
+        {
+          "mulai": "10.30",
+          "selesai": "10.45",
+          "tipe": "istirahat",
+          "label": "ISTIRAHAT"
+        },
+        {
+          "mulai": "10.45",
+          "selesai": "11.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "SEJARAH",
+              "kg": 32
+            },
+            "X-TKJ-B": {
+              "mapel": "SEJARAH",
+              "kg": 35
+            },
+            "XI-TKJ-A": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TKJ-B": {
+              "mapel": "PEMINATAN",
+              "kg": 6
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "PEMINATAN",
+              "kg": 3
+            }
+          }
+        },
+        {
+          "mulai": "11.30",
+          "selesai": "12.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "SEJARAH",
+              "kg": 32
+            },
+            "X-TKJ-B": {
+              "mapel": "SEJARAH",
+              "kg": 35
+            },
+            "XI-TKJ-A": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TKJ-B": {
+              "mapel": "PEMINATAN",
+              "kg": 6
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "PEMINATAN",
+              "kg": 3
+            }
+          }
+        },
+        {
+          "mulai": "12.15",
+          "selesai": "12.45",
+          "tipe": "isoma",
+          "label": "ISOMA"
+        },
+        {
+          "mulai": "12.45",
+          "selesai": "13.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "PEMINATAN",
+              "kg": 6
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "PEMINATAN",
+              "kg": 3
+            }
+          }
+        },
+        {
+          "mulai": "13.30",
+          "selesai": "14.15",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "14.15",
+          "selesai": "15.00",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "X-TKJ-B": {
+              "mapel": "INFOR",
+              "kg": 24
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        },
+        {
+          "mulai": "15.00",
+          "selesai": "15.45",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "X-TKJ-B": {
+              "mapel": "INFOR",
+              "kg": 24
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "nama": "jumat",
+      "statusDecode": "lengkap-dari-foto",
+      "catatan": "Data Jumat dari nyanpo 2026-11-17 (otoritatif). Slot pembuka ROHIS/ROKRIS, ISOMA/Sholat Jumat panjang 11.55-13.30, penutup Kokurikuler/Ekstrakurikuler.",
+      "slots": [
+        {
+          "mulai": "07.15",
+          "selesai": "08.15",
+          "tipe": "khusus",
+          "label": "ROHIS / ROKRIS"
+        },
+        {
+          "mulai": "08.15",
+          "selesai": "08.40",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "INFOR",
+              "kg": 32
+            },
+            "X-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TKJ-A": {
+              "mapel": "PEMINATAN",
+              "kg": 33
+            },
+            "XI-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKJ-A": {
+              "mapel": "PEMINATAN",
+              "kg": 21
+            },
+            "XII-TKJ-B": {
+              "mapel": "PAI",
+              "kg": 17
+            }
+          }
+        },
+        {
+          "mulai": "08.40",
+          "selesai": "09.05",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "INFOR",
+              "kg": 32
+            },
+            "X-TKJ-B": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TKJ-A": {
+              "mapel": "PEMINATAN",
+              "kg": 33
+            },
+            "XI-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKJ-A": {
+              "mapel": "PEMINATAN",
+              "kg": 21
+            },
+            "XII-TKJ-B": {
+              "mapel": "PAI",
+              "kg": 17
+            }
+          }
+        },
+        {
+          "mulai": "09.05",
+          "selesai": "09.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-TKJ-A": {
+              "mapel": "PEMINATAN",
+              "kg": 33
+            },
+            "XI-TKJ-B": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-TKJ-B": {
+              "mapel": "PAI",
+              "kg": 17
+            }
+          }
+        },
+        {
+          "mulai": "09.30",
+          "selesai": "09.55",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-TKJ-A": {
+              "mapel": "PEMINATAN",
+              "kg": 33
+            },
+            "XI-TKJ-B": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 35
+            }
+          }
+        },
+        {
+          "mulai": "09.55",
+          "selesai": "10.20",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "BMR",
+              "kg": 26
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TKJ-A": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-TKJ-B": {
+              "mapel": "PKK",
+              "kg": 35
+            }
+          }
+        },
+        {
+          "mulai": "10.20",
+          "selesai": "10.40",
+          "tipe": "istirahat",
+          "label": "ISTIRAHAT"
+        },
+        {
+          "mulai": "10.40",
+          "selesai": "11.05",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "XI-TKJ-A": {
+              "mapel": "KK",
+              "kg": 3
+            },
+            "XI-TKJ-B": {
+              "mapel": "PEMINATAN",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 33
+            }
+          }
+        },
+        {
+          "mulai": "11.05",
+          "selesai": "11.30",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "XI-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 33
+            }
+          }
+        },
+        {
+          "mulai": "11.30",
+          "selesai": "11.55",
+          "tipe": "pelajaran",
+          "entri": {
+            "X-TKJ-A": {
+              "mapel": "DDPK",
+              "kg": 6
+            },
+            "X-TKJ-B": {
+              "mapel": "IPAS",
+              "kg": 7
+            },
+            "XI-TKJ-A": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XI-TKJ-B": {
+              "mapel": "KK",
+              "kg": 21
+            },
+            "XII-TKJ-A": {
+              "mapel": "KK",
+              "kg": 10
+            },
+            "XII-TKJ-B": {
+              "mapel": "KK",
+              "kg": 33
+            }
+          }
+        },
+        {
+          "mulai": "11.55",
+          "selesai": "13.30",
+          "tipe": "isoma",
+          "label": "ISOMA / SHOLAT JUMAT"
+        },
+        {
+          "mulai": "13.30",
+          "selesai": "15.30",
+          "tipe": "khusus",
+          "label": "KOKURIKULER / EKSTRAKURIKULER"
+        }
+      ]
+    }
+  ]
+}
