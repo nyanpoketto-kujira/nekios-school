@@ -321,3 +321,67 @@ skenario Selasa 09:20 beserta kesamaan lebar kartu dan baris yang
 terisi penuh; regresi overflow 1920×1080 DPR 1.0 & 2.0 memeriksa
 kedua halaman. Menambah/mengurangi kelas kelak cukup mengubah
 data — paging, lebar, dan indikator menyesuaikan sendiri.
+
+## ADR-011: Transisi halaman cascade sekuensial — semua elemen ter-swap beranimasi (2026-11-18)
+
+Konteks: nyanpo menonton rekaman transisi dan menemukan tiga hal.
+(1) Sebagian elemen ter-swap TIDAK beranimasi: pada pindah
+halaman 4→2, kartu di slot indeks 2–3 hilang seketika bersama
+barisnya — karakteristik yang dicatat ADR-010 — karena switcher
+per-slot (ADR-009) musnah dari tree saat jumlah anak Row berubah.
+(2) Transisi terlalu cepat (rotasi 500ms, status 400ms) sehingga
+geraknya nyaris tak terlihat. (3) Gerak yang diminta adalah
+cascade SEKUENSIAL satu-persatu — kartu 1 bertukar sampai hampir
+selesai, baru kartu 2, dst. — bukan stagger yang tumpang-tindih
+banyak.
+
+Keputusan (token & pola di `lib/ui/transisi.dart`):
+- ATURAN: semua elemen yang ter-swap WAJIB beranimasi masuk DAN
+  keluar, berapa pun perubahan jumlah elemen antar halaman.
+- Pola switcher LEVEL-HALAMAN menggantikan switcher per-slot
+  ADR-009 (bagian ADR-009 itu diamendemen): `TransisiHalaman`
+  adalah SATU AnimatedSwitcher per wilayah ter-swap dengan kunci
+  = indeks halaman — wilayahnya: baris kartu kelas, label kepala
+  kolom timeline, dan wilayah chip pada tiap baris timeline. Yang
+  di-swap adalah SELURUH isi wilayah; elemen di dalamnya
+  (`ElemenHalaman`) membaca animasi switcher yang sama dan
+  menerapkan jendela cascade per indeks kolomnya, sehingga kolom
+  timeline (label + chip-chipnya) bergerak sebagai unit dengan
+  interval yang sama per indeks. Karena wilayahnya yang berganti
+  (bukan slot per slot), elemen yang bertambah/berkurang tetap
+  beranimasi penuh.
+- Cascade sekuensial: jendela per indeks nyaris TIDAK tumpang
+  tindih (overlap maksimal ±15% lebar jendela). Untuk n elemen:
+  lebar jendela w = 1/(1 + 0,85·(n−1)) — porsi 1/n plus sedikit
+  overlap — dan langkah s = (1 − w)/(n − 1); elemen ke-i memakai
+  `Interval(i·s, i·s + w)` berkurva emphasized M3. Keluar dan
+  masuk pada indeks yang sama BERBAGI jendela yang sama: progres
+  elemen keluar dicerminkan terhadap animasi reverse switcher,
+  jadi posisi 1 tuntas bertukar dulu, baru posisi 2, dst. Untuk
+  n = 1 jendelanya penuh (0–1). Rumus generik terhadap jumlah
+  elemen berapa pun.
+- Durasi diperlambat: rotasi 500 → **1200ms** (halaman isi 4:
+  tiap elemen kebagian ±340ms gerak), fade-through status
+  400 → **600ms**, indikator halaman 300 → **500ms** (kurva
+  emphasized tetap). Interval rotasi tetap 12 detik.
+- Elemen yang TIDAK berubah antar halaman tidak ikut wilayah
+  swap: label waktu dan rel timeline (sudah statis sejak
+  ADR-009), dan kini juga label baris non-pelajaran
+  (ISTIRAHAT/ISOMA/dll. — teksnya sama di semua halaman)
+  dikeluarkan dari switcher agar tidak berkedip tiap rotasi.
+- Bahasa gerak per elemen tidak berubah dari ADR-009: fade +
+  geser vertikal fraksional 0,10 + scale 0,97↔1, kurva emphasized
+  M3; hanya opacity/translation/scale yang dimainkan. Yang tidak
+  disentuh tetap: fase WavyProgressBar, marquee mading, blob.
+
+Konsekuensi: karakteristik ADR-010 "slot ekstra dilepas bersama
+barisnya tanpa animasi keluar" TIDAK berlaku lagi — seluruh isi
+wilayah lama beranimasi keluar dan seluruh isi wilayah baru
+beranimasi masuk. Test `transisi_test.dart` mengunci: rumus
+jendela (mulai 0, berakhir 1, overlap tepat ±15%, n=4 → ±340ms),
+koeksistensi penuh di tengah transisi 4→2 (keempat kartu lama +
+kedua kartu baru + chip lama & baru sama-sama di tree), dan sifat
+sekuensialnya lewat opasitas terukur (pada 250ms: indeks 0 kedua
+halaman sedang bertukar 0<t<1, indeks terakhir lama masih 1,
+indeks terakhir baru masih 0). Pump test rotasi di test layar
+disesuaikan dari 600ms ke 1300ms mengikuti durasi baru.

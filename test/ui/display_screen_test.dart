@@ -67,9 +67,10 @@ void main() {
       expect(find.text('XII TKJ A'), findsNothing);
 
       // Rotasi 12 detik → halaman 2 = sisa 2 kelas (XII TKJ A,
-      // XII TKJ B).
+      // XII TKJ B). Pump harus melewati durasi cascade 1200ms
+      // (ADR-011) agar halaman lama benar-benar sudah pergi.
       await tester.pump(const Duration(seconds: 12));
-      await tester.pump(const Duration(milliseconds: 600));
+      await tester.pump(const Duration(milliseconds: 1300));
       expect(find.text('Bahasa Inggris'), findsOneWidget);
       expect(find.text('Konsentrasi Keahlian TKJ'), findsOneWidget);
       expect(find.text('Ilmu Pengetahuan Alam dan Sosial'), findsNothing);
@@ -120,7 +121,7 @@ void main() {
       // Halaman 2: sisa 2 kartu — keduanya melebar merata memenuhi
       // baris (bukan menyusut ke lebar 4-kolom).
       await tester.pump(const Duration(seconds: 12));
-      await tester.pump(const Duration(milliseconds: 600));
+      await tester.pump(const Duration(milliseconds: 1300));
       await tester.pump();
       expect(tester.takeException(), isNull);
       cekMerata(lebarKartu(), 2);

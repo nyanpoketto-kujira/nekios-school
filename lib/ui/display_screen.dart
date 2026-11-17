@@ -96,9 +96,10 @@ class DisplayScreen extends StatelessWidget {
       );
     }
     // Pergantian layout Pelajaran ↔ hero (dan antar hero) memakai
-    // SATU AnimatedSwitcher fade-through M3 (ADR-009) di titik ini:
-    // kuncinya dibedakan per status agar pergantian status memicu
-    // transisi, sedangkan tick 1 detik (kunci sama) tidak.
+    // SATU AnimatedSwitcher fade-through M3 (ADR-009, durasi 600ms
+    // per ADR-011) di titik ini: kuncinya dibedakan per status agar
+    // pergantian status memicu transisi, sedangkan tick 1 detik
+    // (kunci sama) tidak.
     final Widget isi;
     final String kunciIsi;
     if (keadaan.status == StatusSekolah.pelajaran) {
@@ -109,7 +110,7 @@ class DisplayScreen extends StatelessWidget {
       isi = _layoutHero(context, data, keadaan);
     }
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 400),
+      duration: durasiTransisiStatus,
       transitionBuilder: transisiFadeThrough,
       layoutBuilder: tumpukanExpand,
       child: KeyedSubtree(key: ValueKey<String>(kunciIsi), child: isi),
@@ -211,34 +212,42 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
 
     // Baris kartu TANPA tinggi tetap: tingginya datang dari flex
     // Expanded di bawah, berbagi ruang dengan timeline — keduanya
-    // bisa menyusut sehingga total tidak pernah meluber. Tiap kartu
-    // punya switcher sendiri agar transisi rotasinya bisa STAGGER
-    // per kartu (ADR-009).
+    // bisa menyusut sehingga total tidak pernah meluber.
+    //
+    // Seluruh isi baris adalah SATU wilayah swap (ADR-011): satu
+    // TransisiHalaman mengganti seluruh baris per halaman, dan tiap
+    // kartu beranimasi cascade sekuensial lewat ElemenHalaman —
+    // termasuk kartu yang jumlahnya bertambah/berkurang antar
+    // halaman (4→2 dst.), yang pada pola per-slot ADR-009 hilang
+    // seketika karena switcher slotnya musnah dari tree.
     //
     // Lebar juga adaptif (ADR-010): tiap kartu Expanded berbobot
     // sama, jadi halaman sisa (isi 3, 2, atau 1) membagi lebar baris
     // secara merata dan memenuhi baris — tidak ada kartu menyusut
     // ke lebar halaman penuh lalu menyisakan ruang kosong.
-    final barisKartu = Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (var i = 0; i < kelasHalaman.length; i++) ...[
-          if (i > 0) SizedBox(width: 24 * s),
-          Expanded(
-            child: TransisiRotasi(
-              kunci: indeks,
-              indeks: i,
-              child: slot?.entri[kelasHalaman[i].id] != null
-                  ? KartuKelasSekarang(
-                      kelas: kelasHalaman[i],
-                      entri: slot!.entri[kelasHalaman[i].id]!,
-                      data: data,
-                    )
-                  : const SizedBox.shrink(),
+    final barisKartu = TransisiHalaman(
+      kunci: indeks,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < kelasHalaman.length; i++) ...[
+            if (i > 0) SizedBox(width: 24 * s),
+            Expanded(
+              child: ElemenHalaman(
+                indeks: i,
+                jumlah: kelasHalaman.length,
+                child: slot?.entri[kelasHalaman[i].id] != null
+                    ? KartuKelasSekarang(
+                        kelas: kelasHalaman[i],
+                        entri: slot!.entri[kelasHalaman[i].id]!,
+                        data: data,
+                      )
+                    : const SizedBox.shrink(),
+              ),
             ),
-          ),
+          ],
         ],
-      ],
+      ),
     );
 
     return Padding(

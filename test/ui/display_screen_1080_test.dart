@@ -83,9 +83,9 @@ void main() {
         expect(find.byType(KartuKelasSekarang), findsNWidgets(4));
 
         // Rotasi ke halaman 2 (sisa 2 kartu) pun tidak boleh
-        // overflow.
+        // overflow. Pump melewati durasi cascade 1200ms (ADR-011).
         await tester.pump(const Duration(seconds: 12));
-        await tester.pump(const Duration(milliseconds: 600));
+        await tester.pump(const Duration(milliseconds: 1300));
         expect(tester.takeException(), isNull);
         expect(find.text('Bahasa Inggris'), findsOneWidget);
         expect(find.byType(KartuKelasSekarang), findsNWidgets(2));

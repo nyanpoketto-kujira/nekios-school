@@ -33,9 +33,13 @@ class TimelineJendela extends StatelessWidget {
   /// Kelas-kelas yang ditampilkan sebagai kolom (halaman rotasi aktif).
   final List<Kelas> kelasKolom;
 
-  /// Kunci halaman rotasi (ADR-009): bila diisi, label kolom + chip
-  /// per kolom ikut transisi stagger [TransisiRotasi] saat halaman
-  /// berganti. Null (layout hero) = tanpa switcher, konten langsung.
+  /// Kunci halaman rotasi (ADR-011): bila diisi, wilayah label
+  /// kolom dan wilayah chip tiap baris ikut transisi cascade
+  /// [TransisiHalaman] saat halaman berganti — seluruh isi wilayah
+  /// bertukar sebagai satu kesatuan, elemen per kolom beranimasi
+  /// lewat [ElemenHalaman]. Label waktu, rel titik, dan label baris
+  /// non-pelajaran TIDAK ikut: isinya tidak berubah antar halaman.
+  /// Null (layout hero) = tanpa switcher, konten langsung.
   final int? kunciHalaman;
 
   @override
@@ -85,28 +89,40 @@ class TimelineJendela extends StatelessWidget {
                 ),
               ),
             ),
-            for (var i = 0; i < kelasKolom.length; i++) ...[
-              if (i > 0) SizedBox(width: 14 * s),
-              Expanded(
-                child: transisiKolom(
-                  Text(
-                    kelasKolom[i].nama,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.8,
-                      fontSize: 14 * s,
-                    ),
-                  ),
-                  kunciHalaman,
-                  i,
-                  // Kepala kolom tingginya tak berbatas tegas (baris
-                  // di dalam Column) — pakai layout switcher bawaan.
-                  paskan: false,
+            // Wilayah label kolom: SATU switcher level-halaman
+            // (ADR-011) untuk semua kolom sekaligus; tiap label
+            // beranimasi cascade per indeks kolomnya. Kepala kolom
+            // tingginya tak berbatas tegas (baris di dalam Column)
+            // — pakai layout switcher bawaan (paskan: false).
+            Expanded(
+              child: bungkusHalaman(
+                kunci: kunciHalaman,
+                paskan: false,
+                child: Row(
+                  children: [
+                    for (var i = 0; i < kelasKolom.length; i++) ...[
+                      if (i > 0) SizedBox(width: 14 * s),
+                      Expanded(
+                        child: ElemenHalaman(
+                          indeks: i,
+                          jumlah: kelasKolom.length,
+                          child: Text(
+                            kelasKolom[i].nama,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.8,
+                              fontSize: 14 * s,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
-            ],
+            ),
           ],
         ),
         SizedBox(height: 8 * s),
@@ -250,20 +266,35 @@ class _BarisSlot extends StatelessWidget {
             ],
           ),
         ),
-        for (var i = 0; i < kelasKolom.length; i++) ...[
-          if (i > 0) SizedBox(width: 14 * s),
-          Expanded(
-            child: transisiKolom(
-              _ChipKelas(
-                entri: slot.entri[kelasKolom[i].id],
-                data: data,
-                keadaan: bingkai.keadaan,
-              ),
-              kunciHalaman,
-              i,
+        // Wilayah chip baris ini: SATU switcher level-halaman
+        // (ADR-011) — seluruh baris chip bertukar sebagai satu
+        // kesatuan mengikuti indeks kolom yang sama dengan label
+        // kepala kolom, jadi kolom bergerak sebagai unit. Label
+        // waktu di kiri sengaja di luar wilayah ini (statis).
+        Expanded(
+          child: bungkusHalaman(
+            kunci: kunciHalaman,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var i = 0; i < kelasKolom.length; i++) ...[
+                  if (i > 0) SizedBox(width: 14 * s),
+                  Expanded(
+                    child: ElemenHalaman(
+                      indeks: i,
+                      jumlah: kelasKolom.length,
+                      child: _ChipKelas(
+                        entri: slot.entri[kelasKolom[i].id],
+                        data: data,
+                        keadaan: bingkai.keadaan,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-        ],
+        ),
       ],
     );
   }
@@ -286,20 +317,20 @@ class _BarisSlot extends StatelessWidget {
       KeadaanSlot.selesai => colorScheme.onSurfaceVariant,
       _ => colorScheme.onSurface,
     };
-    return transisiKolom(
-      Center(
-        child: Text(
-          '$label • ${slot.mulai}–${slot.selesai}',
-          style: theme.textTheme.titleLarge?.copyWith(
-            color: warnaTeks,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-            fontSize: 20 * s,
-          ),
+    // Label baris non-pelajaran SENGAJA statis (ADR-011): teksnya
+    // (label + jam slot) sama persis di semua halaman rotasi, jadi
+    // tidak ada yang ter-swap — sejajar dengan label waktu dan rel
+    // titik yang juga tidak ikut beranimasi.
+    return Center(
+      child: Text(
+        '$label • ${slot.mulai}–${slot.selesai}',
+        style: theme.textTheme.titleLarge?.copyWith(
+          color: warnaTeks,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0.5,
+          fontSize: 20 * s,
         ),
       ),
-      kunciHalaman,
-      0,
     );
   }
 }

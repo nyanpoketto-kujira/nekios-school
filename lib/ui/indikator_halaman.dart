@@ -28,7 +28,7 @@ class IndikatorHalaman extends StatelessWidget {
         for (var i = 0; i < jumlah; i++) ...[
           if (i > 0) SizedBox(width: 10 * s),
           AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
+            duration: durasiIndikatorHalaman,
             curve: kurvaEmphasizedM3,
             width: (i == aktif ? 30 : 10) * s,
             height: 10 * s,
