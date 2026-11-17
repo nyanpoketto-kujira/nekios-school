@@ -72,3 +72,34 @@ Keputusan:
 
 Konsekuensi: mengganti sumber (mis. WebSocket) = menulis satu kelas
 `ScheduleSource` baru; store, mesin, dan UI tidak berubah.
+
+## ADR-005: UI Fase 3 — kanvas 1920×1080, tema konstan, rotasi, SIM_NOW (2026-11-17)
+
+Konteks: layar TV pertama (status Pelajaran) mengikuti board Penpot
+"Varian J — Timeline + Chip 2 Baris" + "Rotasi 1/2".
+
+Keputusan:
+- Kanvas desain 1920×1080 digambar apa adanya lalu diskalakan
+  proporsional (`FittedBox.contain`) ke jendela aktual — satu tata
+  letak untuk semua ukuran TV/desktop.
+- Skema warna dark M3 dari desain di-hardcode sebagai konstanta di
+  `lib/ui/tema.dart` (belum ada generator skema runtime). Pill kode
+  mapel menurunkan container gelap dari hue warna identitas kertas
+  (arsitektur §6), bukan hex mentah.
+- Rotasi halaman kelas tiap 12 detik dengan `AnimatedSwitcher`
+  (crossfade) HANYA pada area kartu kelas dan kolom timeline —
+  halaman dari `halamanRotasi` (3 kelas/halaman); header, strip bel,
+  dan progres slot tidak ikut berotasi karena sama untuk semua kelas.
+- Tinggi baris timeline memakai bobot proporsional terhadap tinggi
+  desain Varian J (selesai 62 / aktif 136 / berikutnya 92 / istirahat
+  68) di dalam `Expanded`, supaya jendela mana pun tidak meluber.
+- Status selain Pelajaran tampil sebagai hero sederhana (kata status
+  + countdown, pola board Status); poles visual per status = Fase 4.
+- Nama pendek guru untuk chip ("Bu Eva", "Pak Yusuf") sementara
+  berupa peta kurasi per KG di `lib/ui/format.dart` mengikuti board
+  desain, jatuh ke kata pertama nama untuk KG lain.
+- Alat verifikasi visual: `--dart-define=SIM_NOW=<ISO8601>` membuat
+  tick selalu memakai waktu tetap itu, supaya tampilan emulator bisa
+  dibandingkan dengan board desain pada momen yang sama. Default
+  mati (jam sistem); ini alat pengembang, bukan fitur pengguna —
+  simulasi jam untuk pengguna kelak lewat event `ClockSimulated`.
