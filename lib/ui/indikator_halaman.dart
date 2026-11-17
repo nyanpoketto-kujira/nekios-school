@@ -5,6 +5,7 @@ library;
 import 'package:flutter/material.dart';
 
 import 'skala_tampilan.dart';
+import 'transisi.dart';
 
 class IndikatorHalaman extends StatelessWidget {
   const IndikatorHalaman({
@@ -28,6 +29,7 @@ class IndikatorHalaman extends StatelessWidget {
           if (i > 0) SizedBox(width: 10 * s),
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
+            curve: kurvaEmphasizedM3,
             width: (i == aktif ? 30 : 10) * s,
             height: 10 * s,
             decoration: BoxDecoration(

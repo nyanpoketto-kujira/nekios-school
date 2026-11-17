@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import '../domain/domain.dart';
 import 'format.dart';
 import 'skala_tampilan.dart';
+import 'transisi.dart';
 
 class TimelineJendela extends StatelessWidget {
   const TimelineJendela({
@@ -23,6 +24,7 @@ class TimelineJendela extends StatelessWidget {
     required this.data,
     required this.keadaan,
     required this.kelasKolom,
+    this.kunciHalaman,
   });
 
   final JadwalData data;
@@ -30,6 +32,11 @@ class TimelineJendela extends StatelessWidget {
 
   /// Kelas-kelas yang ditampilkan sebagai kolom (halaman rotasi aktif).
   final List<Kelas> kelasKolom;
+
+  /// Kunci halaman rotasi (ADR-009): bila diisi, label kolom + chip
+  /// per kolom ikut transisi stagger [TransisiRotasi] saat halaman
+  /// berganti. Null (layout hero) = tanpa switcher, konten langsung.
+  final int? kunciHalaman;
 
   @override
   Widget build(BuildContext context) {
@@ -81,15 +88,22 @@ class TimelineJendela extends StatelessWidget {
             for (var i = 0; i < kelasKolom.length; i++) ...[
               if (i > 0) SizedBox(width: 14 * s),
               Expanded(
-                child: Text(
-                  kelasKolom[i].nama,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.8,
-                    fontSize: 14 * s,
+                child: transisiKolom(
+                  Text(
+                    kelasKolom[i].nama,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.8,
+                      fontSize: 14 * s,
+                    ),
                   ),
+                  kunciHalaman,
+                  i,
+                  // Kepala kolom tingginya tak berbatas tegas (baris
+                  // di dalam Column) — pakai layout switcher bawaan.
+                  paskan: false,
                 ),
               ),
             ],
@@ -110,6 +124,7 @@ class TimelineJendela extends StatelessWidget {
                     bingkai: keadaan.jendela[i],
                     data: data,
                     kelasKolom: kelasKolom,
+                    kunciHalaman: kunciHalaman,
                   ),
                 ),
               ],
@@ -138,11 +153,13 @@ class _BarisSlot extends StatelessWidget {
     required this.bingkai,
     required this.data,
     required this.kelasKolom,
+    this.kunciHalaman,
   });
 
   final SlotBingkai bingkai;
   final JadwalData data;
   final List<Kelas> kelasKolom;
+  final int? kunciHalaman;
 
   @override
   Widget build(BuildContext context) {
@@ -236,10 +253,14 @@ class _BarisSlot extends StatelessWidget {
         for (var i = 0; i < kelasKolom.length; i++) ...[
           if (i > 0) SizedBox(width: 14 * s),
           Expanded(
-            child: _ChipKelas(
-              entri: slot.entri[kelasKolom[i].id],
-              data: data,
-              keadaan: bingkai.keadaan,
+            child: transisiKolom(
+              _ChipKelas(
+                entri: slot.entri[kelasKolom[i].id],
+                data: data,
+                keadaan: bingkai.keadaan,
+              ),
+              kunciHalaman,
+              i,
             ),
           ),
         ],
@@ -265,16 +286,20 @@ class _BarisSlot extends StatelessWidget {
       KeadaanSlot.selesai => colorScheme.onSurfaceVariant,
       _ => colorScheme.onSurface,
     };
-    return Center(
-      child: Text(
-        '$label • ${slot.mulai}–${slot.selesai}',
-        style: theme.textTheme.titleLarge?.copyWith(
-          color: warnaTeks,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 0.5,
-          fontSize: 20 * s,
+    return transisiKolom(
+      Center(
+        child: Text(
+          '$label • ${slot.mulai}–${slot.selesai}',
+          style: theme.textTheme.titleLarge?.copyWith(
+            color: warnaTeks,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+            fontSize: 20 * s,
+          ),
         ),
       ),
+      kunciHalaman,
+      0,
     );
   }
 }

@@ -31,6 +31,7 @@ import 'running_text.dart';
 import 'skala_tampilan.dart';
 import 'strip_status_bel.dart';
 import 'timeline_jendela.dart';
+import 'transisi.dart';
 
 class DisplayScreen extends StatelessWidget {
   const DisplayScreen({super.key, required this.store});
@@ -94,17 +95,41 @@ class DisplayScreen extends StatelessWidget {
         ),
       );
     }
+    // Pergantian layout Pelajaran ↔ hero (dan antar hero) memakai
+    // SATU AnimatedSwitcher fade-through M3 (ADR-009) di titik ini:
+    // kuncinya dibedakan per status agar pergantian status memicu
+    // transisi, sedangkan tick 1 detik (kunci sama) tidak.
+    final Widget isi;
+    final String kunciIsi;
     if (keadaan.status == StatusSekolah.pelajaran) {
-      return _LayarPelajaran(store: store, data: data, keadaan: keadaan);
+      kunciIsi = 'layout-pelajaran';
+      isi = _LayarPelajaran(store: store, data: data, keadaan: keadaan);
+    } else {
+      kunciIsi = 'layout-hero-${keadaan.status.name}';
+      isi = _layoutHero(context, data, keadaan);
     }
-    // Status lain: header + hero + timeline statis. StripStatusBel
-    // SENGAJA tidak dirender di sini (ADR-008): isinya — nama status,
-    // countdown, bel berikutnya — sama persis dengan yang ditampilkan
-    // hero, jadi fungsi dobel. Strip hanya tampil di layout
-    // Pelajaran.
-    // HeaderSekolah juga dipanggil tanpa logoBytes (default null):
-    // logo sekolah dari state/remote belum ada — jalurnya disiapkan
-    // di HeaderSekolah, pengisiannya fase berikutnya (ADR-008).
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 400),
+      transitionBuilder: transisiFadeThrough,
+      layoutBuilder: tumpukanExpand,
+      child: KeyedSubtree(key: ValueKey<String>(kunciIsi), child: isi),
+    );
+  }
+
+  /// Layout status hero: header + hero + timeline statis.
+  ///
+  /// StripStatusBel SENGAJA tidak dirender di sini (ADR-008):
+  /// isinya — nama status, countdown, bel berikutnya — sama persis
+  /// dengan yang ditampilkan hero, jadi fungsi dobel. Strip hanya
+  /// tampil di layout Pelajaran.
+  /// HeaderSekolah juga dipanggil tanpa logoBytes (default null):
+  /// logo sekolah dari state/remote belum ada — jalurnya disiapkan
+  /// di HeaderSekolah, pengisiannya fase berikutnya (ADR-008).
+  Widget _layoutHero(
+    BuildContext context,
+    JadwalData data,
+    KeadaanTampilan keadaan,
+  ) {
     final s = SkalaTampilan.of(context);
     final halaman = halamanRotasi(data.kelas);
     return Padding(
@@ -186,20 +211,26 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
 
     // Baris kartu TANPA tinggi tetap: tingginya datang dari flex
     // Expanded di bawah, berbagi ruang dengan timeline — keduanya
-    // bisa menyusut sehingga total tidak pernah meluber.
+    // bisa menyusut sehingga total tidak pernah meluber. Tiap kartu
+    // punya switcher sendiri agar transisi rotasinya bisa STAGGER
+    // per kartu (ADR-009).
     final barisKartu = Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         for (var i = 0; i < kelasHalaman.length; i++) ...[
           if (i > 0) SizedBox(width: 24 * s),
           Expanded(
-            child: slot?.entri[kelasHalaman[i].id] != null
-                ? KartuKelasSekarang(
-                    kelas: kelasHalaman[i],
-                    entri: slot!.entri[kelasHalaman[i].id]!,
-                    data: data,
-                  )
-                : const SizedBox.shrink(),
+            child: TransisiRotasi(
+              kunci: indeks,
+              indeks: i,
+              child: slot?.entri[kelasHalaman[i].id] != null
+                  ? KartuKelasSekarang(
+                      kelas: kelasHalaman[i],
+                      entri: slot!.entri[kelasHalaman[i].id]!,
+                      data: data,
+                    )
+                  : const SizedBox.shrink(),
+            ),
           ),
         ],
       ],
@@ -219,31 +250,17 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
           // dan timeline berbagi sisa ruang lewat flex (4:7 — timeline
           // lebih besar karena baris terkecilnya tetap harus memuat
           // chip 2 baris + kolom waktu).
-          Expanded(
-            flex: 4,
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 450),
-              child: KeyedSubtree(
-                key: ValueKey<int>(indeks),
-                child: barisKartu,
-              ),
-            ),
-          ),
+          Expanded(flex: 4, child: barisKartu),
           SizedBox(height: 14 * s),
           ProgressSlot(keadaan: keadaan),
           SizedBox(height: 12 * s),
           Expanded(
             flex: 7,
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 450),
-              child: KeyedSubtree(
-                key: ValueKey<int>(indeks),
-                child: TimelineJendela(
-                  data: data,
-                  keadaan: keadaan,
-                  kelasKolom: kelasHalaman,
-                ),
-              ),
+            child: TimelineJendela(
+              data: data,
+              keadaan: keadaan,
+              kelasKolom: kelasHalaman,
+              kunciHalaman: indeks,
             ),
           ),
           SizedBox(height: 10 * s),

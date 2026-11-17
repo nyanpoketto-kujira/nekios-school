@@ -242,3 +242,41 @@ Keputusan:
 Konsekuensi: header sekolah dan header masjid memakai pola logo
 yang sama persis; saat fitur logo sekolah dikerjakan kelak, cukup
 mengisi `logoBytes` dari state tanpa mengubah widget header.
+
+## ADR-009: Motion ekspresif M3 — stagger rotasi + fade-through status (2026-11-18)
+
+Konteks: nyanpo menilai transisi layar "kurang expressive" —
+pergantian halaman rotasi hanya crossfade polos bawaan
+AnimatedSwitcher, dan pergantian status tidak punya transisi sama
+sekali (rebuild seketika). Material 3 punya bahasa motion sendiri:
+kurva emphasized dan pola fade-through; keluarga Nekios harus
+memakainya agar terasa Material You, bukan sekadar berwarna M3.
+
+Keputusan (token di `lib/ui/transisi.dart`):
+- Kurva tunggal emphasized M3: `Cubic(0.2, 0.0, 0.0, 1.0)`
+  (`kurvaEmphasizedM3`) untuk semua transisi layar.
+- Rotasi halaman (500ms): tiap kartu kelas dan tiap kolom timeline
+  (label kepala + chip per baris + isi baris non-pelajaran) punya
+  switcher sendiri (`TransisiRotasi`) — masuk fade in + geser naik
+  (SlideTransition fraksional 0.10) + scale 0.97→1; keluar fade out
+  + geser turun + scale →0.97. STAGGER antar item lewat
+  `Interval(indeks × 0.12)` (±60ms per langkah: kartu/kolom ke-2
+  mulai ±60ms, ke-3 ±120ms). Timeline menerima `kunciHalaman`;
+  layout hero (kunci null) tidak memasang switcher kolom.
+- Pergantian status (400ms): satu AnimatedSwitcher fade-through di
+  titik pergantian layout pada DisplayScreen, kunci per status —
+  konten lama fade out + scale 1→0.98, konten baru fade in + scale
+  1.02→1. Tick 1 detik tidak memicu transisi (kunci sama).
+- Indikator halaman: lebar dot aktif sudah dianimasikan
+  AnimatedContainer; kurvanya disamakan ke emphasized M3.
+- Yang TIDAK disentuh: fase gelombang WavyProgressBar (ADR-007),
+  marquee running text, dan blob background — animasi ambient itu
+  sudah hidup dengan mekanismenya sendiri.
+- Semua transisi hanya memainkan opacity/translation/scale
+  (transform murah) demi performa TV; tidak ada animasi layout
+  (ukuran/posisi widget tidak dianimasikan).
+
+Konsekuensi: test rotasi lama tetap berlaku (pump 600ms >
+durasi baru 500ms); test baru `transisi_test.dart` mengunci
+keberadaan widget transisi baru dan perilaku tengah-transisi.
+Mengubah rasa motion kelak cukup di satu file token.
