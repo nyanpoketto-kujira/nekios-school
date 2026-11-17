@@ -14,5 +14,6 @@ export 'indikator_halaman.dart';
 export 'kartu_kelas.dart';
 export 'material_blob_background.dart';
 export 'progress_slot.dart';
+export 'running_text.dart';
 export 'strip_status_bel.dart';
 export 'timeline_jendela.dart';

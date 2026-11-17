@@ -22,6 +22,7 @@ import 'indikator_halaman.dart';
 import 'kartu_kelas.dart';
 import 'material_blob_background.dart';
 import 'progress_slot.dart';
+import 'running_text.dart';
 import 'strip_status_bel.dart';
 import 'timeline_jendela.dart';
 
@@ -43,7 +44,19 @@ class DisplayScreen extends StatelessWidget {
           const MaterialBlobBackground(),
           ListenableBuilder(
             listenable: store,
-            builder: (context, _) => _isi(context),
+            builder: (context, _) {
+              return Column(
+                children: [
+                  Expanded(child: _isi(context)),
+                  // Bar mading full-width di dasar layar, membaca teks
+                  // dari store (event MadingChanged).
+                  RunningTextMading(
+                    teks: store.mading,
+                    namaSekolah: store.data?.sekolah,
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
