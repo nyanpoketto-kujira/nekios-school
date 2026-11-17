@@ -123,6 +123,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
+  material_new_shapes:
+    dependency: "direct main"
+    description:
+      name: material_new_shapes
+      sha256: e4bc375205e187e8fb232573387112dd8c0dd45b03af8aa2b3c79eb4b9e3e0dc
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   meta:
     dependency: transitive
     description:
@@ -210,4 +218,4 @@ packages:
     version: "15.4.0"
 sdks:
   dart: ">=3.13.3 <4.0.0"
-  flutter: ">=3.18.0-18.0.pre.54"
+  flutter: ">=3.22.0"

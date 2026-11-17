@@ -311,9 +311,21 @@ KeadaanTampilan hitungKeadaan(JadwalData data, DateTime now) {
   );
 }
 
-/// Bagi daftar kelas menjadi halaman rotasi (pola desain Rotasi 1/2:
-/// 3 kelas per halaman → 2 halaman untuk 6 kelas TKJ).
-List<List<Kelas>> halamanRotasi(List<Kelas> kelas, {int perHalaman = 3}) {
+/// Ukuran halaman rotasi kelas: 4 kelas sekali tampil (ADR-010).
+///
+/// Satu sumber kebenaran untuk paging — UI tidak boleh menebak angka
+/// ini sendiri. Halaman terakhir berisi sisa pembagian (bisa 3, 2,
+/// atau 1 kelas) dan UI wajib membagi lebar secara merata untuk
+/// jumlah berapa pun, supaya aman saat jumlah kelas berubah.
+const int ukuranHalamanRotasi = 4;
+
+/// Bagi daftar kelas menjadi halaman rotasi berisi maksimal
+/// [perHalaman] kelas (bawaan: [ukuranHalamanRotasi] → 6 kelas TKJ
+/// menjadi 2 halaman isi [4, 2]). Urutan mengikuti [Kelas.urutan].
+List<List<Kelas>> halamanRotasi(
+  List<Kelas> kelas, {
+  int perHalaman = ukuranHalamanRotasi,
+}) {
   final terurut = [...kelas]..sort((a, b) => a.urutan.compareTo(b.urutan));
   final halaman = <List<Kelas>>[];
   for (var i = 0; i < terurut.length; i += perHalaman) {

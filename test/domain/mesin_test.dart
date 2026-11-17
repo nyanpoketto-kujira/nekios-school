@@ -173,16 +173,20 @@ void main() {
   });
 
   group('halamanRotasi', () {
-    test('6 kelas TKJ menjadi 2 halaman isi 3 (pola Rotasi 1/2)', () {
+    test('ukuran halaman bawaan = 4 (ADR-010)', () {
+      expect(ukuranHalamanRotasi, 4);
+    });
+
+    test('6 kelas TKJ menjadi 2 halaman isi [4, 2]', () {
       final halaman = halamanRotasi(data.kelas);
       expect(halaman.length, 2);
       expect(
         halaman[0].map((k) => k.id),
-        ['X-TKJ-A', 'X-TKJ-B', 'XI-TKJ-A'],
+        ['X-TKJ-A', 'X-TKJ-B', 'XI-TKJ-A', 'XI-TKJ-B'],
       );
       expect(
         halaman[1].map((k) => k.id),
-        ['XI-TKJ-B', 'XII-TKJ-A', 'XII-TKJ-B'],
+        ['XII-TKJ-A', 'XII-TKJ-B'],
       );
     });
 
@@ -191,6 +195,40 @@ void main() {
       final halaman = halamanRotasi(acak, perHalaman: 6);
       expect(halaman.single.first.id, 'X-TKJ-A');
       expect(halaman.single.last.id, 'XII-TKJ-B');
+    });
+
+    // Paging adaptif (ADR-010): jumlah kelas berapa pun harus
+    // terbagi rapi — halaman terakhir berisi sisa (3, 2, atau 1)
+    // tanpa halaman kosong. Kelas sintetis minimal cukup di level
+    // fungsi paging; data aset tidak perlu diubah.
+    group('adaptif terhadap jumlah kelas berapa pun', () {
+      List<Kelas> sintetis(int n) => [
+            for (var i = 1; i <= n; i++)
+              Kelas(id: 'K$i', nama: 'Kelas $i', urutan: i),
+          ];
+
+      void cek(int total, List<int> isiHalaman) {
+        final halaman = halamanRotasi(sintetis(total));
+        expect(
+          halaman.map((h) => h.length),
+          isiHalaman,
+          reason: '$total kelas → $isiHalaman',
+        );
+        // Tidak ada kelas hilang/duplikat dan urutan terjaga.
+        expect(
+          halaman.expand((h) => h).map((k) => k.urutan),
+          [for (var i = 1; i <= total; i++) i],
+        );
+      }
+
+      test('5 kelas → [4, 1]', () => cek(5, [4, 1]));
+      test('8 kelas → [4, 4]', () => cek(8, [4, 4]));
+      test('4 kelas → [4]', () => cek(4, [4]));
+      test('1 kelas → [1]', () => cek(1, [1]));
+      test('7 kelas → [4, 3]', () => cek(7, [4, 3]));
+      test('0 kelas → tanpa halaman', () {
+        expect(halamanRotasi(const <Kelas>[]), isEmpty);
+      });
     });
   });
 }
