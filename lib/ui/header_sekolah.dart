@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../domain/domain.dart';
 import '../theme/theme.dart';
 import 'format.dart';
+import 'skala_tampilan.dart';
 
 class HeaderSekolah extends StatelessWidget {
   const HeaderSekolah({super.key, required this.data, required this.sekarang});
@@ -21,31 +22,44 @@ class HeaderSekolah extends StatelessWidget {
   /// masjid-you. Kelak diisi logo sekolah asli; kini inisial.
   static const double logoSize = 76;
 
+  /// Subjudul ringkas yang muat penuh di kolom nama: label semester
+  /// dari judul data (tanpa awalan "Jadwal Pembelajaran"), tahun
+  /// pelajaran dengan pemisah '/', lalu jurusan. Contoh hasil:
+  /// "Semester Ganjil 2026/2027 • Jurusan TKJ".
+  String get _subjudul {
+    final kata = data.judul.split(' ');
+    final labelSemester =
+        kata.length > 2 ? kata.sublist(2).join(' ') : data.judul;
+    final tahun = data.tahunPelajaran.replaceAll('-', '/');
+    return '$labelSemester $tahun • Jurusan ${data.jurusan}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final s = SkalaTampilan.of(context);
 
     return Card(
       color: colorScheme.surfaceContainer,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(28 * s),
         side: BorderSide(
           color: colorScheme.outlineVariant.withValues(alpha: 0.3),
         ),
       ),
       elevation: 1,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        padding: EdgeInsets.symmetric(horizontal: 24 * s, vertical: 14 * s),
         child: Row(
           children: [
             // Kotak logo 1:1 (placeholder inisial sekolah).
             Container(
-              width: logoSize,
-              height: logoSize,
+              width: logoSize * s,
+              height: logoSize * s,
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(14 * s),
               ),
               alignment: Alignment.center,
               child: Text(
@@ -53,11 +67,11 @@ class HeaderSekolah extends StatelessWidget {
                 style: theme.textTheme.headlineLarge?.copyWith(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.bold,
-                  fontSize: 36,
+                  fontSize: 36 * s,
                 ),
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16 * s),
             // Nama sekolah + subjudul jadwal.
             Expanded(
               child: Column(
@@ -71,32 +85,31 @@ class HeaderSekolah extends StatelessWidget {
                     style: theme.textTheme.headlineLarge?.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.bold,
-                      fontSize: 30,
+                      fontSize: 30 * s,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2 * s),
                   Text(
-                    '${data.judul} ${data.tahunPelajaran} '
-                    '• Jurusan ${data.jurusan}',
+                    _subjudul,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: colorScheme.onSurfaceVariant,
-                      fontSize: 18,
+                      fontSize: 18 * s,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16 * s),
             // Jam + tanggal di kapsul Arch (bentuk ukuran natural khas
             // masjid-you; bukan permukaan yang di-stretch).
             Container(
-              padding: const EdgeInsets.only(
-                top: 16,
-                bottom: 10,
-                left: 28,
-                right: 28,
+              padding: EdgeInsets.only(
+                top: 16 * s,
+                bottom: 10 * s,
+                left: 28 * s,
+                right: 28 * s,
               ),
               decoration: ShapeDecoration(
                 color: colorScheme.surfaceContainerHighest,
@@ -112,17 +125,17 @@ class HeaderSekolah extends StatelessWidget {
                       color: colorScheme.onSurface,
                       fontFeatures: const [FontFeature.tabularFigures()],
                       height: 1.0,
-                      fontSize: 44,
+                      fontSize: 44 * s,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4 * s),
                   Text(
                     formatTanggal(sekarang),
                     style: theme.textTheme.titleSmall?.copyWith(
                       color: colorScheme.secondary,
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: 16 * s,
                     ),
                   ),
                 ],

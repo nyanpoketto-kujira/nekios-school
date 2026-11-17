@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
 import 'format.dart';
+import 'skala_tampilan.dart';
 
 class HeroStatus extends StatelessWidget {
   const HeroStatus({super.key, required this.keadaan});
@@ -22,6 +23,7 @@ class HeroStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final s = SkalaTampilan.of(context);
     final slot = keadaan.slotAktif;
     final (kata, sub, warnaKartu, warnaTeks) = switch (keadaan.status) {
       StatusSekolah.istirahat => (
@@ -78,12 +80,12 @@ class HeroStatus extends StatelessWidget {
         keadaan.status != StatusSekolah.tidakAdaJadwal;
     final progres = keadaan.progresSlot;
     return Container(
-      height: 250,
+      height: 250 * s,
       decoration: BoxDecoration(
         color: warnaKartu,
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(32 * s),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 28),
+      padding: EdgeInsets.symmetric(horizontal: 48 * s, vertical: 28 * s),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -99,18 +101,18 @@ class HeroStatus extends StatelessWidget {
                         kata,
                         style: theme.textTheme.displayMedium?.copyWith(
                           color: warnaTeks,
-                          fontSize: 52,
+                          fontSize: 52 * s,
                           height: 1.1,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10 * s),
                       Text(
                         sub,
                         style: theme.textTheme.titleLarge?.copyWith(
                           color: warnaTeks.withValues(alpha: 0.85),
-                          fontSize: 24,
+                          fontSize: 24 * s,
                         ),
                       ),
                     ],
@@ -121,7 +123,7 @@ class HeroStatus extends StatelessWidget {
                     formatCountdown(keadaan.sisaKeBel!),
                     style: theme.textTheme.displayLarge?.copyWith(
                       color: warnaTeks,
-                      fontSize: 96,
+                      fontSize: 96 * s,
                       fontWeight: FontWeight.bold,
                       fontFeatures: const [FontFeature.tabularFigures()],
                     ),
@@ -130,13 +132,13 @@ class HeroStatus extends StatelessWidget {
             ),
           ),
           if (progres != null) ...[
-            const SizedBox(height: 18),
+            SizedBox(height: 18 * s),
             // Progress tonal: rel = on-container redup, isi = warna
             // teks container itu sendiri (pasangan tonal yang aman).
             ClipRRect(
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(6 * s),
               child: Container(
-                height: 12,
+                height: 12 * s,
                 color: warnaTeks.withValues(alpha: 0.18),
                 child: FractionallySizedBox(
                   alignment: Alignment.centerLeft,

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
 import 'format.dart';
+import 'skala_tampilan.dart';
 
 class ProgressSlot extends StatelessWidget {
   const ProgressSlot({super.key, required this.keadaan});
@@ -17,6 +18,7 @@ class ProgressSlot extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final s = SkalaTampilan.of(context);
     final slot = keadaan.slotAktif;
     final progres = (keadaan.progresSlot ?? 0).clamp(0.0, 1.0);
     final labelKiri = keadaan.jamKeAktif != null && slot != null
@@ -39,7 +41,7 @@ class ProgressSlot extends StatelessWidget {
                   color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.8,
-                  fontSize: 15,
+                  fontSize: 15 * s,
                 ),
               ),
             ),
@@ -49,16 +51,16 @@ class ProgressSlot extends StatelessWidget {
                 color: colorScheme.tertiary,
                 fontWeight: FontWeight.bold,
                 fontFeatures: const [FontFeature.tabularFigures()],
-                fontSize: 16,
+                fontSize: 16 * s,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 9),
+        SizedBox(height: 9 * s),
         ClipRRect(
-          borderRadius: BorderRadius.circular(7),
+          borderRadius: BorderRadius.circular(7 * s),
           child: Container(
-            height: 14,
+            height: 14 * s,
             color: colorScheme.surfaceContainerHigh,
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,

@@ -2,9 +2,14 @@
 ///
 /// Komposisi berlapis ala masjid-you tv_display: latar
 /// surfaceContainerLowest + ornamen blob M3 (ukuran tetap) di bawah
-/// konten; konten berupa layout flex RESPONSIF (bukan lagi kanvas
+/// konten; konten berupa layout flex RESPONSIF (bukan kanvas
 /// FittedBox 1920×1080 yang dikunci); bar running text mading
 /// full-width menempel di dasar layar, di luar padding konten.
+///
+/// Ukuran desain diskalakan proporsional ke viewport logis nyata
+/// lewat [SkalaTampilan]: panel TV 1080p melaporkan viewport logis
+/// 960×540 (DPR 2.0), bukan 1920×1080 — tanpa skala, jumlah tinggi
+/// tetap meluber 87px (lihat test regresi display_screen_1080).
 ///
 /// Layar hanya membaca [DisplayStore]: status pelajaran memakai tata
 /// letak wireframe Varian J + rotasi kelas; status lain memakai hero.
@@ -23,6 +28,7 @@ import 'kartu_kelas.dart';
 import 'material_blob_background.dart';
 import 'progress_slot.dart';
 import 'running_text.dart';
+import 'skala_tampilan.dart';
 import 'strip_status_bel.dart';
 import 'timeline_jendela.dart';
 
@@ -36,29 +42,40 @@ class DisplayScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Lapisan ornamen: blob M3 ukuran tetap melayang pelan di
-          // atas latar polos, di bawah semua konten (pola masjid-you).
-          const MaterialBlobBackground(),
-          ListenableBuilder(
-            listenable: store,
-            builder: (context, _) {
-              return Column(
-                children: [
-                  Expanded(child: _isi(context)),
-                  // Bar mading full-width di dasar layar, membaca teks
-                  // dari store (event MadingChanged).
-                  RunningTextMading(
-                    teks: store.mading,
-                    namaSekolah: store.data?.sekolah,
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // Faktor skala dari ukuran body sebenarnya (viewport logis
+          // perangkat), dibagikan ke semua widget layar.
+          final skala = SkalaTampilan.hitung(constraints.biggest);
+          return SkalaTampilan(
+            skala: skala,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Lapisan ornamen: blob M3 ukuran tetap melayang pelan
+                // di atas latar polos, di bawah semua konten (pola
+                // masjid-you). Ornamen memang tidak diskalakan.
+                const MaterialBlobBackground(),
+                ListenableBuilder(
+                  listenable: store,
+                  builder: (context, _) {
+                    return Column(
+                      children: [
+                        Expanded(child: _isi(context)),
+                        // Bar mading full-width di dasar layar, membaca
+                        // teks dari store (event MadingChanged).
+                        RunningTextMading(
+                          teks: store.mading,
+                          namaSekolah: store.data?.sekolah,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -81,18 +98,19 @@ class DisplayScreen extends StatelessWidget {
       return _LayarPelajaran(store: store, data: data, keadaan: keadaan);
     }
     // Status lain: header + strip + hero + timeline statis.
+    final s = SkalaTampilan.of(context);
     final halaman = halamanRotasi(data.kelas);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(40, 24, 40, 16),
+      padding: EdgeInsets.fromLTRB(40 * s, 24 * s, 40 * s, 16 * s),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           HeaderSekolah(data: data, sekarang: keadaan.sekarang),
-          const SizedBox(height: 16),
+          SizedBox(height: 16 * s),
           StripStatusBel(keadaan: keadaan),
-          const SizedBox(height: 18),
+          SizedBox(height: 18 * s),
           HeroStatus(keadaan: keadaan),
-          const SizedBox(height: 16),
+          SizedBox(height: 16 * s),
           Expanded(
             child: TimelineJendela(
               data: data,
@@ -146,6 +164,7 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
 
   @override
   Widget build(BuildContext context) {
+    final s = SkalaTampilan.of(context);
     final data = widget.data;
     final keadaan = widget.keadaan;
     final halaman = halamanRotasi(data.kelas);
@@ -153,49 +172,56 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
     final kelasHalaman = halaman[indeks];
     final slot = keadaan.slotAktif;
 
-    final barisKartu = SizedBox(
-      height: 216,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          for (var i = 0; i < kelasHalaman.length; i++) ...[
-            if (i > 0) const SizedBox(width: 24),
-            Expanded(
-              child: slot?.entri[kelasHalaman[i].id] != null
-                  ? KartuKelasSekarang(
-                      kelas: kelasHalaman[i],
-                      entri: slot!.entri[kelasHalaman[i].id]!,
-                      data: data,
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ],
+    // Baris kartu TANPA tinggi tetap: tingginya datang dari flex
+    // Expanded di bawah, berbagi ruang dengan timeline — keduanya
+    // bisa menyusut sehingga total tidak pernah meluber.
+    final barisKartu = Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (var i = 0; i < kelasHalaman.length; i++) ...[
+          if (i > 0) SizedBox(width: 24 * s),
+          Expanded(
+            child: slot?.entri[kelasHalaman[i].id] != null
+                ? KartuKelasSekarang(
+                    kelas: kelasHalaman[i],
+                    entri: slot!.entri[kelasHalaman[i].id]!,
+                    data: data,
+                  )
+                : const SizedBox.shrink(),
+          ),
         ],
-      ),
+      ],
     );
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(40, 24, 40, 16),
+      padding: EdgeInsets.fromLTRB(40 * s, 24 * s, 40 * s, 16 * s),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           HeaderSekolah(data: data, sekarang: keadaan.sekarang),
-          const SizedBox(height: 16),
+          SizedBox(height: 16 * s),
           StripStatusBel(keadaan: keadaan),
-          const SizedBox(height: 18),
+          SizedBox(height: 18 * s),
           // Hanya area kartu + kolom timeline yang berotasi; header,
-          // strip, dan progres tetap (pola board Rotasi 1/2).
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 450),
-            child: KeyedSubtree(
-              key: ValueKey<int>(indeks),
-              child: barisKartu,
+          // strip, dan progres tetap (pola board Rotasi 1/2). Kartu
+          // dan timeline berbagi sisa ruang lewat flex (4:7 — timeline
+          // lebih besar karena baris terkecilnya tetap harus memuat
+          // chip 2 baris + kolom waktu).
+          Expanded(
+            flex: 4,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 450),
+              child: KeyedSubtree(
+                key: ValueKey<int>(indeks),
+                child: barisKartu,
+              ),
             ),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14 * s),
           ProgressSlot(keadaan: keadaan),
-          const SizedBox(height: 12),
+          SizedBox(height: 12 * s),
           Expanded(
+            flex: 7,
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 450),
               child: KeyedSubtree(
@@ -208,7 +234,7 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10 * s),
           IndikatorHalaman(jumlah: halaman.length, aktif: indeks),
         ],
       ),

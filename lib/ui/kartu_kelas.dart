@@ -4,15 +4,19 @@
 /// pill kode mapel di atas, nama panjang mapel besar, nama guru + KG
 /// di bawah.
 ///
-/// Nama panjang mapel TIDAK boleh terpotong ellipsis: dipakai
-/// `FittedBox.scaleDown` satu baris seperti PrayerCardsRow masjid-you
-/// — teks menyusut proporsional bila sempit, tidak pernah hilang.
+/// Nama panjang mapel memakai ukuran teks TETAP (headlineMedium dari
+/// tema) dengan maksimal 2 baris dan wrap — konsisten di semua kartu.
+/// Cara lama (FittedBox.scaleDown satu baris) membuat ukuran antar
+/// kartu tidak konsisten: nama pendek tampil raksasa, nama panjang
+/// menyusut kecil. Tanpa ellipsis dan tanpa FittedBox, nama terpanjang
+/// pun (PJOK, 44 karakter) muat 2 baris pada lebar kartu.
 library;
 
 import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
 import '../theme/theme.dart';
+import 'skala_tampilan.dart';
 
 class KartuKelasSekarang extends StatelessWidget {
   const KartuKelasSekarang({
@@ -30,6 +34,7 @@ class KartuKelasSekarang extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final s = SkalaTampilan.of(context);
     final mapel = data.mapelByKode(entri.mapel);
     final guru = data.guruByKg(entri.kg);
     final pill = warnaPillMapel(mapel?.warna ?? '#888888');
@@ -37,10 +42,10 @@ class KartuKelasSekarang extends StatelessWidget {
       color: colorScheme.surfaceContainer,
       elevation: 0, // filled card: koleksi berbagi elevasi istirahat sama
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(28 * s),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(28, 24, 28, 22),
+        padding: EdgeInsets.fromLTRB(28 * s, 24 * s, 28 * s, 22 * s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -53,15 +58,17 @@ class KartuKelasSekarang extends StatelessWidget {
                       color: colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0.5,
-                      fontSize: 20,
+                      fontSize: 20 * s,
                     ),
                   ),
                 ),
                 // Pill kode mapel: elemen ukuran tetap — warna tonal
                 // identitas kertas diizinkan di sini (ADR-006).
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20 * s,
+                    vertical: 8 * s,
+                  ),
                   decoration: BoxDecoration(
                     color: pill.latar,
                     borderRadius: BorderRadius.circular(999),
@@ -71,33 +78,30 @@ class KartuKelasSekarang extends StatelessWidget {
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: pill.teks,
                       fontWeight: FontWeight.bold,
-                      fontSize: 17,
+                      fontSize: 17 * s,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 18),
+            SizedBox(height: 18 * s),
+            // Area nama mapel fleksibel (min-height 0): teks 2 baris
+            // berukuran tetap di tengah area ini.
             Expanded(
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    mapel?.namaPanjang ?? entri.mapel,
-                    softWrap: false,
-                    maxLines: 1,
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      color: colorScheme.onSurface,
-                      fontSize: 36,
-                      height: 1.1,
-                    ),
+                child: Text(
+                  mapel?.namaPanjang ?? entri.mapel,
+                  maxLines: 2,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontSize: 24 * s,
+                    height: 1.15,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12 * s),
             Row(
               children: [
                 Expanded(
@@ -105,7 +109,7 @@ class KartuKelasSekarang extends StatelessWidget {
                     guru?.nama ?? 'KG ${entri.kg}',
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: colorScheme.onSurface,
-                      fontSize: 22,
+                      fontSize: 22 * s,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -115,7 +119,7 @@ class KartuKelasSekarang extends StatelessWidget {
                   'KG ${entri.kg}',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
-                    fontSize: 18,
+                    fontSize: 18 * s,
                   ),
                 ),
               ],

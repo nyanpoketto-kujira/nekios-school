@@ -12,6 +12,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'skala_tampilan.dart';
+
 class RunningTextMading extends StatefulWidget {
   const RunningTextMading({
     super.key,
@@ -94,9 +96,10 @@ class _RunningTextMadingState extends State<RunningTextMading> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final s = SkalaTampilan.of(context);
 
     return Container(
-      height: 52,
+      height: 52 * s,
       color: colorScheme.surfaceContainer,
       child: Row(
         children: [
@@ -104,12 +107,12 @@ class _RunningTextMadingState extends State<RunningTextMading> {
           // sisi kanan (pola badge INFORMASI masjid-you).
           Container(
             height: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20 * s),
             decoration: ShapeDecoration(
               color: colorScheme.primary,
-              shape: const RoundedRectangleBorder(
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.horizontal(
-                  right: Radius.circular(26),
+                  right: Radius.circular(26 * s),
                 ),
               ),
             ),
@@ -119,15 +122,16 @@ class _RunningTextMadingState extends State<RunningTextMading> {
                 Icon(
                   Icons.campaign_rounded,
                   color: colorScheme.onPrimary,
-                  size: 24,
+                  size: 24 * s,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8 * s),
                 Text(
                   'MADING',
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
+                    fontSize: 16 * s,
                   ),
                 ),
               ],
@@ -138,7 +142,7 @@ class _RunningTextMadingState extends State<RunningTextMading> {
               controller: _kontrol,
               scrollDirection: Axis.horizontal,
               physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16 * s),
               children: [
                 Center(
                   child: Text(
@@ -147,11 +151,11 @@ class _RunningTextMadingState extends State<RunningTextMading> {
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: colorScheme.onSurface,
                       fontWeight: FontWeight.w500,
-                      fontSize: 20,
+                      fontSize: 20 * s,
                     ),
                   ),
                 ),
-                const SizedBox(width: 240), // ruang sebelum putaran ulang
+                SizedBox(width: 240 * s), // ruang sebelum putaran ulang
               ],
             ),
           ),

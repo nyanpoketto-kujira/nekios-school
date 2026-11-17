@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
 import 'format.dart';
+import 'skala_tampilan.dart';
 
 class StripStatusBel extends StatelessWidget {
   const StripStatusBel({super.key, required this.keadaan});
@@ -17,11 +18,14 @@ class StripStatusBel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final s = SkalaTampilan.of(context);
     final slot = keadaan.slotAktif;
+    // Teks tengah pelajaran sengaja ringkas ("Pelajaran berlangsung",
+    // tanpa rentang slot — rentang sudah tampil di label progres dan
+    // timeline) supaya tidak ter-ellipsis menabrak countdown.
     final teksTengah = switch (keadaan.status) {
       StatusSekolah.pelajaran => 'Jam ke-${keadaan.jamKeAktif ?? '-'}'
-          ' • Pelajaran sedang berlangsung'
-          '${slot != null ? ' • ${slot.mulai}–${slot.selesai}' : ''}',
+          ' • Pelajaran berlangsung',
       StatusSekolah.istirahat => 'Istirahat'
           '${slot != null ? ' • ${slot.mulai}–${slot.selesai}' : ''}',
       StatusSekolah.isoma => 'ISOMA'
@@ -49,18 +53,19 @@ class StripStatusBel extends StatelessWidget {
         : 'BEL • ${bel.hour.toString().padLeft(2, '0')}'
             '.${bel.minute.toString().padLeft(2, '0')}';
     return Container(
-      height: 60,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      height: 60 * s,
+      padding: EdgeInsets.symmetric(horizontal: 20 * s),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(30 * s),
       ),
       child: Row(
         children: [
           // Chip status: pill ukuran natural, pasangan container/on
           // yang sah menurut spec color roles.
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+            padding:
+                EdgeInsets.symmetric(horizontal: 16 * s, vertical: 7 * s),
             decoration: BoxDecoration(
               color: colorScheme.secondaryContainer,
               borderRadius: BorderRadius.circular(999),
@@ -71,17 +76,17 @@ class StripStatusBel extends StatelessWidget {
                 color: colorScheme.onSecondaryContainer,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.6,
-                fontSize: 15,
+                fontSize: 15 * s,
               ),
             ),
           ),
-          const SizedBox(width: 22),
+          SizedBox(width: 22 * s),
           Expanded(
             child: Text(
               teksTengah,
               style: theme.textTheme.titleLarge?.copyWith(
                 color: colorScheme.onSurface,
-                fontSize: 22,
+                fontSize: 22 * s,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -89,20 +94,24 @@ class StripStatusBel extends StatelessWidget {
           if (keadaan.sisaKeBel != null &&
               keadaan.status != StatusSekolah.pulang &&
               keadaan.status != StatusSekolah.tidakAdaJadwal) ...[
+            // Celah tetap sebelum countdown: teks tengah yang menyusut
+            // tidak pernah menempel ke angka countdown.
+            SizedBox(width: 22 * s),
             Text(
               formatCountdown(keadaan.sisaKeBel!),
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: colorScheme.tertiary,
                 fontWeight: FontWeight.bold,
                 fontFeatures: const [FontFeature.tabularFigures()],
-                fontSize: 30,
+                fontSize: 30 * s,
               ),
             ),
-            const SizedBox(width: 22),
+            SizedBox(width: 22 * s),
           ],
           if (teksBel != null)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+              padding:
+                  EdgeInsets.symmetric(horizontal: 16 * s, vertical: 7 * s),
               decoration: BoxDecoration(
                 border: Border.all(color: colorScheme.outlineVariant),
                 borderRadius: BorderRadius.circular(999),
@@ -113,7 +122,7 @@ class StripStatusBel extends StatelessWidget {
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.6,
-                  fontSize: 15,
+                  fontSize: 15 * s,
                 ),
               ),
             ),

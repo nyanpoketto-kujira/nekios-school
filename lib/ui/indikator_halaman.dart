@@ -4,6 +4,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import 'skala_tampilan.dart';
+
 class IndikatorHalaman extends StatelessWidget {
   const IndikatorHalaman({
     super.key,
@@ -18,20 +20,21 @@ class IndikatorHalaman extends StatelessWidget {
   Widget build(BuildContext context) {
     if (jumlah <= 1) return const SizedBox.shrink();
     final colorScheme = Theme.of(context).colorScheme;
+    final s = SkalaTampilan.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         for (var i = 0; i < jumlah; i++) ...[
-          if (i > 0) const SizedBox(width: 10),
+          if (i > 0) SizedBox(width: 10 * s),
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            width: i == aktif ? 30 : 10,
-            height: 10,
+            width: (i == aktif ? 30 : 10) * s,
+            height: 10 * s,
             decoration: BoxDecoration(
               color: i == aktif
                   ? colorScheme.primary
                   : colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(5 * s),
             ),
           ),
         ],
