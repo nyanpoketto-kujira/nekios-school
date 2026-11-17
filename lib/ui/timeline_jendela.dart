@@ -1,14 +1,20 @@
-/// Jendela timeline (Fase 3, pola Varian J): maksimal 5 kartu slot di
-/// sekitar posisi sekarang, dengan rel titik status di kiri dan chip
-/// 2 baris per kelas (kode mapel tebal + nama pendek guru). Kolom
-/// kelas mengikuti halaman rotasi yang sedang tampil.
+/// Jendela timeline (pola Varian J sebagai wireframe, kulit ADR-006):
+/// maksimal 5 kartu slot di sekitar posisi sekarang, dengan rel titik
+/// status di kiri dan chip 2 baris per kelas (kode mapel tebal + nama
+/// pendek guru). Kolom kelas mengikuti halaman rotasi yang tampil.
+///
+/// Hierarki permukaan memakai tingkat surface container berbasis tone
+/// dari skema (spec M3): selesai = container-low (redup), akan datang
+/// = container, berikutnya = container, aktif = primaryContainer +
+/// border primary 2 (pola kartu aktif masjid-you). Baris adalah
+/// permukaan melebar → rounded rectangle radius large (20), bukan
+/// bentuk expressive.
 library;
 
 import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
 import 'format.dart';
-import 'tema.dart';
 
 class TimelineJendela extends StatelessWidget {
   const TimelineJendela({
@@ -26,6 +32,8 @@ class TimelineJendela extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -34,19 +42,19 @@ class TimelineJendela extends StatelessWidget {
             Expanded(
               child: Text(
                 'JADWAL HARI INI — ${namaHariKapital(keadaan.sekarang)}',
-                style: const TextStyle(
-                  color: TemaWarna.primary,
-                  fontSize: 20,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: colorScheme.primary,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.6,
+                  fontSize: 19,
                 ),
               ),
             ),
-            const Text(
+            Text(
               'Sel berisi kode mapel • nama guru',
-              style: TextStyle(
-                color: TemaWarna.onSurfaceVariant,
-                fontSize: 16,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 15,
               ),
             ),
           ],
@@ -56,15 +64,15 @@ class TimelineJendela extends StatelessWidget {
         Row(
           children: [
             const SizedBox(width: 40),
-            const SizedBox(
+            SizedBox(
               width: 235,
               child: Text(
                 'WAKTU',
-                style: TextStyle(
-                  color: TemaWarna.onSurfaceVariant,
-                  fontSize: 15,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.8,
+                  fontSize: 14,
                 ),
               ),
             ),
@@ -74,11 +82,11 @@ class TimelineJendela extends StatelessWidget {
                 child: Text(
                   kelasKolom[i].nama,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: TemaWarna.onSurfaceVariant,
-                    fontSize: 15,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.8,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -136,12 +144,12 @@ class _BarisSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final slot = bingkai.slot;
+    final colorScheme = Theme.of(context).colorScheme;
     final keadaanSlot = bingkai.keadaan;
     final warnaKartu = switch (keadaanSlot) {
-      KeadaanSlot.aktif => TemaWarna.primaryContainer,
-      KeadaanSlot.selesai => TemaWarna.surfaceContainerLow,
-      _ => TemaWarna.surfaceContainer,
+      KeadaanSlot.aktif => colorScheme.primaryContainer,
+      KeadaanSlot.selesai => colorScheme.surfaceContainerLow,
+      _ => colorScheme.surfaceContainer,
     };
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -151,10 +159,13 @@ class _BarisSlot extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               color: warnaKartu,
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(20),
+              border: keadaanSlot == KeadaanSlot.aktif
+                  ? Border.all(color: colorScheme.primary, width: 2)
+                  : null,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            child: slot.adalahPelajaran
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+            child: bingkai.slot.adalahPelajaran
                 ? _isiPelajaran(context)
                 : _isiNonPelajaran(context),
           ),
@@ -164,6 +175,8 @@ class _BarisSlot extends StatelessWidget {
   }
 
   Widget _isiPelajaran(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final slot = bingkai.slot;
     final aktif = bingkai.keadaan == KeadaanSlot.aktif;
     final labelStatus = switch (bingkai.keadaan) {
@@ -172,10 +185,15 @@ class _BarisSlot extends StatelessWidget {
       KeadaanSlot.berikutnya => 'BERIKUTNYA',
       KeadaanSlot.akanDatang => '',
     };
+    final warnaWaktu = switch (bingkai.keadaan) {
+      KeadaanSlot.aktif => colorScheme.onPrimaryContainer,
+      KeadaanSlot.selesai => colorScheme.onSurfaceVariant,
+      _ => colorScheme.onSurface,
+    };
     final warnaLabel = switch (bingkai.keadaan) {
-      KeadaanSlot.aktif => TemaWarna.primary,
-      KeadaanSlot.berikutnya => TemaWarna.tertiary,
-      _ => TemaWarna.onSurfaceVariant,
+      KeadaanSlot.aktif => colorScheme.primary,
+      KeadaanSlot.berikutnya => colorScheme.tertiary,
+      _ => colorScheme.onSurfaceVariant,
     };
     return Row(
       children: [
@@ -187,23 +205,23 @@ class _BarisSlot extends StatelessWidget {
             children: [
               Text(
                 '${slot.mulai}–${slot.selesai}',
-                style: TextStyle(
-                  color: TemaWarna.onSurface,
-                  fontSize: aktif ? 29 : 20,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: warnaWaktu,
                   fontWeight: FontWeight.bold,
+                  fontSize: aktif ? 28 : 20,
                   height: 1.05,
                 ),
               ),
               if (labelStatus.isNotEmpty) ...[
-                const SizedBox(height: 5),
+                const SizedBox(height: 3),
                 Text(
                   labelStatus,
-                  style: TextStyle(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     color: warnaLabel,
-                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.7,
-                    height: 1.05,
+                    fontSize: 12,
+                    height: 1.0,
                   ),
                 ),
               ],
@@ -225,6 +243,8 @@ class _BarisSlot extends StatelessWidget {
   }
 
   Widget _isiNonPelajaran(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final slot = bingkai.slot;
     final label = slot.label ??
         switch (slot.tipe) {
@@ -234,14 +254,19 @@ class _BarisSlot extends StatelessWidget {
           SlotTipe.khusus => 'KEGIATAN KHUSUS',
           SlotTipe.pelajaran => '',
         };
+    final warnaTeks = switch (bingkai.keadaan) {
+      KeadaanSlot.aktif => colorScheme.onPrimaryContainer,
+      KeadaanSlot.selesai => colorScheme.onSurfaceVariant,
+      _ => colorScheme.onSurface,
+    };
     return Center(
       child: Text(
         '$label • ${slot.mulai}–${slot.selesai}',
-        style: const TextStyle(
-          color: TemaWarna.onSurface,
-          fontSize: 21,
+        style: theme.textTheme.titleLarge?.copyWith(
+          color: warnaTeks,
           fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
+          fontSize: 20,
         ),
       ),
     );
@@ -262,34 +287,36 @@ class _ChipKelas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (entri == null) return const SizedBox.shrink();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final guru = data.guruByKg(entri!.kg);
     final (warnaLatar, warnaKode, warnaGuru) = switch (keadaan) {
       KeadaanSlot.aktif => (
-          TemaWarna.secondaryContainer,
-          TemaWarna.onPrimaryContainer,
-          TemaWarna.onPrimaryContainer,
+          colorScheme.secondaryContainer,
+          colorScheme.onSecondaryContainer,
+          colorScheme.onSecondaryContainer,
         ),
       KeadaanSlot.selesai => (
-          TemaWarna.surfaceContainer,
-          TemaWarna.onSurfaceVariant.withValues(alpha: 0.65),
-          TemaWarna.onSurfaceVariant.withValues(alpha: 0.55),
+          colorScheme.surfaceContainer,
+          colorScheme.onSurfaceVariant.withValues(alpha: 0.65),
+          colorScheme.onSurfaceVariant.withValues(alpha: 0.55),
         ),
       KeadaanSlot.berikutnya => (
-          TemaWarna.surfaceContainerHighest,
-          TemaWarna.onSurface,
-          TemaWarna.onSurfaceVariant,
+          colorScheme.surfaceContainerHighest,
+          colorScheme.onSurface,
+          colorScheme.onSurfaceVariant,
         ),
       KeadaanSlot.akanDatang => (
-          TemaWarna.surfaceContainerHigh,
-          TemaWarna.onSurface,
-          TemaWarna.onSurfaceVariant,
+          colorScheme.surfaceContainerHigh,
+          colorScheme.onSurface,
+          colorScheme.onSurfaceVariant,
         ),
     };
     final aktif = keadaan == KeadaanSlot.aktif;
     return Container(
       decoration: BoxDecoration(
         color: warnaLatar,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
       alignment: Alignment.center,
       child: Column(
@@ -297,20 +324,20 @@ class _ChipKelas extends StatelessWidget {
         children: [
           Text(
             entri!.mapel,
-            style: TextStyle(
+            style: theme.textTheme.titleLarge?.copyWith(
               color: warnaKode,
-              fontSize: aktif ? 25 : 19,
               fontWeight: FontWeight.bold,
-              height: 1.05,
+              fontSize: aktif ? 24 : 19,
+              height: 1.0,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             guru != null ? namaPendekGuru(guru) : 'KG ${entri!.kg}',
-            style: TextStyle(
+            style: theme.textTheme.bodyMedium?.copyWith(
               color: warnaGuru,
-              fontSize: aktif ? 18 : 14,
-              height: 1.05,
+              fontSize: aktif ? 17 : 14,
+              height: 1.0,
             ),
           ),
         ],
@@ -327,10 +354,17 @@ class _RelTitik extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: 40,
       child: CustomPaint(
-        painter: _RelPainter(keadaan),
+        painter: _RelPainter(
+          keadaan,
+          garis: colorScheme.surfaceContainerHighest,
+          aktif: colorScheme.primary,
+          berikutnya: colorScheme.onSurface,
+          redup: colorScheme.onSurfaceVariant,
+        ),
         child: const SizedBox.expand(),
       ),
     );
@@ -338,17 +372,27 @@ class _RelTitik extends StatelessWidget {
 }
 
 class _RelPainter extends CustomPainter {
-  _RelPainter(this.keadaan);
+  _RelPainter(
+    this.keadaan, {
+    required this.garis,
+    required this.aktif,
+    required this.berikutnya,
+    required this.redup,
+  });
 
   final KeadaanSlot keadaan;
+  final Color garis;
+  final Color aktif;
+  final Color berikutnya;
+  final Color redup;
 
   @override
   void paint(Canvas canvas, Size size) {
     final cx = size.width / 2;
-    final garis = Paint()
-      ..color = TemaWarna.surfaceContainerHighest
+    final cat = Paint()
+      ..color = garis
       ..strokeWidth = 3;
-    canvas.drawLine(Offset(cx, 0), Offset(cx, size.height), garis);
+    canvas.drawLine(Offset(cx, 0), Offset(cx, size.height), cat);
 
     final tengah = Offset(cx, size.height / 2);
     switch (keadaan) {
@@ -357,25 +401,28 @@ class _RelPainter extends CustomPainter {
           tengah,
           17,
           Paint()
-            ..color = TemaWarna.primary.withValues(alpha: 0.25)
+            ..color = aktif.withValues(alpha: 0.25)
             ..style = PaintingStyle.fill,
         );
-        canvas.drawCircle(tengah, 10, Paint()..color = TemaWarna.primary);
+        canvas.drawCircle(tengah, 10, Paint()..color = aktif);
       case KeadaanSlot.berikutnya:
-        canvas.drawCircle(tengah, 7, Paint()..color = TemaWarna.onSurface);
+        canvas.drawCircle(tengah, 7, Paint()..color = berikutnya);
       case KeadaanSlot.akanDatang:
-        canvas.drawCircle(
-            tengah, 6, Paint()..color = TemaWarna.onSurfaceVariant);
+        canvas.drawCircle(tengah, 6, Paint()..color = redup);
       case KeadaanSlot.selesai:
         canvas.drawCircle(
           tengah,
           6,
-          Paint()..color = TemaWarna.onSurfaceVariant.withValues(alpha: 0.6),
+          Paint()..color = redup.withValues(alpha: 0.6),
         );
     }
   }
 
   @override
   bool shouldRepaint(_RelPainter oldDelegate) =>
-      oldDelegate.keadaan != keadaan;
+      oldDelegate.keadaan != keadaan ||
+      oldDelegate.garis != garis ||
+      oldDelegate.aktif != aktif ||
+      oldDelegate.berikutnya != berikutnya ||
+      oldDelegate.redup != redup;
 }

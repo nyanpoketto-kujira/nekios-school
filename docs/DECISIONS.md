@@ -103,3 +103,60 @@ Keputusan:
   dibandingkan dengan board desain pada momen yang sama. Default
   mati (jam sistem); ini alat pengembang, bukan fitur pengguna —
   simulasi jam untuk pengguna kelak lewat event `ClockSimulated`.
+
+## ADR-006: Koreksi desain — Penpot = wireframe, bahasa visual = spec M3 + masjid-you (2026-11-18)
+
+Konteks: nyanpo menilai UI Fase 3 "terpaku banget sama desain utama"
+— board Penpot disalin mentah sebagai visual final (hex hijau
+campuran manual di `lib/ui/tema.dart`, kotak radius kecil, kanvas
+1920×1080 dikunci FittedBox). Koreksinya: board Penpot adalah
+WIREFRAME (arsitektur informasi), bukan desain visual. Bahasa visual
+nekios-school harus bahasa desain masjid-you (nekios-mosque) — "the
+real Material You kiosk design" — yang diground-kan ke panduan resmi
+Material 3 (m3.material.io: color roles, shape, typography, cards).
+
+Keputusan:
+- Tema disalin pendekatannya utuh dari masjid-you tv_display
+  (`lib/theme/app_theme.dart`): `ColorScheme.fromSeed` dengan seed
+  IDENTIK masjid-you `0xFF006A60` (dark) — warnanya disamakan, bukan
+  varian hijau sekolah. Semua warna UI dari role skema (pasangan
+  container/on-container yang sah, hierarki 5 tingkat surface
+  container berbasis tone). Peta hex manual dihapus.
+- Skala teks sama dengan AppTheme masjid-you (displayLarge 72 w900,
+  dst.); angka jam/countdown memakai tabular figures.
+- Bentuk expressive (MaterialShapes/M3ShapeBorder, diporting dari
+  masjid-you bersama paket `material_new_shapes`) HANYA untuk elemen
+  ukuran tetap/natural: ornamen blob latar (fix 120–160), kapsul jam
+  ArchBorder, chip pill. DILARANG pada permukaan yang bisa melebar —
+  polygon terdistorsi saat di-stretch (aturan nyanpo). Permukaan
+  melebar (kartu kelas, baris timeline, hero, strip, bar) memakai
+  rounded rectangle radius token M3 (large 20 / extra-large 28–32).
+  Kartu kelas = filled card surfaceContainer radius 28 (koleksi
+  selevel, elevasi istirahat sama); baris timeline aktif =
+  primaryContainer + border primary 2 (pola kartu aktif masjid-you).
+- Komposisi berlapis ala tv_display: latar surfaceContainerLowest +
+  MaterialBlobBackground (porting; repaint via animation, tanpa
+  rebuild tree) + konten. Header = Card radius 28 surfaceContainer
+  border outlineVariant, kotak logo 1:1, kapsul jam ArchBorder —
+  meniru HeaderClock masjid-you.
+- Layout RESPONSIF flex menggantikan kanvas FittedBox tetap (ADR-005
+  bagian kanvas dinyatakan superseded oleh ADR ini).
+- Nama mapel panjang tidak boleh terpotong ellipsis: FittedBox
+  scaleDown satu baris seperti PrayerCardsRow masjid-you.
+- Pengecualian warna non-skema HANYA: (a) ornamen blob (teal/emerald
+  masjid-you ber-alpha), (b) pill kode mapel ukuran tetap memakai
+  derivasi tonal dari warna identitas kertas (`warnaPillMapel`).
+- Running text mading akhirnya tampil: bar full-width di dasar layar
+  di luar padding konten (pola RunningTextBar masjid-you), membaca
+  `DisplayStore.mading` (event MadingChanged, Fase 2.5); kosong →
+  teks sambutan default. Marquee sederhana: jeda awal, scroll
+  berulang.
+- Hero status non-Pelajaran digaya ulang ala PrayerStateOverlay:
+  display besar, container tonal per status (ISOMA =
+  tertiaryContainer, sebelum masuk = primaryContainer, khusus =
+  secondaryContainer), countdown tabular, progress tonal.
+
+Konsekuensi: wireframe Penpot (Varian J, Rotasi, board Status) tetap
+menjadi acuan isi & susunan — yang diganti hanya kulitnya. Mengganti
+seed/tema kelak cukup di satu tempat (`AppTheme`), dan nekios-school
+tampil sedarah dengan masjid-you sebagai keluarga Nekios.

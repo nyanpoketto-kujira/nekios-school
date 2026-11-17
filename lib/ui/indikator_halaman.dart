@@ -1,10 +1,8 @@
-/// Indikator halaman rotasi (Fase 3): titik per halaman, halaman
+/// Indikator halaman rotasi (ADR-006): titik per halaman, halaman
 /// aktif memanjang dengan warna primary (pola board Rotasi 1/2).
 library;
 
 import 'package:flutter/material.dart';
-
-import 'tema.dart';
 
 class IndikatorHalaman extends StatelessWidget {
   const IndikatorHalaman({
@@ -19,6 +17,7 @@ class IndikatorHalaman extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (jumlah <= 1) return const SizedBox.shrink();
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -30,8 +29,8 @@ class IndikatorHalaman extends StatelessWidget {
             height: 10,
             decoration: BoxDecoration(
               color: i == aktif
-                  ? TemaWarna.primary
-                  : TemaWarna.surfaceContainerHighest,
+                  ? colorScheme.primary
+                  : colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(5),
             ),
           ),

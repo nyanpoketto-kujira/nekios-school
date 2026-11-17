@@ -1,12 +1,12 @@
-/// Progress slot bersama (Fase 3): label progres + sisa waktu di atas
-/// bar primer — satu bar untuk semua kelas karena belnya bersamaan.
+/// Progress slot bersama (ADR-006): label progres + sisa waktu di
+/// atas bar primary — satu bar untuk semua kelas karena belnya
+/// bersamaan. Warna dari role skema; angka sisa tabular.
 library;
 
 import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
 import 'format.dart';
-import 'tema.dart';
 
 class ProgressSlot extends StatelessWidget {
   const ProgressSlot({super.key, required this.keadaan});
@@ -15,6 +15,8 @@ class ProgressSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final slot = keadaan.slotAktif;
     final progres = (keadaan.progresSlot ?? 0).clamp(0.0, 1.0);
     final labelKiri = keadaan.jamKeAktif != null && slot != null
@@ -33,20 +35,21 @@ class ProgressSlot extends StatelessWidget {
             Expanded(
               child: Text(
                 labelKiri,
-                style: const TextStyle(
-                  color: TemaWarna.onSurfaceVariant,
-                  fontSize: 16,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.8,
+                  fontSize: 15,
                 ),
               ),
             ),
             Text(
               labelKanan,
-              style: const TextStyle(
-                color: TemaWarna.tertiary,
-                fontSize: 18,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: colorScheme.tertiary,
                 fontWeight: FontWeight.bold,
+                fontFeatures: const [FontFeature.tabularFigures()],
+                fontSize: 16,
               ),
             ),
           ],
@@ -56,11 +59,11 @@ class ProgressSlot extends StatelessWidget {
           borderRadius: BorderRadius.circular(7),
           child: Container(
             height: 14,
-            color: TemaWarna.surfaceContainerHigh,
+            color: colorScheme.surfaceContainerHigh,
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
               widthFactor: progres,
-              child: Container(color: TemaWarna.primary),
+              child: Container(color: colorScheme.primary),
             ),
           ),
         ),

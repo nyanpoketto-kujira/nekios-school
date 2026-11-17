@@ -1,12 +1,12 @@
-/// Strip status bel (Fase 3): chip status + Jam ke-N + rentang slot
-/// di kiri; countdown menuju bel dan chip jam bel di kanan.
+/// Strip status bel (ADR-006): bar pill surfaceContainer berisi chip
+/// status + Jam ke-N + rentang slot di kiri; countdown menuju bel dan
+/// chip jam bel di kanan. Warna dari role skema; countdown tabular.
 library;
 
 import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
 import 'format.dart';
-import 'tema.dart';
 
 class StripStatusBel extends StatelessWidget {
   const StripStatusBel({super.key, required this.keadaan});
@@ -15,6 +15,8 @@ class StripStatusBel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final slot = keadaan.slotAktif;
     final teksTengah = switch (keadaan.status) {
       StatusSekolah.pelajaran => 'Jam ke-${keadaan.jamKeAktif ?? '-'}'
@@ -50,24 +52,26 @@ class StripStatusBel extends StatelessWidget {
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        color: TemaWarna.surfaceContainer,
+        color: colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
         children: [
+          // Chip status: pill ukuran natural, pasangan container/on
+          // yang sah menurut spec color roles.
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
             decoration: BoxDecoration(
-              color: TemaWarna.secondaryContainer,
-              borderRadius: BorderRadius.circular(10),
+              color: colorScheme.secondaryContainer,
+              borderRadius: BorderRadius.circular(999),
             ),
             child: Text(
               kataChip,
-              style: const TextStyle(
-                color: TemaWarna.onSurface,
-                fontSize: 17,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: colorScheme.onSecondaryContainer,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.6,
+                fontSize: 15,
               ),
             ),
           ),
@@ -75,9 +79,9 @@ class StripStatusBel extends StatelessWidget {
           Expanded(
             child: Text(
               teksTengah,
-              style: const TextStyle(
-                color: TemaWarna.onSurface,
-                fontSize: 24,
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: colorScheme.onSurface,
+                fontSize: 22,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -87,10 +91,11 @@ class StripStatusBel extends StatelessWidget {
               keadaan.status != StatusSekolah.tidakAdaJadwal) ...[
             Text(
               formatCountdown(keadaan.sisaKeBel!),
-              style: const TextStyle(
-                color: TemaWarna.tertiary,
-                fontSize: 34,
+              style: theme.textTheme.headlineMedium?.copyWith(
+                color: colorScheme.tertiary,
                 fontWeight: FontWeight.bold,
+                fontFeatures: const [FontFeature.tabularFigures()],
+                fontSize: 30,
               ),
             ),
             const SizedBox(width: 22),
@@ -99,16 +104,16 @@ class StripStatusBel extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
               decoration: BoxDecoration(
-                border: Border.all(color: TemaWarna.onSurfaceVariant),
-                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: colorScheme.outlineVariant),
+                borderRadius: BorderRadius.circular(999),
               ),
               child: Text(
                 teksBel,
-                style: const TextStyle(
-                  color: TemaWarna.onSurface,
-                  fontSize: 17,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.6,
+                  fontSize: 15,
                 ),
               ),
             ),

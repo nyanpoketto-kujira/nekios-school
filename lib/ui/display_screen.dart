@@ -1,8 +1,13 @@
-/// Layar utama TV nekios-school (Fase 3).
+/// Layar utama TV nekios-school (ADR-006).
 ///
-/// Kanvas desain 1920×1080 diskalakan proporsional ke jendela aktual.
+/// Komposisi berlapis ala masjid-you tv_display: latar
+/// surfaceContainerLowest + ornamen blob M3 (ukuran tetap) di bawah
+/// konten; konten berupa layout flex RESPONSIF (bukan lagi kanvas
+/// FittedBox 1920×1080 yang dikunci); bar running text mading
+/// full-width menempel di dasar layar, di luar padding konten.
+///
 /// Layar hanya membaca [DisplayStore]: status pelajaran memakai tata
-/// letak Varian J + rotasi kelas; status lain memakai hero sederhana.
+/// letak wireframe Varian J + rotasi kelas; status lain memakai hero.
 library;
 
 import 'dart:async';
@@ -15,9 +20,9 @@ import 'header_sekolah.dart';
 import 'hero_status.dart';
 import 'indikator_halaman.dart';
 import 'kartu_kelas.dart';
+import 'material_blob_background.dart';
 import 'progress_slot.dart';
 import 'strip_status_bel.dart';
-import 'tema.dart';
 import 'timeline_jendela.dart';
 
 class DisplayScreen extends StatelessWidget {
@@ -27,50 +32,52 @@ class DisplayScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: TemaWarna.latar,
-      body: ListenableBuilder(
-        listenable: store,
-        builder: (context, _) {
-          return FittedBox(
-            fit: BoxFit.contain,
-            child: SizedBox(
-              width: TemaWarna.ukuranKanvas.width,
-              height: TemaWarna.ukuranKanvas.height,
-              child: _isi(),
-            ),
-          );
-        },
+      backgroundColor: colorScheme.surfaceContainerLowest,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Lapisan ornamen: blob M3 ukuran tetap melayang pelan di
+          // atas latar polos, di bawah semua konten (pola masjid-you).
+          const MaterialBlobBackground(),
+          ListenableBuilder(
+            listenable: store,
+            builder: (context, _) => _isi(context),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _isi() {
+  Widget _isi(BuildContext context) {
     final data = store.data;
     final keadaan = store.keadaan;
     if (data == null || keadaan == null) {
-      return const Center(
+      final theme = Theme.of(context);
+      return Center(
         child: Text(
           'Memuat jadwal…',
-          style: TextStyle(color: TemaWarna.onSurfaceVariant, fontSize: 28),
+          style: theme.textTheme.headlineMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
       );
     }
     if (keadaan.status == StatusSekolah.pelajaran) {
       return _LayarPelajaran(store: store, data: data, keadaan: keadaan);
     }
-    // Status lain: header + strip + hero + timeline statis (Fase 4
-    // akan memolesnya per status).
+    // Status lain: header + strip + hero + timeline statis.
     final halaman = halamanRotasi(data.kelas);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(48, 26, 48, 14),
+      padding: const EdgeInsets.fromLTRB(40, 24, 40, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           HeaderSekolah(data: data, sekarang: keadaan.sekarang),
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
           StripStatusBel(keadaan: keadaan),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
           HeroStatus(keadaan: keadaan),
           const SizedBox(height: 16),
           Expanded(
@@ -134,7 +141,7 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
     final slot = keadaan.slotAktif;
 
     final barisKartu = SizedBox(
-      height: 208,
+      height: 216,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -155,14 +162,14 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
     );
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(48, 26, 48, 14),
+      padding: const EdgeInsets.fromLTRB(40, 24, 40, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           HeaderSekolah(data: data, sekarang: keadaan.sekarang),
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
           StripStatusBel(keadaan: keadaan),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
           // Hanya area kartu + kolom timeline yang berotasi; header,
           // strip, dan progres tetap (pola board Rotasi 1/2).
           AnimatedSwitcher(

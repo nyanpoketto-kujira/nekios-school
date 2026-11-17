@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 
 import 'sources/sources.dart';
 import 'state/state.dart';
+import 'theme/theme.dart';
 import 'ui/ui.dart';
 
 /// Waktu tetap untuk verifikasi visual; kosong = jam sistem.
@@ -69,7 +70,7 @@ class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
     return MaterialApp(
       title: 'nekios-school',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(useMaterial3: true),
+      theme: AppTheme.darkTheme,
       home: DisplayScreen(store: _store),
     );
   }

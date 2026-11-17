@@ -35,6 +35,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # Bentuk Material 3 Expressive (RoundedPolygon) — paket yang sama
+  # dengan masjid-you tv_display; dipakai HANYA untuk ornamen ukuran
+  # tetap, bukan permukaan yang melebar (ADR-006).
+  material_new_shapes: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
