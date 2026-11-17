@@ -1,6 +1,7 @@
 /// Progress slot bersama (ADR-006): label progres + sisa waktu di
-/// atas bar primary — satu bar untuk semua kelas karena belnya
-/// bersamaan. Warna dari role skema; angka sisa tabular.
+/// atas bar gelombang Material You (ADR-007) — satu bar untuk semua
+/// kelas karena belnya bersamaan. Warna dari role skema; angka sisa
+/// tabular.
 library;
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import '../domain/domain.dart';
 import 'format.dart';
 import 'skala_tampilan.dart';
+import 'wavy_progress_bar.dart';
 
 class ProgressSlot extends StatelessWidget {
   const ProgressSlot({super.key, required this.keadaan});
@@ -57,17 +59,12 @@ class ProgressSlot extends StatelessWidget {
           ],
         ),
         SizedBox(height: 9 * s),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(7 * s),
-          child: Container(
-            height: 14 * s,
-            color: colorScheme.surfaceContainerHigh,
-            child: FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              widthFactor: progres,
-              child: Container(color: colorScheme.primary),
-            ),
-          ),
+        // Bar gelombang (porting nekios-mosque, ADR-007): aktif =
+        // primary, track = onSurface alpha rendah ala overlay azan.
+        WavyProgressBar(
+          progress: progres,
+          activeColor: colorScheme.primary,
+          trackColor: colorScheme.onSurface.withValues(alpha: 0.35),
         ),
       ],
     );

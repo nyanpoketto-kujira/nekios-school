@@ -160,3 +160,48 @@ Konsekuensi: wireframe Penpot (Varian J, Rotasi, board Status) tetap
 menjadi acuan isi & susunan — yang diganti hanya kulitnya. Mengganti
 seed/tema kelak cukup di satu tempat (`AppTheme`), dan nekios-school
 tampil sedarah dengan masjid-you sebagai keluarga Nekios.
+
+## ADR-007: WavyProgressBar — porting dari nekios-mosque (2026-11-18)
+
+Konteks: nyanpo meminta progress bar diganti bar gelombang
+("wavey") dan mengingatkan komponennya sudah ada di masjid-you.
+Benar: `_WavyProgressBar` + `_WavyProgressPainter` di
+`apps/tv_display/lib/widgets/prayer_state_overlay.dart` masjid-you,
+dipakai overlay Azan & Khutbah — bar progres khas Material You
+(gelombang sinus tunggal ala media player). Melanjutkan pola
+ADR-006, komponen keluarga Nekios dipakai bersama, bukan diciptakan
+ulang dengan rasa berbeda.
+
+Keputusan:
+- Porting menjadi widget publik `WavyProgressBar`
+  (`lib/ui/wavy_progress_bar.dart`). Matematika lukis identik
+  dengan sumber: track garis lurus redup, garis aktif sinus
+  (λ 52, amplitudo 5, stroke aktif 8 / track 4) berhenti 7 satuan
+  sebelum cursor bar vertikal (tinggi 22); fase gelombang dari
+  AnimationController 2800ms dibaca painter via repaint listenable
+  (60 FPS, tanpa rebuild).
+- Adaptasi API yang disengaja: sumber menghitung progress sub-detik
+  dari `deadline` vs `DateTime.now()` — TIDAK dipakai, karena jam
+  nekios-school bisa disimulasi (`ClockSimulated` di DisplayStore)
+  dan painter tidak boleh membaca jam sistem. Progress berbasis
+  fraksi `progress` 0..1 dari `KeadaanTampilan.progresSlot` (tick
+  1 detik dari store); bar tetap hidup antar-tick lewat animasi
+  fase gelombangnya.
+- Geometri diskalakan `SkalaTampilan` (tinggi area lukis default
+  30 satuan desain, λ/amplitudo/stroke/cursor ikut faktor) agar
+  proporsinya sama di viewport TV 960×540 logis.
+- Pemasangan: (a) ProgressSlot layar Pelajaran — aktif `primary`,
+  track `onSurface` alpha 0.35 (meniru track redup overlay azan);
+  label progres & sisa bel tidak berubah. (b) HeroStatus — aktif =
+  warna on-container hero, track = warna sama alpha 0.35 (pasangan
+  tonal yang sah di atas container hero).
+- Tinggi area lukis (30) lebih besar dari bar lurus lama (14/12)
+  karena amplitudo + cursor butuh ruang vertikal; layout flex
+  menyerapnya — test regresi overflow 1920×1080 DPR 1.0 & 2.0
+  tetap hijau, ditambah test widget khusus WavyProgressBar
+  (fraksi 0 / 0.44 / 1 + clamp di luar rentang).
+
+Konsekuensi: satu-satunya bar progres di nekios-school sekarang
+komponen yang sama dengan overlay azan/khutbah nekios-mosque;
+perubahan gaya bar kelak cukup dilakukan sejajar di dua repo
+(sampai nekios-core lahir dan komponen ini diangkat ke sana).

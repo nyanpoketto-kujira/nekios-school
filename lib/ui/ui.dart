@@ -18,3 +18,4 @@ export 'running_text.dart';
 export 'skala_tampilan.dart';
 export 'strip_status_bel.dart';
 export 'timeline_jendela.dart';
+export 'wavy_progress_bar.dart';

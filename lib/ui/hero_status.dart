@@ -1,7 +1,8 @@
 /// Hero status (ADR-006) untuk status selain pelajaran — digaya
 /// ulang ala PrayerStateOverlay masjid-you: tipografi display besar,
 /// container tonal per status dengan pasangan on-container yang sah,
-/// countdown besar tabular, dan progress tonal di dasar kartu.
+/// countdown besar tabular, dan progress gelombang tonal di dasar
+/// kartu (WavyProgressBar, ADR-007).
 ///
 /// Pemetaan container mengikuti spec color roles: ISOMA/istirahat =
 /// tertiaryContainer, khusus/upacara = secondaryContainer, sebelum
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import '../domain/domain.dart';
 import 'format.dart';
 import 'skala_tampilan.dart';
+import 'wavy_progress_bar.dart';
 
 class HeroStatus extends StatelessWidget {
   const HeroStatus({super.key, required this.keadaan});
@@ -133,19 +135,14 @@ class HeroStatus extends StatelessWidget {
           ),
           if (progres != null) ...[
             SizedBox(height: 18 * s),
-            // Progress tonal: rel = on-container redup, isi = warna
-            // teks container itu sendiri (pasangan tonal yang aman).
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6 * s),
-              child: Container(
-                height: 12 * s,
-                color: warnaTeks.withValues(alpha: 0.18),
-                child: FractionallySizedBox(
-                  alignment: Alignment.centerLeft,
-                  widthFactor: progres.clamp(0.0, 1.0),
-                  child: Container(color: warnaTeks),
-                ),
-              ),
+            // Progress gelombang tonal (ADR-007): aktif = warna teks
+            // container itu sendiri (on-container), track = warna
+            // yang sama ber-alpha rendah — pasangan tonal yang aman
+            // di atas container hero.
+            WavyProgressBar(
+              progress: progres.clamp(0.0, 1.0),
+              activeColor: warnaTeks,
+              trackColor: warnaTeks.withValues(alpha: 0.35),
             ),
           ],
         ],
