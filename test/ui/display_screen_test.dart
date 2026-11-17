@@ -57,18 +57,73 @@ void main() {
       // Chip strip + label baris aktif di timeline.
       expect(find.text('SEDANG BERLANGSUNG'), findsNWidgets(2));
 
-      // Kartu halaman 1: X TKJ A, X TKJ B, XI TKJ A.
+      // Kartu halaman 1 (paging 4-per-halaman, ADR-010):
+      // X TKJ A, X TKJ B, XI TKJ A, XI TKJ B.
       expect(find.text('Ilmu Pengetahuan Alam dan Sosial'), findsOneWidget);
       expect(find.text('Dasar-Dasar Program Keahlian'), findsOneWidget);
       expect(find.text('Bahasa Indonesia'), findsOneWidget);
+      expect(find.text('Konsentrasi Keahlian TKJ'), findsOneWidget);
+      expect(find.text('Bahasa Inggris'), findsNothing);
       expect(find.text('XII TKJ A'), findsNothing);
 
-      // Rotasi 12 detik → halaman 2 (XI TKJ B, XII TKJ A, XII TKJ B).
+      // Rotasi 12 detik → halaman 2 = sisa 2 kelas (XII TKJ A,
+      // XII TKJ B).
       await tester.pump(const Duration(seconds: 12));
       await tester.pump(const Duration(milliseconds: 600));
       expect(find.text('Bahasa Inggris'), findsOneWidget);
-      expect(find.text('Konsentrasi Keahlian TKJ'), findsWidgets);
+      expect(find.text('Konsentrasi Keahlian TKJ'), findsOneWidget);
       expect(find.text('Ilmu Pengetahuan Alam dan Sosial'), findsNothing);
+    });
+
+    testWidgets(
+        'paging adaptif: halaman 1 isi 4 kartu sama lebar; halaman 2 '
+        'isi 2 kartu sama lebar & memenuhi baris (ADR-010)',
+        (tester) async {
+      aturLayarTv(tester);
+      final store = storePada(DateTime(2026, 11, 17, 9, 20, 24));
+      addTearDown(store.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp(home: DisplayScreen(store: store)),
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+
+      // Area konten pada 1920×1080 @ DPR 1.0 (skala tampilan 1.0):
+      // lebar layar − padding layar 40×2; celah antar kartu 24.
+      const lebarKonten = 1920.0 - 80.0;
+      const celah = 24.0;
+
+      List<double> lebarKartu() {
+        final finder = find.byType(KartuKelasSekarang);
+        return [
+          for (var i = 0; i < tester.widgetList(finder).length; i++)
+            tester.getSize(finder.at(i)).width,
+        ];
+      }
+
+      void cekMerata(List<double> lebar, int jumlah) {
+        expect(lebar.length, jumlah);
+        for (final w in lebar) {
+          expect(w, closeTo(lebar.first, 0.5),
+              reason: 'semua kartu harus sama lebar');
+        }
+        // Total lebar kartu + celah di antaranya = lebar konten:
+        // baris terisi penuh, tidak ada sisa ruang kosong di kanan.
+        final total = lebar.fold(0.0, (a, b) => a + b) + celah * (jumlah - 1);
+        expect(total, closeTo(lebarKonten, 1.0));
+      }
+
+      // Halaman 1: 4 kartu merata.
+      cekMerata(lebarKartu(), 4);
+
+      // Halaman 2: sisa 2 kartu — keduanya melebar merata memenuhi
+      // baris (bukan menyusut ke lebar 4-kolom).
+      await tester.pump(const Duration(seconds: 12));
+      await tester.pump(const Duration(milliseconds: 600));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      cekMerata(lebarKartu(), 2);
     });
 
     testWidgets(

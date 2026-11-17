@@ -75,7 +75,8 @@ class TransisiRotasi extends StatelessWidget {
   /// Kunci halaman (berubah → transisi jalan).
   final int kunci;
 
-  /// Indeks item dalam halaman (0, 1, 2) untuk stagger.
+  /// Indeks item dalam halaman (0, 1, 2, 3, … — berapa pun isi
+  /// halamannya, ADR-010) untuk stagger.
   final int indeks;
 
   final Widget child;

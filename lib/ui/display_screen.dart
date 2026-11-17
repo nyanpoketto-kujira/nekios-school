@@ -214,6 +214,11 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
     // bisa menyusut sehingga total tidak pernah meluber. Tiap kartu
     // punya switcher sendiri agar transisi rotasinya bisa STAGGER
     // per kartu (ADR-009).
+    //
+    // Lebar juga adaptif (ADR-010): tiap kartu Expanded berbobot
+    // sama, jadi halaman sisa (isi 3, 2, atau 1) membagi lebar baris
+    // secara merata dan memenuhi baris — tidak ada kartu menyusut
+    // ke lebar halaman penuh lalu menyisakan ruang kosong.
     final barisKartu = Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

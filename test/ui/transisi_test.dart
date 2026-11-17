@@ -4,7 +4,10 @@
 ///   ScaleTransition + FadeTransition per kartu/kolom), bukan
 ///   crossfade polos AnimatedSwitcher bawaan.
 /// - Di tengah transisi rotasi, kartu lama & baru sama-sama ada di
-///   tree; setelah durasi selesai hanya halaman baru.
+///   tree pada slot yang persisten; setelah durasi selesai hanya
+///   halaman baru. (Paging adaptif ADR-010: halaman bisa beda
+///   panjang — slot ekstra di halaman yang lebih panjang dilepas
+///   bersama barisnya, jadi koeksistensi diuji pada slot indeks 0.)
 /// - Pergantian status Pelajaran → ISOMA melewati switcher
 ///   fade-through di level layar (ScaleTransition tingkat layar).
 library;
@@ -55,10 +58,11 @@ void main() {
       expect(find.text('Bahasa Indonesia'), findsOneWidget);
 
       // Picu rotasi 12 detik, lalu berhenti di tengah transisi
-      // (100ms dari 500ms): kartu lama & baru sama-sama di tree.
+      // (100ms dari 500ms): pada slot persisten (indeks 0), kartu
+      // lama (X TKJ A) & baru (XII TKJ A) sama-sama di tree.
       await tester.pump(const Duration(seconds: 12));
       await tester.pump(const Duration(milliseconds: 100));
-      expect(find.text('Bahasa Indonesia'), findsOneWidget);
+      expect(find.text('Ilmu Pengetahuan Alam dan Sosial'), findsOneWidget);
       expect(find.text('Bahasa Inggris'), findsOneWidget);
 
       // Selesaikan transisi: hanya halaman 2 yang tersisa.

@@ -79,12 +79,16 @@ void main() {
         );
         // Strip: teks tengah ringkas, tidak menabrak countdown.
         expect(find.text('Jam ke-3 • Pelajaran berlangsung'), findsOneWidget);
+        // Paging adaptif (ADR-010): halaman 1 berisi 4 kartu.
+        expect(find.byType(KartuKelasSekarang), findsNWidgets(4));
 
-        // Rotasi ke halaman 2 pun tidak boleh overflow.
+        // Rotasi ke halaman 2 (sisa 2 kartu) pun tidak boleh
+        // overflow.
         await tester.pump(const Duration(seconds: 12));
         await tester.pump(const Duration(milliseconds: 600));
         expect(tester.takeException(), isNull);
         expect(find.text('Bahasa Inggris'), findsOneWidget);
+        expect(find.byType(KartuKelasSekarang), findsNWidgets(2));
       });
     }
 

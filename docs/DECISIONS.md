@@ -280,3 +280,44 @@ Konsekuensi: test rotasi lama tetap berlaku (pump 600ms >
 durasi baru 500ms); test baru `transisi_test.dart` mengunci
 keberadaan widget transisi baru dan perilaku tengah-transisi.
 Mengubah rasa motion kelak cukup di satu file token.
+
+## ADR-010: Paging rotasi adaptif — 4 kelas per halaman (2026-11-18)
+
+Konteks: keputusan nyanpo — bagian jadwal harus menampung 4 kelas
+sekali tampil, dan paging-nya tidak boleh kaku terhadap jumlah
+kelas. Saat ini datanya 6 kelas TKJ, tetapi saat dipakai penuh
+jumlah kelas bisa berubah (bertambah); halaman terakhir yang
+berisi sisa tidak boleh tampil kagok. Ini menyempurnakan
+wireframe Penpot: board Rotasi 1/2 dulu menggambar 3 kelas per
+halaman, tetapi Penpot adalah wireframe (arsitektur informasi),
+bukan patokan jumlah (ADR-006).
+
+Keputusan:
+- Ukuran halaman menjadi konstanta domain tunggal
+  `ukuranHalamanRotasi = 4` di `lib/domain/mesin.dart`;
+  `halamanRotasi` memakainya sebagai `perHalaman` bawaan. Untuk
+  6 kelas hasilnya 2 halaman isi [4, 2]. Urutan tetap mengikuti
+  `Kelas.urutan`.
+- Lebar adaptif tanpa kode khusus per jumlah: baris kartu dan
+  kolom timeline sama-sama memakai `Expanded` berbobot sama per
+  item, sehingga halaman sisa berisi 3, 2, atau 1 kelas membagi
+  lebar baris/kolom secara merata dan memenuhi ruang — tidak ada
+  kartu yang menyusut ke lebar halaman penuh lalu menyisakan
+  ruang kosong, dan tidak ada overflow pada lebar kolom tersempit
+  (isi 4) maupun terlebar (isi 1).
+- Indikator halaman dan stagger transisi (ADR-009) mengikuti
+  hasil paging secara generik — tidak ada angka jumlah halaman
+  atau jumlah kartu yang hardcoded di UI. Satu karakteristik
+  transisi pada halaman beda panjang: kartu pada slot yang
+  persisten antar halaman bertransisi stagger seperti biasa,
+  sedangkan slot ekstra milik halaman yang lebih panjang dilepas
+  bersama barisnya saat halaman berganti (switcher-nya memang
+  tinggal di slot baris itu).
+
+Konsekuensi: test domain mengunci pola bagi untuk total kelas
+1, 4, 5, 6, 7, 8 (termasuk sisa 1 dan halaman penuh); test widget
+mengunci isi halaman 1 (4 kartu) dan halaman 2 (2 kartu) pada
+skenario Selasa 09:20 beserta kesamaan lebar kartu dan baris yang
+terisi penuh; regresi overflow 1920×1080 DPR 1.0 & 2.0 memeriksa
+kedua halaman. Menambah/mengurangi kelas kelak cukup mengubah
+data — paging, lebar, dan indikator menyesuaikan sendiri.
