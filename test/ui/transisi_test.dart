@@ -147,6 +147,82 @@ void main() {
       expect(find.text('Bu Sumiati'), findsNothing);
     });
 
+    testWidgets(
+        'timeline: cascade per kolom sinkron antar baris & kepala kolom, '
+        'chip benar-benar meluncur (addendum ADR-011)', (tester) async {
+      tester.view.physicalSize = const Size(1920, 1080);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final store = _storePada(DateTime(2026, 11, 17, 9, 20, 24));
+      addTearDown(store.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp(home: DisplayScreen(store: store)),
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+
+      final timeline = find.byType(TimelineJendela);
+      expect(timeline, findsOneWidget);
+      Finder diTimeline(String teks) =>
+          find.descendant(of: timeline, matching: find.text(teks));
+
+      // Posisi diam chip kolom 0 baris pertama (X TKJ A, 07.30)
+      // sebelum rotasi — pembanding gerak meluncur nanti.
+      final dyEvaDiam = tester.getTopLeft(diTimeline('Bu Eva').first).dy;
+
+      // Picu rotasi, berhenti di 250ms (progres ±0,21) — titik
+      // yang sama dengan test kartu di atas.
+      await tester.pump(const Duration(seconds: 12));
+      await tester.pump(const Duration(milliseconds: 250));
+
+      // KOLOM TERAKHIR LAMA (indeks 3 dari 4, jendela mulai 0,72):
+      // belum bergerak DI MANA PUN — kepala kolom utuh, dan chip
+      // kolom itu di baris pertama maupun terakhir sama-sama
+      // utuh. Bila satu baris saja mulai lebih dulu (switcher
+      // per baris tidak sinkron), salah satu angka ini < 1.
+      expect(_opasitasElemen(tester, diTimeline('XI TKJ B')),
+          closeTo(1.0, 0.001));
+      expect(_opasitasElemen(tester, diTimeline('Bu Sumiati').first),
+          closeTo(1.0, 0.001));
+      expect(_opasitasElemen(tester, diTimeline('Bu Sumiati').last),
+          closeTo(1.0, 0.001));
+
+      // KOLOM TERAKHIR BARU (indeks 1 dari 2, jendela mulai
+      // 0,46): belum muncul di baris mana pun.
+      expect(_opasitasElemen(tester, diTimeline('Pak Rudi').first),
+          closeTo(0.0, 0.001));
+      expect(_opasitasElemen(tester, diTimeline('Pak Rudi').last),
+          closeTo(0.0, 0.001));
+
+      // KOLOM 0 SEDANG BERTUKAR di semua lapis timeline, dengan
+      // opasitas yang SAMA antara kepala kolom dan chip baris
+      // pertama: jendela cascade & momen mulai mereka satu —
+      // sinkron dengan kartu ke-0 (test sebelumnya).
+      final opasKepala0 = _opasitasElemen(tester, diTimeline('X TKJ A'));
+      final opasChip0 = _opasitasElemen(tester, diTimeline('Bu Eva').first);
+      expect(opasKepala0, allOf(greaterThan(0.0), lessThan(1.0)));
+      expect(opasChip0, closeTo(opasKepala0, 0.02));
+
+      // GERAK MELUNCUR terukur dari posisi render, bukan cuma
+      // fade: chip keluar kolom 0 sudah tenggelam jauh dari
+      // posisi diamnya (geser desain 30 satuan), dan chip masuk
+      // kolom 0 (XII TKJ A baris aktif) masih di bawah posisi
+      // akhirnya — ia naik meluncur ke tempatnya.
+      expect(tester.getTopLeft(diTimeline('Bu Eva').first).dy,
+          greaterThan(dyEvaDiam + 10));
+      final dyDosfriyatiTengah =
+          tester.getTopLeft(diTimeline('Bu Dosfriyati').first).dy;
+
+      // Selesaikan transisi: chip masuk tepat di posisi akhir.
+      await tester.pump(const Duration(milliseconds: 1000));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(tester.getTopLeft(diTimeline('Bu Dosfriyati').first).dy,
+          lessThan(dyDosfriyatiTengah - 2));
+      expect(diTimeline('Bu Sumiati'), findsNothing);
+    });
+
     testWidgets('status: Pelajaran → ISOMA lewat fade-through layar',
         (tester) async {
       tester.view.physicalSize = const Size(1920, 1080);

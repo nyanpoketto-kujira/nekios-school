@@ -28,6 +28,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import 'skala_tampilan.dart';
+
 /// Kurva emphasized Material 3.
 const Cubic kurvaEmphasizedM3 = Cubic(0.2, 0.0, 0.0, 1.0);
 
@@ -172,15 +174,26 @@ Widget bungkusHalaman({
 ///
 /// Membaca animasi switcher halaman dari ruang lingkupnya dan
 /// menerapkan jendela cascade indeksnya: fade + geser vertikal
-/// halus (masuk dari bawah, keluar turun) + scale 0.97↔1, kurva
-/// emphasized M3. Di luar switcher halaman (layout hero), elemen
-/// dirender apa adanya tanpa animasi.
+/// (masuk dari bawah, keluar turun) + scale, kurva emphasized M3.
+/// Di luar switcher halaman (layout hero), elemen dirender apa
+/// adanya tanpa animasi.
+///
+/// Bahasa gerak bawaan (kartu kelas): geser fraksional 0,10 dari
+/// tinggi elemen sendiri + scale [skalaMin] bawaan 0,97↔1. Elemen
+/// PENDEK (chip timeline, label kolom) memakai mode desain
+/// (addendum ADR-011): geser absolut [geserDesain] satuan desain —
+/// fraksi 0,10 pada elemen setinggi ±17–60 satuan hanya 2–6 piksel
+/// sehingga cascade-nya tidak terbaca — dan [skalaMin] yang lebih
+/// dalam. Pada t = 1 kedua mode kembali persis ke keadaan statis
+/// (offset 0, scale 1), jadi tampilan akhir tidak berubah.
 class ElemenHalaman extends StatelessWidget {
   const ElemenHalaman({
     super.key,
     required this.indeks,
     required this.jumlah,
     required this.child,
+    this.geserDesain,
+    this.skalaMin = 0.97,
   });
 
   /// Indeks elemen dalam wilayahnya (0, 1, 2, 3, …).
@@ -191,28 +204,48 @@ class ElemenHalaman extends StatelessWidget {
 
   final Widget child;
 
+  /// Geser vertikal maksimum dalam SATUAN DESAIN (dikalikan
+  /// [SkalaTampilan] saat menggambar). Null = mode bawaan kartu:
+  /// geser fraksional 0,10 dari tinggi elemen.
+  final double? geserDesain;
+
+  /// Scale pada awal masuk / akhir keluar (1.0 = ukuran penuh
+  /// pada keadaan statis). Bawaan 0,97 (kartu); elemen timeline
+  /// memakai nilai lebih kecil agar pertukarannya terbaca.
+  final double skalaMin;
+
   @override
   Widget build(BuildContext context) {
     final animasi = _RuangAnimasiHalaman.dari(context);
     if (animasi == null) return child;
     final jendela = jendelaCascade(indeks, jumlah);
+    final geser = geserDesain;
+    final skala = SkalaTampilan.of(context);
     return AnimatedBuilder(
       animation: animasi,
       child: child,
       builder: (context, anak) {
         final t = _progresElemen(animasi, jendela);
+        final isi = Transform.scale(
+          scale: skalaMin + (1.0 - skalaMin) * t,
+          child: anak!,
+        );
         return Opacity(
           opacity: t.clamp(0.0, 1.0),
-          child: FractionalTranslation(
-            // Geser vertikal fraksional terhadap ukuran elemen
-            // sendiri (pola SlideTransition): masuk dari bawah,
-            // keluar turun.
-            translation: Offset(0, (1.0 - t) * 0.10),
-            child: Transform.scale(
-              scale: 0.97 + 0.03 * t,
-              child: anak!,
-            ),
-          ),
+          child: geser == null
+              ? FractionalTranslation(
+                  // Geser vertikal fraksional terhadap ukuran
+                  // elemen sendiri (pola SlideTransition): masuk
+                  // dari bawah, keluar turun.
+                  translation: Offset(0, (1.0 - t) * 0.10),
+                  child: isi,
+                )
+              : Transform.translate(
+                  // Geser absolut satuan desain: terbaca sama pada
+                  // elemen tinggi maupun pendek.
+                  offset: Offset(0, (1.0 - t) * geser * skala),
+                  child: isi,
+                ),
         );
       },
     );

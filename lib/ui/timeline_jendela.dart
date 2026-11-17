@@ -106,6 +106,14 @@ class TimelineJendela extends StatelessWidget {
                         child: ElemenHalaman(
                           indeks: i,
                           jumlah: kelasKolom.length,
+                          // Label pendek (±17 satuan): geser
+                          // fraksional ala kartu cuma ±2 piksel —
+                          // tak terlihat. Mode desain (addendum
+                          // ADR-011): geser absolut 10 satuan +
+                          // scale lebih dalam agar cascade kolom
+                          // terbaca sejajar chip di bawahnya.
+                          geserDesain: 10,
+                          skalaMin: 0.85,
                           child: Text(
                             kelasKolom[i].nama,
                             textAlign: TextAlign.center,
@@ -283,6 +291,18 @@ class _BarisSlot extends StatelessWidget {
                     child: ElemenHalaman(
                       indeks: i,
                       jumlah: kelasKolom.length,
+                      // Chip pendek & lebar: latar chip lama/baru
+                      // identik (ditentukan keadaan baris, bukan
+                      // isi), jadi geser fraksional ala kartu
+                      // (±6–14 satuan) tenggelam — pertukaran
+                      // terasa seperti kedip teks serentak.
+                      // Mode desain (addendum ADR-011): geser
+                      // absolut 30 satuan + scale 0,92 membuat
+                      // chip benar-benar meluncur bertukar,
+                      // sekuat kartu, dalam jendela kolom yang
+                      // sama persis dengan kartu ke-i.
+                      geserDesain: 30,
+                      skalaMin: 0.92,
                       child: _ChipKelas(
                         entri: slot.entri[kelasKolom[i].id],
                         data: data,

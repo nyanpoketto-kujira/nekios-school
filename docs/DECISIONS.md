@@ -385,3 +385,45 @@ sekuensialnya lewat opasitas terukur (pada 250ms: indeks 0 kedua
 halaman sedang bertukar 0<t<1, indeks terakhir lama masih 1,
 indeks terakhir baru masih 0). Pump test rotasi di test layar
 disesuaikan dari 600ms ke 1300ms mengikuti durasi baru.
+
+Addendum ADR-011 (2026-11-18): nyanpo menyetujui cascade kartu,
+tetapi jadwal bawah (timeline) masih terasa belum beranimasi
+seurut/sejelas kartu. Audit menemukan BUKAN ada elemen timeline
+yang bertukar seketika — label kepala kolom dan semua chip sudah
+di dalam wilayah swap sejak ADR-011, dan label waktu/rel/label
+non-pelajaran memang tidak berubah antar halaman — melainkan
+bahasa gerak kartu yang terlalu lemah untuk elemen timeline:
+
+- Geser vertikal elemen adalah FRAKSI 0,10 dari tinggi elemen
+  sendiri. Kartu tinggi (±230 satuan) kebagian ±23 satuan dan
+  terbaca; label kepala kolom setinggi ±17 satuan cuma bergeser
+  ±2 satuan (tak terlihat), chip baris selesai ±6 satuan.
+- Latar chip lama/baru di sel yang sama IDENTIK — warna chip
+  ditentukan keadaan baris (selesai/aktif/berikutnya), bukan isi
+  kelas — jadi dengan geser sekecil itu pertukaran chip terbaca
+  sebagai kedip silang teks yang serentak, bukan cascade kolom
+  yang bergerak. Scale 0,97 pada chip lebar-pendek juga tak
+  terasa.
+
+Keputusan: `ElemenHalaman` mendapat mode gerak DESAIN opsional
+(parameter `geserDesain` + `skalaMin` di `lib/ui/transisi.dart`)
+— geser vertikal ABSOLUT dalam satuan desain (× SkalaTampilan),
+bukan fraksi tinggi elemen. Kartu TIDAK berubah (mode bawaan:
+fraksi 0,10, scale 0,97). Elemen timeline memakai: chip
+`geserDesain` 30 + `skalaMin` 0,92; label kepala kolom
+`geserDesain` 10 + `skalaMin` 0,85. Jendela cascade, durasi
+1200ms, dan momen mulai TIDAK berubah — semua switcher wilayah
+(kartu, kepala kolom, chip tiap baris) dipicu rebuild rotasi
+yang sama dan memakai rumus jendela yang sama, jadi kolom ke-i
+timeline bergerak dalam jendela yang sama persis dengan kartu
+ke-i, serentak memulainya. Pada t = 1 kedua mode kembali ke
+offset 0 / scale 1: tampilan statis akhir identik.
+
+Test `transisi_test.dart` bertambah satu pembuktian khusus
+timeline: pada 250ms opasitas kepala kolom indeks 0 SAMA dengan
+opasitas chip kolom 0 (±0,02 — satu jendela, satu momen mulai),
+chip kolom terakhir lama masih opasitas 1 di baris pertama DAN
+terakhir (tidak ada baris yang mulai lebih dulu), chip kolom
+terakhir baru masih 0, dan gerak meluncur chip terukur dari
+posisi render (chip keluar tenggelam >10 satuan dari posisi
+diamnya; chip masuk tiba dari bawah posisi akhirnya).
