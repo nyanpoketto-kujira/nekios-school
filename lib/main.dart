@@ -1,7 +1,10 @@
 /// Titik masuk nekios-school.
 ///
-/// Merakit DisplayStore + AssetScheduleSource, lalu memajukan waktu
-/// lewat tick berkala 1 detik. UI hanya membaca store.
+/// Merakit DisplayStore + dua sumber yang berjalan bersamaan:
+/// AssetScheduleSource (jadwal bawaan/default) dan
+/// CoreWebSocketSource (kendali remote nekios-core, Fase R1 —
+/// ADR-013), lalu memajukan waktu lewat tick berkala 1 detik.
+/// UI hanya membaca store.
 ///
 /// Alat verifikasi visual: `--dart-define=SIM_NOW=2026-11-17T09:20:24`
 /// membuat tick selalu memakai waktu tetap itu (default mati — lihat
@@ -33,9 +36,7 @@ DateTime? get _simNow =>
 /// aplikasi tetap jalan (layar hanya berisiko tidur).
 Future<void> aktifkanModeKios() async {
   // Sembunyikan bar sistem: pengalaman TV layar penuh.
-  unawaited(
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky),
-  );
+  unawaited(SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky));
 
   // Cegah layar TV tidur di tengah pameran.
   try {
@@ -52,7 +53,14 @@ Future<void> main() async {
 }
 
 class NekiosSchoolApp extends StatefulWidget {
-  const NekiosSchoolApp({super.key});
+  const NekiosSchoolApp({super.key, this.sumberRemote});
+
+  /// Sumber remote pengganti untuk test. Bawaan (null) memakai
+  /// [CoreWebSocketSource] sungguhan; widget test menginjeksi
+  /// sumber palsu karena server WebSocket asli (dart:io HttpServer)
+  /// tidak bisa hidup di zona FakeAsync testWidgets — perilaku
+  /// servernya sendiri diuji di test integrasi sumber.
+  final ScheduleSource? sumberRemote;
 
   @override
   State<NekiosSchoolApp> createState() => _NekiosSchoolAppState();
@@ -61,7 +69,9 @@ class NekiosSchoolApp extends StatefulWidget {
 class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
   late final DisplayStore _store;
   late final AssetScheduleSource _sumber;
+  late final ScheduleSource _sumberRemote;
   StreamSubscription<DisplayEvent>? _langganan;
+  StreamSubscription<DisplayEvent>? _langgananRemote;
   Timer? _timer;
 
   @override
@@ -71,6 +81,16 @@ class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
     _sumber = AssetScheduleSource();
     _langganan = _sumber.events.listen(_store.terima);
     unawaited(_sumber.start());
+    // Sumber remote berjalan BERSAMAAN dengan sumber asset (pola
+    // multi-source ADR-004): asset mengisi jadwal awal, remote
+    // menimpa lewat event yang sama bila ada perintah masuk.
+    // start()-nya tidak pernah melempar — gagal bind port hanya
+    // mematikan kendali remote, bukan display (ADR-013).
+    _sumberRemote =
+        widget.sumberRemote ??
+        CoreWebSocketSource(penyediaSnapshot: () => _store.snapshotPaket());
+    _langgananRemote = _sumberRemote.events.listen(_store.terima);
+    unawaited(_sumberRemote.start());
     _store.tick(_sekarang());
     _timer = Timer.periodic(
       const Duration(seconds: 1),
@@ -84,7 +104,9 @@ class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
   void dispose() {
     _timer?.cancel();
     unawaited(_langganan?.cancel() ?? Future<void>.value());
+    unawaited(_langgananRemote?.cancel() ?? Future<void>.value());
     unawaited(_sumber.dispose());
+    unawaited(_sumberRemote.dispose());
     _store.dispose();
     super.dispose();
   }
