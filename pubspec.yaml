@@ -40,6 +40,10 @@ dependencies:
   # tetap, bukan permukaan yang melebar (ADR-006).
   material_new_shapes: ^1.0.0
 
+  # Cegah layar TV tidur saat pameran — versi sama dengan masjid-you
+  # tv_display (Fase 5 finishing, ADR-012).
+  wakelock_plus: ^1.2.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
