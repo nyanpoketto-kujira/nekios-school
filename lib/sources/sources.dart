@@ -8,5 +8,6 @@
 library;
 
 export 'asset_schedule_source.dart';
+export 'core_websocket_source.dart';
 export 'events.dart';
 export 'schedule_source.dart';
