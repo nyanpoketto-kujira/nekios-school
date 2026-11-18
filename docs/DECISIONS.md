@@ -468,3 +468,101 @@ toggle enable), amplop error Pigeon membuktikan
 dan widget test membuktikan `NekiosSchoolApp` tetap pump
 normal. Verifikasi live di emulator (layar tetap bangun, tanpa
 bar sistem) menyusul lewat build APK terpisah.
+
+## ADR-013: Fase R1 — sumber remote WebSocket nekios-core (2026-11-18)
+
+Konteks: nekios-core sudah terbit sebagai paket protokol bersama
+(envelope + codec anti-throw + `NekiosServer`/`NekiosKlien`,
+protokol v1, port 8920, tanpa PIN — lihat `docs/PROTOCOL.md` di
+repo nekios-core) dan spike jaringan emulator sudah lulus.
+Arsitektur Fase 2.5 (ADR-004) memang menyiapkan slot ini: semua
+input masuk sebagai `DisplayEvent` lewat interface
+`ScheduleSource`, jadi sumber WebSocket tinggal menembakkan
+event yang sama. Fase R1 mengisi slot itu — sisi display dari
+kendali remote; aplikasi remote-nya sendiri adalah Fase R2.
+
+Keputusan:
+- Dependensi: `nekios_core` sebagai dependensi git HTTPS
+  (`https://github.com/nyanpoketto-kujira/nekios-core.git`,
+  ref `main`) di pubspec. Repo core PUBLIK, jadi CI GitHub
+  Actions bisa me-resolve tanpa kredensial; commit persisnya
+  dikunci `resolved-ref` di pubspec.lock.
+- `CoreWebSocketSource implements ScheduleSource`
+  (`lib/sources/core_websocket_source.dart`) menjalankan
+  `NekiosServer` dan menerjemahkan paket → event:
+  `schedule.replace` → parse `JadwalData.fromJson` lalu WAJIB
+  lolos `validasiJadwal` (aturan §7 dokumen arsitektur, fungsi
+  yang sama dengan jalur data lain) → `ScheduleReplaced`;
+  `mading.set` → `MadingChanged`; `clock.simulate` →
+  `ClockSimulated` (paket membawa momen absolut ISO-8601, event
+  membawa offset dari jam sistem — terjemahan terjadi di
+  sumber); `clock.clear` → `ClockSimulationCleared`;
+  `logo.set` → event BARU `LogoChanged(Uint8List?)` (payload
+  `imageBase64`; string kosong/null/payload absen = hapus logo);
+  `ping` → dibalas `state.snapshot`.
+- Aturan balasan: perintah sukses dibalas `ack` (payload
+  `ofType` = tipe perintah) lalu `state.snapshot` terbaru
+  menyusul satu putaran event-loop kemudian (pola PROTOCOL.md
+  core §5; jeda itu memberi kesempatan store menerapkan event
+  yang baru di-emit, karena pengantaran stream async — snapshot
+  tidak basi). Perintah gagal (format payload salah, jadwal
+  tidak lolos validasi) dibalas `error` berisi alasan, dan
+  TIDAK ada event yang di-emit: jadwal lama tetap tampil utuh.
+  Paket yang gagal decode oleh codec tidak pernah sampai ke
+  sumber sebagai paket — server core mengalirkannya ke stream
+  `invalidPackets`; sumber cukup menghitung
+  (`jumlahPaketTidakValid`) + mencatat log, koneksi tidak
+  putus. Paket arah balasan (`ack`/`state.snapshot`/`error`)
+  yang sampai ke display diabaikan tanpa balasan.
+- Snapshot dimiliki store: `DisplayStore.snapshotPaket()`
+  mengembalikan payload `state.snapshot` — `status` (nama
+  StatusSekolah, atau `belumSiap`), `jamEfektif` (ISO-8601,
+  sudah termasuk offset simulasi), `simulasiAktif`, `mading`,
+  `hasLogo`, `jamKeAktif`, `slotAktif` {mulai, selesai, tipe,
+  label}, `belBerikutnya`, `sisaKeBelDetik`, dan ringkasan
+  `jadwal` {sekolah, judul, tahunPelajaran, jurusan,
+  jumlahKelas, jumlahHari, hariAktif}. Sumber menerimanya
+  sebagai callback `PenyediaSnapshot` yang dihubungkan di
+  komposisi aplikasi — layer sources tidak tahu bentuk state
+  tampilan. Bentuk payload ini kontrak untuk nekios-remote
+  (R2) sebagai cermin keadaan display.
+- Store menerima dua event baru: `LogoChanged` → field
+  `logoBytes`, diteruskan apa adanya ke `HeaderSekolah` di
+  kedua layout (jalur ADR-008 akhirnya terisi); dan
+  `RemoteConnectionChanged(bool)` → field `remoteTerhubung`.
+- Indikator koneksi: titik `tertiary` + label kecil
+  "Remote terhubung" (`onSurfaceVariant`) di ujung kanan bar
+  mading, HANYA selama ada klien tersambung. Bar mading dipilih
+  karena ia bar utilitas full-width di dasar layar yang selalu
+  tampil di semua layout — header dan konten utama tidak
+  berubah sama sekali, dan indikator terbaca sebagai status,
+  bukan konten. Karena `NekiosServer` tidak menyediakan stream
+  sambung/putus, status diturunkan dari `clientCount` yang
+  diperiksa berkala (bawaan 1 detik) dan diterbitkan sebagai
+  `RemoteConnectionChanged` hanya saat berubah.
+- Pola gagal-bind: `CoreWebSocketSource.start()` TIDAK pernah
+  melempar. Gagal mengikat port (mis. sudah dipakai) ditandai
+  `gagalBind`/`galatBind` + log, dan display berjalan normal
+  dengan sumber asset saja. Komposisi di `main.dart` menjalankan
+  kedua sumber bersamaan: `AssetScheduleSource` tetap sumber
+  jadwal awal/default; sumber remote menimpa lewat event yang
+  sama. `start()` juga menjaga balapan dispose-saat-bind:
+  sumber yang dibuang selagi bind berjalan mematikan servernya
+  dan tidak membuat langganan/timer.
+- Testabilitas komposisi: `NekiosSchoolApp` menerima parameter
+  opsional `sumberRemote` (bawaan: `CoreWebSocketSource`
+  sungguhan). Widget test menginjeksi sumber palsu diam karena
+  `HttpServer` dart:io tidak bisa hidup di zona FakeAsync
+  testWidgets (timer internal `idleTimeout`-nya dianggap bocor
+  oleh invariant test) — perilaku server sungguhan diuji di
+  test integrasi `test/sources/core_websocket_source_test.dart`
+  dengan server di port acak + `NekiosKlien` asli.
+
+Konsekuensi: display kini bisa dikendalikan penuh dari jaringan
+lokal (jadwal, mading, simulasi jam, logo) tanpa mengubah UI
+maupun domain; R2 tinggal membangun klien remote di atas
+kontrak snapshot di atas. Keterbatasan yang disadari:
+granularitas indikator koneksi = interval periksa (1 detik);
+logo hanya bisa dipasang dari remote (belum ada pemilih logo
+lokal); dan sesuai keputusan protokol v1, belum ada
+autentikasi — diasumsikan LAN pameran terpercaya.
