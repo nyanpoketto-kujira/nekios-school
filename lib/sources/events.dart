@@ -6,6 +6,8 @@
 /// berasal dari mana.
 library;
 
+import 'dart:typed_data';
+
 import '../domain/domain.dart';
 
 /// Kelas dasar tertutup untuk semua event tampilan. `sealed` membuat
@@ -42,4 +44,25 @@ final class ClockSimulated extends DisplayEvent {
 /// Simulasi jam dibatalkan; tampilan kembali ke jam sistem.
 final class ClockSimulationCleared extends DisplayEvent {
   const ClockSimulationCleared();
+}
+
+/// Logo sekolah diganti dari remote (Fase R1, paket `logo.set`).
+/// [bytes] adalah byte gambar yang sudah di-decode dari base64;
+/// `null` berarti logo dihapus — header kembali tampil tanpa kotak
+/// logo (ADR-008). Store meneruskannya apa adanya ke HeaderSekolah.
+final class LogoChanged extends DisplayEvent {
+  const LogoChanged(this.bytes);
+
+  final Uint8List? bytes;
+}
+
+/// Status koneksi remote berubah (Fase R1): [terhubung] true saat
+/// ada klien WebSocket tersambung ke sumber remote, false saat
+/// klien terakhir putus. Diterbitkan sumber remote sendiri dari
+/// pengamatannya atas jumlah klien server; store menyimpannya
+/// untuk indikator halus di UI.
+final class RemoteConnectionChanged extends DisplayEvent {
+  const RemoteConnectionChanged(this.terhubung);
+
+  final bool terhubung;
 }
