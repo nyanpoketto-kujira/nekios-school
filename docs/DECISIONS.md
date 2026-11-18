@@ -427,3 +427,44 @@ terakhir (tidak ada baris yang mulai lebih dulu), chip kolom
 terakhir baru masih 0, dan gerak meluncur chip terukur dari
 posisi render (chip keluar tenggelam >10 satuan dari posisi
 diamnya; chip masuk tiba dari bawah posisi akhirnya).
+
+## ADR-012: Fase 5 finishing — wakelock + immersive fullscreen (2026-11-18)
+
+Konteks: display pameran berjalan tanpa operator di depan TV.
+Dua risiko finishing tersisa di `main`: (1) bar sistem Android
+bisa tampil dan mengecilkan area konten; (2) layar TV bisa tidur
+di tengah pameran. nekios-mosque tv_display sudah menyelesaikan
+keduanya sejak lama di `main()`-nya — Fase 5 mem-porting pola
+itu persis, seperti porting WavyProgressBar (ADR-007).
+
+Keputusan:
+- `lib/main.dart`: `main()` menjadi async —
+  `WidgetsFlutterBinding.ensureInitialized()`, lalu
+  `aktifkanModeKios()`, lalu `runApp`. Di dalam
+  `aktifkanModeKios()`: `SystemChrome.setEnabledSystemUIMode(
+  SystemUiMode.immersiveSticky)` (fire-and-forget via
+  `unawaited`, idiom file ini; perilaku sama dengan panggilan
+  telanjang di tv_display), lalu `WakelockPlus.enable()` di-await
+  di dalam try/catch dengan `debugPrint` saat gagal — persis
+  pola aslinya. Kegagalan platform TIDAK pernah menggagalkan
+  startup: aplikasi tetap jalan, layar hanya berisiko tidur.
+- Dependensi `wakelock_plus: ^1.2.8` ditambahkan ke
+  pubspec.yaml — constraint yang sama dengan tv_display.
+- Aktivasi diekstrak ke fungsi bernama `aktifkanModeKios()`
+  (satu-satunya penyesuaian dari pola asli yang inline) agar
+  bisa diuji langsung tanpa menjalankan `main()`.
+- Hook verifikasi `--dart-define=SIM_NOW` tidak berubah sama
+  sekali: tetap dibaca dari environment yang sama dan dipakai
+  tick dengan cara yang sama.
+
+Konsekuensi: TV tampil fullscreen tanpa bar sistem dan tidak
+tidur selama aplikasi berjalan; tidak ada pengaturan baru dan
+tidak ada perubahan perilaku tampilan lain. Test
+`test/main_test.dart` mengunci janji mode kios: mock channel
+platform + channel Pigeon wakelock membuktikan kedua
+pemanggilan benar-benar terjadi (mode immersiveSticky + satu
+toggle enable), amplop error Pigeon membuktikan
+`aktifkanModeKios()` tetap selesai normal saat wakelock gagal,
+dan widget test membuktikan `NekiosSchoolApp` tetap pump
+normal. Verifikasi live di emulator (layar tetap bangun, tanpa
+bar sistem) menyusul lewat build APK terpisah.

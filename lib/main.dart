@@ -11,6 +11,8 @@ library;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'sources/sources.dart';
 import 'state/state.dart';
@@ -23,7 +25,29 @@ const String _simNowMentah = String.fromEnvironment('SIM_NOW');
 DateTime? get _simNow =>
     _simNowMentah.isEmpty ? null : DateTime.tryParse(_simNowMentah);
 
-void main() {
+/// Aktifkan mode kios TV: fullscreen immersive + layar tidak tidur
+/// (Fase 5 — ADR-012; porting pola nekios-mosque tv_display).
+///
+/// Kegagalan platform TIDAK boleh menggagalkan startup aplikasi:
+/// wakelock dibungkus try/catch persis pola aslinya — bila gagal,
+/// aplikasi tetap jalan (layar hanya berisiko tidur).
+Future<void> aktifkanModeKios() async {
+  // Sembunyikan bar sistem: pengalaman TV layar penuh.
+  unawaited(
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky),
+  );
+
+  // Cegah layar TV tidur di tengah pameran.
+  try {
+    await WakelockPlus.enable();
+  } catch (e) {
+    debugPrint('Wakelock enable failed: $e');
+  }
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await aktifkanModeKios();
   runApp(const NekiosSchoolApp());
 }
 
