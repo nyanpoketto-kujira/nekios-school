@@ -105,4 +105,52 @@ void main() {
       expect(find.text('24:36'), findsOneWidget);
     });
   });
+
+  group('Regresi overflow fraksional Rabu 13:45 (laporan TV 2026-11-18)', () {
+    // Screenshot TV asli: "BOTTOM OVERFLOWED BY 0.0145 PIXELS" pada
+    // baris 12.45–13.30. Komposisi jendela Rabu siang — ISOMA
+    // selesai (flex 62) + pelajaran 12.45–13.30 selesai (62) + aktif
+    // 13.30–14.15 (136) + berikutnya (92) + akan datang (92) —
+    // membuat jatah flex baris selesai jatuh sedikit di bawah
+    // tinggi tetap kolom waktu (jam + label status) dan kolom chip.
+    // Perbaikan: kedua kolom dibungkus FittedBox scaleDown di
+    // timeline_jendela.dart (ADR-014). Test menyapu tinggi logis
+    // 528–540 pada DPR 2.0 karena batas lubernya bergerak mengikuti
+    // skala; semuanya harus bersih.
+    testWidgets('DPR 2.0: sapuan tinggi 528–540 tidak ada overflow', (
+      tester,
+    ) async {
+      addTearDown(tester.view.reset);
+      for (final tinggiLogis in [540.0, 536.0, 532.0, 528.0]) {
+        tester.view.physicalSize = Size(1920, tinggiLogis * 2);
+        tester.view.devicePixelRatio = 2.0;
+        final store = _storePada(DateTime(2026, 11, 18, 13, 45));
+        await _pumpLayar(tester, store);
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: 'overflow pada tinggi logis $tinggiLogis',
+        );
+        store.dispose();
+        await tester.pumpWidget(const SizedBox());
+      }
+    });
+
+    testWidgets('DPR 2.0: konten Rabu 13:45 tampil utuh di 540', (
+      tester,
+    ) async {
+      _aturPermukaan(tester, 2.0);
+      final store = _storePada(DateTime(2026, 11, 18, 13, 45));
+      addTearDown(store.dispose);
+
+      await _pumpLayar(tester, store);
+      expect(tester.takeException(), isNull);
+      expect(find.text('JADWAL HARI INI — RABU'), findsOneWidget);
+      // 'SEDANG BERLANGSUNG' tampil dua kali: strip status bel
+      // (labelLarge) + label kolom waktu baris aktif (labelSmall).
+      expect(find.text('SEDANG BERLANGSUNG'), findsWidgets);
+      expect(find.text('SELESAI'), findsWidgets);
+      expect(find.text('BERIKUTNYA'), findsWidgets);
+    });
+  });
 }

@@ -567,6 +567,37 @@ logo hanya bisa dipasang dari remote (belum ada pemilih logo
 lokal); dan sesuai keputusan protokol v1, belum ada
 autentikasi — diasumsikan LAN pameran terpercaya.
 
+## ADR-014: Jaminan anti-luber kolom timeline — FittedBox scaleDown (2026-11-18)
+
+**Konteks.** Screenshot TV asli (Rabu 2026-11-18 ±13.45) menunjukkan
+"BOTTOM OVERFLOWED BY 0.0145 PIXELS" pada baris 12.45–13.30 grid
+Jadwal Hari Ini. Baris timeline tingginya datang dari bagi flex
+fraksional (bobot selesai 62 dari total 444 pada komposisi jendela
+Rabu siang: ISOMA selesai + pelajaran selesai + aktif + berikutnya
++ akan datang), sedangkan kolom waktu (jam + label status) dan isi
+chip (kode + guru) tingginya tetap. Pada komposisi itu jatah flex
+baris selesai jatuh sepersekian piksel di bawah tinggi kolom —
+test regresi 1080p yang ada (Selasa 09:20) tidak menangkapnya
+karena komposisi jendelanya berbeda. Reproduksi test: komposisi
+Rabu 13:45 melempar exception overflow pada seluruh sapuan tinggi
+logis 528–540 (DPR 2.0).
+
+**Keputusan.** Kolom waktu `_isiPelajaran` dan kolom isi
+`_ChipKelas` di `timeline_jendela.dart` dibungkus
+`FittedBox(fit: BoxFit.scaleDown)` (kolom waktu dengan alignment
+centerLeft). ScaleDown berskala tepat 1 bila ruang cukup — tampilan
+tidak berubah — dan menyusut sepersekian persen bila jatah flex
+kurang, sehingga kedua kolom tidak pernah meluber pada komposisi
+jendela dan ukuran viewport mana pun. Test regresi baru di
+`display_screen_1080_test.dart` menyapu tinggi logis 528–540 pada
+komposisi Rabu 13:45 dan memeriksa konten tampil utuh.
+
+**Konsekuensi.** Kelas overflow fraksional di baris timeline
+tertutup secara struktural, bukan dengan menggeser angka flex/font
+yang batasnya bergerak mengikuti komposisi. Penyusutan maksimum
+yang teramati pada reproduksi ±2px dari ±21px (±10% pada font 20
+satuan desain di baris selesai) — tidak kasatmata di TV.
+
 ## ADR-015: Desktop pameran — kios fullscreen Windows/Linux + build CI (2026-11-19)
 
 Konteks: perangkat stand pameran sekolah (23/24 Nov 2026) hanya
