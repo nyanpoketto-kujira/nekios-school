@@ -6,6 +6,12 @@
 /// Bila mading kosong, tampil teks sambutan default sekolah. Marquee
 /// sederhana: jeda di awal, scroll horizontal berulang, jeda lagi
 /// setiap putaran.
+///
+/// Sejak Fase R1 bar ini juga memuat indikator koneksi remote
+/// (ADR-013): titik + label kecil "Remote terhubung" di ujung kanan
+/// bar, hanya selama ada remote tersambung. Bar utilitas di dasar
+/// layar dipilih karena paling tidak mengganggu — header dan konten
+/// utama tidak berubah sama sekali.
 library;
 
 import 'dart:async';
@@ -19,6 +25,7 @@ class RunningTextMading extends StatefulWidget {
     super.key,
     required this.teks,
     this.namaSekolah,
+    this.remoteTerhubung = false,
   });
 
   /// Teks mading aktif dari store (boleh kosong).
@@ -26,6 +33,11 @@ class RunningTextMading extends StatefulWidget {
 
   /// Nama sekolah untuk teks sambutan default.
   final String? namaSekolah;
+
+  /// Status koneksi remote dari store (Fase R1): true selama ada
+  /// klien WebSocket tersambung → indikator kecil tampil di ujung
+  /// kanan bar; false → bar persis seperti semula.
+  final bool remoteTerhubung;
 
   /// Teks yang benar-benar ditampilkan: mading bila ada, default bila
   /// kosong.
@@ -159,6 +171,37 @@ class _RunningTextMadingState extends State<RunningTextMading> {
               ],
             ),
           ),
+          // Indikator koneksi remote (Fase R1, ADR-013): hanya
+          // selama remote tersambung; titik tertiary + label kecil
+          // onSurfaceVariant agar terbaca sebagai status, bukan
+          // konten. Lebar marquee menyusut sebatas segmen ini.
+          if (widget.remoteTerhubung)
+            Padding(
+              key: const Key('indikator-remote'),
+              padding: EdgeInsets.only(right: 20 * s),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 9 * s,
+                    height: 9 * s,
+                    decoration: BoxDecoration(
+                      color: colorScheme.tertiary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  SizedBox(width: 8 * s),
+                  Text(
+                    'Remote terhubung',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14 * s,
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );

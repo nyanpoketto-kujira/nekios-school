@@ -64,10 +64,12 @@ class DisplayScreen extends StatelessWidget {
                       children: [
                         Expanded(child: _isi(context)),
                         // Bar mading full-width di dasar layar, membaca
-                        // teks dari store (event MadingChanged).
+                        // teks dari store (event MadingChanged) dan
+                        // status koneksi remote (Fase R1).
                         RunningTextMading(
                           teks: store.mading,
                           namaSekolah: store.data?.sekolah,
+                          remoteTerhubung: store.remoteTerhubung,
                         ),
                       ],
                     );
@@ -123,9 +125,9 @@ class DisplayScreen extends StatelessWidget {
   /// isinya — nama status, countdown, bel berikutnya — sama persis
   /// dengan yang ditampilkan hero, jadi fungsi dobel. Strip hanya
   /// tampil di layout Pelajaran.
-  /// HeaderSekolah juga dipanggil tanpa logoBytes (default null):
-  /// logo sekolah dari state/remote belum ada — jalurnya disiapkan
-  /// di HeaderSekolah, pengisiannya fase berikutnya (ADR-008).
+  /// Logo header datang dari store (`logoBytes`, event LogoChanged
+  /// dari remote — ADR-008 + ADR-013); tanpa logo, header tampil
+  /// persis seperti semula.
   Widget _layoutHero(
     BuildContext context,
     JadwalData data,
@@ -138,15 +140,16 @@ class DisplayScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeaderSekolah(data: data, sekarang: keadaan.sekarang),
+          HeaderSekolah(
+            data: data,
+            sekarang: keadaan.sekarang,
+            logoBytes: store.logoBytes,
+          ),
           SizedBox(height: 16 * s),
           // Hero menyerap ruang yang dulu dipakai strip lewat flex,
           // berbagi sisa ruang dengan timeline (4:7, sama seperti
           // layout Pelajaran) — tidak ada tinggi pengganti yang kaku.
-          Expanded(
-            flex: 4,
-            child: HeroStatus(keadaan: keadaan),
-          ),
+          Expanded(flex: 4, child: HeroStatus(keadaan: keadaan)),
           SizedBox(height: 16 * s),
           Expanded(
             flex: 7,
@@ -255,7 +258,11 @@ class _LayarPelajaranState extends State<_LayarPelajaran> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeaderSekolah(data: data, sekarang: keadaan.sekarang),
+          HeaderSekolah(
+            data: data,
+            sekarang: keadaan.sekarang,
+            logoBytes: widget.store.logoBytes,
+          ),
           SizedBox(height: 16 * s),
           StripStatusBel(keadaan: keadaan),
           SizedBox(height: 18 * s),
