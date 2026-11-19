@@ -604,3 +604,30 @@ Keputusan:
   nekios-core, lintas platform. Catatan operasional Windows:
   prompt Windows Firewall saat pertama jalan harus disetujui
   (Allow, jaringan Private) agar remote bisa menyambung.
+
+## ADR-016 — Zip Windows portabel: DLL runtime VC++ dibungkus ke bundle
+
+Konteks (2026-11-19): build Windows dari ADR-015 terverifikasi di PC
+pameran asli (Windows 10 1803), tetapi awalnya GAGAL jalan — proses
+berhenti seketika dengan kode 0xC0000135 (DLL tidak ditemukan)
+karena PC itu belum memiliki Visual C++ Redistributable 2015–2022:
+aplikasi Flutter Windows bergantung pada `msvcp140.dll`,
+`vcruntime140.dll`, dan `vcruntime140_1.dll` yang tidak termasuk
+dalam bundle bawaan `flutter build`. Setelah redistributable
+dipasang, aplikasi berjalan normal (fullscreen, server 8920,
+remote tersambung). PC stand pameran tidak bisa diasumsikan sudah
+memiliki redistributable ini.
+
+Keputusan:
+
+- **Job `build-windows` menyalin 3 DLL redist** (`msvcp140.dll`,
+  `vcruntime140.dll`, `vcruntime140_1.dll`) dari System32 runner CI
+  ke folder bundle Release, bersebelahan dengan `nekios_school.exe`,
+  sebelum di-zip. Windows mencari DLL di folder aplikasi lebih dulu
+  daripada System32, jadi zip berjalan di PC Windows mana pun tanpa
+  memasang redistributable (penyebaran app-local, pola resmi
+  Microsoft untuk DLL-DLL redistributable ini).
+- **Gagal keras bila DLL tidak ditemukan** di runner — zip yang
+  tidak portabel tidak boleh terkirim diam-diam.
+- PC yang sudah memasang redistributable tidak terpengaruh: salinan
+  app-local dan salinan sistem berasal dari runtime yang sama.

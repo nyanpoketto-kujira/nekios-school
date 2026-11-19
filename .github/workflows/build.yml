@@ -136,6 +136,25 @@ jobs:
           }
           flutter build windows --release @defineArgs
 
+      # Zip harus portabel: aplikasi Flutter Windows butuh runtime
+      # Visual C++ (msvcp140/vcruntime140) yang TIDAK selalu ada di PC
+      # tujuan — terbukti di PC pameran 2026-11-19 (gagal jalan,
+      # 0xC0000135). Salin 3 DLL redist dari runner ke sebelah .exe
+      # (Windows mencari DLL di folder aplikasi lebih dulu), jadi zip
+      # jalan di PC mana pun tanpa memasang redistributable. Lihat
+      # ADR-016. Gagal keras bila ada DLL yang tidak ditemukan supaya
+      # zip non-portabel tidak pernah terkirim diam-diam.
+      - name: Bundle VC++ runtime DLLs (zip portabel)
+        shell: pwsh
+        run: |
+          $bundle = 'build/windows/x64/runner/Release'
+          foreach ($dll in 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll') {
+            $src = Join-Path $env:SystemRoot "System32\$dll"
+            if (-not (Test-Path $src)) { throw "DLL tidak ditemukan di runner: $src" }
+            Copy-Item $src (Join-Path $bundle $dll) -Force
+          }
+          Get-ChildItem $bundle -Filter *.dll | Select-Object Name, Length
+
       - name: Zip bundle
         shell: pwsh
         run: |
