@@ -76,21 +76,16 @@ class DisplayScreen extends StatelessWidget {
                     );
                   },
                 ),
-                // Floating Spotlight Pergantian Jam (ADR-017): panel
-                // melayang 60 detik setiap masuk slot pelajaran baru.
-                // Wilayahnya menyisakan header jam (atas) dan bar
-                // mading (bawah) tetap terlihat.
+                // Spotlight Pergantian Jam (ADR-017): tampilan layar
+                // penuh 60 detik setiap masuk slot pelajaran baru,
+                // menutupi seluruh layar utama selama tampil.
                 ListenableBuilder(
                   listenable: store,
                   builder: (context, _) {
                     if (!spotlightSedangTampil(store)) {
                       return const SizedBox.shrink();
                     }
-                    return Positioned(
-                      left: 40 * skala,
-                      right: 40 * skala,
-                      top: 168 * skala,
-                      bottom: 84 * skala,
+                    return Positioned.fill(
                       child: SpotlightPergantian(store: store),
                     );
                   },

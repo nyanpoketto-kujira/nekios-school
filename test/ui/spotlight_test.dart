@@ -8,7 +8,11 @@ import 'package:nekios_school/ui/ui.dart';
 
 /// Data uji: [jumlahKelas] kelas, satu slot pelajaran Senin
 /// 07.00–07.45 berisi entri untuk semua kelas.
-JadwalData dataUji(int jumlahKelas) {
+JadwalData dataUji(
+  int jumlahKelas, {
+  String kodeMapel = 'DDBP',
+  String namaMapel = 'Dasar-Dasar Pemrograman',
+}) {
   final kelas = [
     for (var i = 1; i <= jumlahKelas; i++)
       Kelas(id: 'K$i', nama: 'Kelas $i', urutan: i),
@@ -20,8 +24,8 @@ JadwalData dataUji(int jumlahKelas) {
     jurusan: 'TKJ',
     kelas: kelas,
     guru: const [Guru(kg: 1, nama: 'Rudi, S.T.', terverifikasi: true)],
-    mapel: const [
-      Mapel(kode: 'DDBP', namaPanjang: 'Dasar-Dasar Pemrograman', warna: '#1'),
+    mapel: [
+      Mapel(kode: kodeMapel, namaPanjang: namaMapel, warna: '#1'),
     ],
     hari: [
       HariJadwal(
@@ -31,7 +35,9 @@ JadwalData dataUji(int jumlahKelas) {
             mulai: '07.00',
             selesai: '07.45',
             tipe: SlotTipe.pelajaran,
-            entri: {for (final k in kelas) k.id: const Entri(mapel: 'DDBP', kg: 1)},
+            entri: {
+              for (final k in kelas) k.id: Entri(mapel: kodeMapel, kg: 1),
+            },
           ),
         ],
       ),
@@ -67,11 +73,17 @@ void main() {
   group('SpotlightPergantian (widget)', () {
     Future<DisplayStore> siapkan(
       WidgetTester tester,
-      int jumlahKelas,
-    ) async {
+      int jumlahKelas, {
+      String kodeMapel = 'DDBP',
+      String namaMapel = 'Dasar-Dasar Pemrograman',
+    }) async {
       final store = DisplayStore();
       addTearDown(store.dispose);
-      store.terima(ScheduleReplaced(dataUji(jumlahKelas)));
+      store.terima(
+        ScheduleReplaced(
+          dataUji(jumlahKelas, kodeMapel: kodeMapel, namaMapel: namaMapel),
+        ),
+      );
       store.tick(senin(6, 59));
       store.tick(senin(7, 0)); // masuk jam ke-1 -> spotlight mulai
       await tester.pumpWidget(
@@ -128,6 +140,27 @@ void main() {
       await tester.pump();
       expect(spotlightSedangTampil(store), isFalse);
       expect(find.text('Pergantian Jam'), findsNothing);
+    });
+
+    testWidgets(
+        'nama mapel terpanjang (PJOK) tampil utuh tanpa overflow '
+        'di kartu fullscreen', (tester) async {
+      tester.view.physicalSize = const Size(1920, 1080);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await siapkan(
+        tester,
+        6,
+        kodeMapel: 'PJOK',
+        namaMapel: 'Pendidikan Jasmani, Olahraga, dan Kesehatan',
+      );
+      // Teks penuh ada di setiap kartu (membungkus 2 baris, tidak
+      // terpotong ellipsis) dan tidak ada pengecualian overflow.
+      expect(
+        find.text('Pendidikan Jasmani, Olahraga, dan Kesehatan'),
+        findsNWidgets(6),
+      );
+      expect(tester.takeException(), isNull);
     });
   });
 }

@@ -632,7 +632,7 @@ Keputusan:
 - PC yang sudah memasang redistributable tidak terpengaruh: salinan
   app-local dan salinan sistem berasal dari runtime yang sama.
 
-## ADR-017 — Audio Bel statis ter-bundel + Floating Spotlight Pergantian Jam
+## ADR-017 — Audio Bel statis ter-bundel + Spotlight Pergantian Jam layar penuh
 
 Konteks (2026-11-19, menuju pameran 23 Nov 2026): bel sekolah perlu
 berbunyi di display. Rancangan awal (TTS dinamis yang merakit
@@ -670,14 +670,21 @@ Keputusan:
   berbunyi (uji manual yang disengaja) memainkan pengumuman slot
   berjalan (di luar slot: contoh jam ke-1). Pemutaran tercatat di
   `belTerakhir` dan terkirim di snapshot sebagai bukti bunyi.
-- **Pengganti panggil guru = Floating Spotlight Pergantian Jam**:
-  panel melayang 60 detik pertama setiap masuk slot PELAJARAN baru,
-  menampilkan Kelas + Mapel + Guru slot itu untuk semua kelas.
-  Grid 4×3 = 12 kartu per halaman (dikunci nyanpo); kelas lebih dari
-  12 berpindah halaman otomatis membagi rata 60 detik. Semua
-  keadaan (tampil/hilang, halaman, sisa waktu) diturunkan murni dari
+- **Pengganti panggil guru = Spotlight Pergantian Jam**: tampilan
+  60 detik pertama setiap masuk slot PELAJARAN baru, menampilkan
+  Kelas + Mapel + Guru slot itu untuk semua kelas. Grid 4 kolom,
+  12 kartu per halaman (dikunci nyanpo); kelas lebih dari 12
+  berpindah halaman otomatis membagi rata 60 detik. Semua keadaan
+  (tampil/hilang, halaman, sisa waktu) diturunkan murni dari
   `KeadaanSpotlight` (slot + jamKe + mulaiEfektif) dan jam efektif —
-  tanpa timer di widget. Wilayah overlay menyisakan header jam dan
-  bar mading tetap terlihat. Spotlight tampil juga saat bel
-  nonaktif (visual bukan suara); masuk slot non-pelajaran
-  menghapusnya.
+  tanpa timer di widget. Spotlight tampil juga saat bel nonaktif
+  (visual bukan suara); masuk slot non-pelajaran menghapusnya.
+  **Revisi 2026-11-19 (perintah nyanpo, dari bukti rig):** bentuk
+  panel melayang diganti LAYAR PENUH menutupi seluruh tampilan, dan
+  kartu spotlight memakai widget yang sama persis dengan kartu
+  "Sedang Berlangsung" layar utama (`KartuKelasSekarang`) — kartu
+  padat khusus spotlight terbukti meluap (overflow piksel font asli)
+  dan memotong nama mapel panjang; kartu utama membungkus nama
+  mapel utuh maksimal 2 baris tanpa terpotong. Baris grid mengikuti
+  isi halaman (1–3) supaya sedikit kelas tampil besar memenuhi
+  layar.

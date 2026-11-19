@@ -1,25 +1,33 @@
-/// "Floating Spotlight Pergantian Jam" (ADR-017): panel melayang
-/// yang tampil 60 detik pertama setiap masuk slot pelajaran baru,
-/// menampilkan kelas + mapel + guru jam tersebut untuk SEMUA kelas
-/// sekaligus — pengganti visual pemanggilan nama guru lewat suara.
+/// "Spotlight Pergantian Jam" (ADR-017, revisi 2026-11-19):
+/// tampilan LAYAR PENUH yang tampil 60 detik pertama setiap masuk
+/// slot pelajaran baru, menampilkan kelas + mapel + guru jam
+/// tersebut untuk SEMUA kelas sekaligus — pengganti visual
+/// pemanggilan nama guru lewat suara.
+///
+/// Kartunya memakai widget yang sama persis dengan kartu "Sedang
+/// Berlangsung" di layar utama ([KartuKelasSekarang]): nama panjang
+/// mapel tampil utuh membungkus maksimal 2 baris tanpa terpotong,
+/// termasuk nama terpanjang (PJOK). Satu halaman menampung
+/// 4 kolom × 3 baris = 12 kartu; kelas lebih dari itu berpindah
+/// halaman otomatis membagi rata 60 detik.
 ///
 /// Semua keadaan diturunkan murni dari [DisplayStore.spotlight] +
-/// jam efektif: tidak ada timer di widget ini. Halaman menampung
-/// 4×3 = 12 kartu; kelas lebih dari itu berpindah halaman otomatis
-/// membagi rata 60 detik (indikator halaman di bawah panel).
+/// jam efektif: tidak ada timer di widget ini.
 library;
 
 import 'package:flutter/material.dart';
 
-import '../domain/domain.dart';
 import '../state/state.dart';
-import '../theme/theme.dart';
 import 'indikator_halaman.dart';
+import 'kartu_kelas.dart';
 import 'skala_tampilan.dart';
 import 'wavy_progress_bar.dart';
 
 /// Kapasitas kartu per halaman spotlight: grid 4 kolom × 3 baris.
 const int kKapasitasHalamanSpotlight = 12;
+
+/// Jumlah kolom grid spotlight (mengikuti grid kartu layar utama).
+const int kKolomSpotlight = 4;
 
 /// Apakah spotlight harus tampil pada keadaan store saat ini.
 /// Dipakai [DisplayScreen] untuk memutuskan mount; widget sendiri
@@ -79,213 +87,127 @@ class SpotlightPergantian extends StatelessWidget {
             kKapasitasHalamanSpotlight;
     final halaman = halamanSpotlight(berentri.length, berlalu.inSeconds);
     final awal = halaman * kKapasitasHalamanSpotlight;
-    final tampil = berentri.skip(awal).take(kKapasitasHalamanSpotlight);
+    final tampil = berentri.skip(awal).take(kKapasitasHalamanSpotlight).toList();
     final sisaDetik = KeadaanSpotlight.durasi.inSeconds - berlalu.inSeconds;
+    // Baris grid mengikuti isi halaman ini (1–3): sedikit kelas =
+    // kartu lebih besar memenuhi layar, bukan mengambang kecil.
+    final baris = (tampil.length + kKolomSpotlight - 1) ~/ kKolomSpotlight;
+    final jarak = 18 * s;
 
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Peredup konten di belakang panel pada wilayah overlay.
-        ColoredBox(color: Colors.black.withValues(alpha: 0.45)),
+        // Layar penuh: latar permukaan nyaris pekat menutupi seluruh
+        // tampilan utama selama spotlight berjalan.
+        ColoredBox(color: cs.surface.withValues(alpha: 0.97)),
         Padding(
-          padding: EdgeInsets.all(28 * s),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: cs.surfaceContainer,
-              borderRadius: BorderRadius.circular(36 * s),
-            ),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(44 * s, 32 * s, 44 * s, 28 * s),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+          padding: EdgeInsets.fromLTRB(40 * s, 36 * s, 40 * s, 32 * s),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.campaign_rounded,
-                        size: 44 * s,
-                        color: cs.tertiary,
-                      ),
-                      SizedBox(width: 20 * s),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Pergantian Jam',
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                color: cs.onSurface,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              'Jam Pelajaran ke-${sp.jamKe} • '
-                              '${sp.slot.mulai}–${sp.slot.selesai}',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                color: cs.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Chip(
-                        avatar: Icon(
-                          Icons.timer_outlined,
-                          size: 22 * s,
-                          color: cs.onTertiaryContainer,
-                        ),
-                        label: Text('$sisaDetik detik'),
-                        backgroundColor: cs.tertiaryContainer,
-                        labelStyle: theme.textTheme.titleMedium?.copyWith(
-                          color: cs.onTertiaryContainer,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        side: BorderSide.none,
-                      ),
-                    ],
+                  Icon(
+                    Icons.campaign_rounded,
+                    size: 44 * s,
+                    color: cs.tertiary,
                   ),
-                  SizedBox(height: 22 * s),
+                  SizedBox(width: 20 * s),
                   Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 18 * s,
-                      crossAxisSpacing: 18 * s,
-                      childAspectRatio: 2.35,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Pergantian Jam',
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            color: cs.onSurface,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Jam Pelajaran ke-${sp.jamKe} • '
+                          '${sp.slot.mulai}–${sp.slot.selesai}',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: cs.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Chip(
+                    avatar: Icon(
+                      Icons.timer_outlined,
+                      size: 22 * s,
+                      color: cs.onTertiaryContainer,
+                    ),
+                    label: Text('$sisaDetik detik'),
+                    backgroundColor: cs.tertiaryContainer,
+                    labelStyle: theme.textTheme.titleMedium?.copyWith(
+                      color: cs.onTertiaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    side: BorderSide.none,
+                  ),
+                ],
+              ),
+              SizedBox(height: 22 * s),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final lebarSel =
+                        (constraints.maxWidth - (kKolomSpotlight - 1) * jarak) /
+                            kKolomSpotlight;
+                    final tinggiSel =
+                        (constraints.maxHeight - (baris - 1) * jarak) / baris;
+                    return GridView.count(
+                      crossAxisCount: kKolomSpotlight,
+                      mainAxisSpacing: jarak,
+                      crossAxisSpacing: jarak,
+                      childAspectRatio: lebarSel / tinggiSel,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         for (final kelas in tampil)
-                          _KartuSpotlight(
+                          KartuKelasSekarang(
                             kelas: kelas,
                             entri: sp.slot.entri[kelas.id]!,
                             data: data,
                           ),
                       ],
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 18 * s),
+              Row(
+                children: [
+                  Expanded(
+                    child: WavyProgressBar(
+                      progress: sisaDetik / KeadaanSpotlight.durasi.inSeconds,
+                      activeColor: cs.tertiary,
+                      trackColor: cs.tertiary.withValues(alpha: 0.25),
+                      height: 22 * s,
                     ),
                   ),
-                  SizedBox(height: 18 * s),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: WavyProgressBar(
-                          progress: sisaDetik / KeadaanSpotlight.durasi.inSeconds,
-                          activeColor: cs.tertiary,
-                          trackColor: cs.tertiary.withValues(alpha: 0.25),
-                          height: 22 * s,
-                        ),
+                  if (jumlahHalaman > 1) ...[
+                    SizedBox(width: 24 * s),
+                    Text(
+                      'Halaman ${halaman + 1} dari $jumlahHalaman',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: cs.onSurfaceVariant,
                       ),
-                      if (jumlahHalaman > 1) ...[
-                        SizedBox(width: 24 * s),
-                        Text(
-                          'Halaman ${halaman + 1} dari $jumlahHalaman',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: cs.onSurfaceVariant,
-                          ),
-                        ),
-                        SizedBox(width: 16 * s),
-                        IndikatorHalaman(
-                          jumlah: jumlahHalaman,
-                          aktif: halaman,
-                        ),
-                      ],
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: 16 * s),
+                    IndikatorHalaman(
+                      jumlah: jumlahHalaman,
+                      aktif: halaman,
+                    ),
+                  ],
                 ],
               ),
-            ),
+            ],
           ),
         ),
       ],
-    );
-  }
-}
-
-/// Satu kartu kelas pada spotlight: nama kelas + pill kode mapel,
-/// nama panjang mapel, nama guru — padat dan seragam antar kartu.
-class _KartuSpotlight extends StatelessWidget {
-  const _KartuSpotlight({
-    required this.kelas,
-    required this.entri,
-    required this.data,
-  });
-
-  final Kelas kelas;
-  final Entri entri;
-  final JadwalData data;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    final s = SkalaTampilan.of(context);
-    final mapel = data.mapelByKode(entri.mapel);
-    final guru = data.guruByKg(entri.kg);
-    final pill = warnaPillMapel(mapel?.warna ?? '#888888');
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(24 * s),
-      ),
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(24 * s, 18 * s, 24 * s, 16 * s),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    kelas.nama,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: cs.onSurface,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: pill.latar,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14 * s,
-                      vertical: 5 * s,
-                    ),
-                    child: Text(
-                      entri.mapel,
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: pill.teks,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8 * s),
-            Text(
-              mapel?.namaPanjang ?? entri.mapel,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                color: cs.onSurface,
-              ),
-            ),
-            SizedBox(height: 4 * s),
-            Text(
-              guru?.nama ?? 'KG ${entri.kg}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: cs.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
