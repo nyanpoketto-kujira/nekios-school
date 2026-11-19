@@ -26,8 +26,29 @@ import 'wavy_progress_bar.dart';
 /// Kapasitas kartu per halaman spotlight: grid 4 kolom × 3 baris.
 const int kKapasitasHalamanSpotlight = 12;
 
-/// Jumlah kolom grid spotlight (mengikuti grid kartu layar utama).
+/// Jumlah kolom maksimum grid spotlight (mengikuti grid kartu
+/// layar utama).
 const int kKolomSpotlight = 4;
+
+/// Lebar maksimum satu kartu spotlight (px desain, sebelum skala):
+/// selebar kartu "Sedang Berlangsung" di layar utama. Grid TIDAK
+/// dipaksa memenuhi lebar layar — selebihnya dibiarkan kosong di
+/// kiri-kanan dan grid dipusatkan, supaya kartu tidak melebar
+/// berlebihan (perintah nyanpo 2026-11-19).
+const double kLebarMaksKartuSpotlight = 440;
+
+/// Rasio lebar:tinggi kartu spotlight, mengikuti proporsi kartu
+/// layar utama.
+const double kAspekKartuSpotlight = 1.45;
+
+/// Jumlah kolom spotlight untuk [jumlah] kartu pada satu halaman:
+/// sedikit kartu memakai kolom lebih sedikit supaya barisnya
+/// seimbang (6 kartu = 3×2, bukan 4+2 yang timpang).
+int kolomSpotlight(int jumlah) {
+  if (jumlah <= kKolomSpotlight) return jumlah < 1 ? 1 : jumlah;
+  if (jumlah <= 6) return 3;
+  return kKolomSpotlight;
+}
 
 /// Apakah spotlight harus tampil pada keadaan store saat ini.
 /// Dipakai [DisplayScreen] untuk memutuskan mount; widget sendiri
@@ -89,9 +110,6 @@ class SpotlightPergantian extends StatelessWidget {
     final awal = halaman * kKapasitasHalamanSpotlight;
     final tampil = berentri.skip(awal).take(kKapasitasHalamanSpotlight).toList();
     final sisaDetik = KeadaanSpotlight.durasi.inSeconds - berlalu.inSeconds;
-    // Baris grid mengikuti isi halaman ini (1–3): sedikit kelas =
-    // kartu lebih besar memenuhi layar, bukan mengambang kecil.
-    final baris = (tampil.length + kKolomSpotlight - 1) ~/ kKolomSpotlight;
     final jarak = 18 * s;
 
     return Stack(
@@ -154,25 +172,42 @@ class SpotlightPergantian extends StatelessWidget {
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final lebarSel =
-                        (constraints.maxWidth - (kKolomSpotlight - 1) * jarak) /
-                            kKolomSpotlight;
-                    final tinggiSel =
-                        (constraints.maxHeight - (baris - 1) * jarak) / baris;
-                    return GridView.count(
-                      crossAxisCount: kKolomSpotlight,
-                      mainAxisSpacing: jarak,
-                      crossAxisSpacing: jarak,
-                      childAspectRatio: lebarSel / tinggiSel,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        for (final kelas in tampil)
-                          KartuKelasSekarang(
-                            kelas: kelas,
-                            entri: sp.slot.entri[kelas.id]!,
-                            data: data,
-                          ),
-                      ],
+                    final kolom = kolomSpotlight(tampil.length);
+                    final baris = (tampil.length + kolom - 1) ~/ kolom;
+                    // Ukuran kartu dibatasi selebar kartu layar utama
+                    // lalu grid dipusatkan — tidak dipaksa memenuhi
+                    // lebar layar. Bila tinggi tidak cukup (halaman
+                    // penuh 3 baris), kartu menyusut mengikuti tinggi.
+                    var lebarSel =
+                        (constraints.maxWidth - (kolom - 1) * jarak) / kolom;
+                    final lebarMaks = kLebarMaksKartuSpotlight * s;
+                    if (lebarSel > lebarMaks) lebarSel = lebarMaks;
+                    var tinggiSel = lebarSel / kAspekKartuSpotlight;
+                    final tinggiPerlu =
+                        baris * tinggiSel + (baris - 1) * jarak;
+                    if (tinggiPerlu > constraints.maxHeight) {
+                      tinggiSel =
+                          (constraints.maxHeight - (baris - 1) * jarak) /
+                              baris;
+                      lebarSel = tinggiSel * kAspekKartuSpotlight;
+                    }
+                    return Center(
+                      child: GridView.count(
+                        crossAxisCount: kolom,
+                        mainAxisSpacing: jarak,
+                        crossAxisSpacing: jarak,
+                        childAspectRatio: lebarSel / tinggiSel,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          for (final kelas in tampil)
+                            KartuKelasSekarang(
+                              kelas: kelas,
+                              entri: sp.slot.entri[kelas.id]!,
+                              data: data,
+                            ),
+                        ],
+                      ),
                     );
                   },
                 ),

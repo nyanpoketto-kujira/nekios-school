@@ -49,6 +49,17 @@ DateTime senin(int jam, int menit, [int detik = 0]) =>
     DateTime(2026, 11, 16, jam, menit, detik);
 
 void main() {
+  group('kolomSpotlight (murni)', () {
+    test('kolom seimbang mengikuti jumlah kartu', () {
+      expect(kolomSpotlight(1), 1);
+      expect(kolomSpotlight(4), 4);
+      expect(kolomSpotlight(5), 3);
+      expect(kolomSpotlight(6), 3);
+      expect(kolomSpotlight(7), 4);
+      expect(kolomSpotlight(12), 4);
+    });
+  });
+
   group('halamanSpotlight (murni)', () {
     test('12 kelas ke bawah selalu 1 halaman', () {
       expect(halamanSpotlight(6, 0), 0);

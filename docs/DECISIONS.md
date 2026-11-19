@@ -687,4 +687,6 @@ Keputusan:
   dan memotong nama mapel panjang; kartu utama membungkus nama
   mapel utuh maksimal 2 baris tanpa terpotong. Baris grid mengikuti
   isi halaman (1–3) supaya sedikit kelas tampil besar memenuhi
-  layar.
+  layar; lebar kartu dibatasi selebar kartu layar utama dan grid
+  dipusatkan — tidak dipaksa memenuhi lebar layar — supaya tidak
+  melebar berlebihan.
