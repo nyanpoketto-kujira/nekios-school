@@ -631,3 +631,53 @@ Keputusan:
   tidak portabel tidak boleh terkirim diam-diam.
 - PC yang sudah memasang redistributable tidak terpengaruh: salinan
   app-local dan salinan sistem berasal dari runtime yang sama.
+
+## ADR-017 — Audio Bel statis ter-bundel + Floating Spotlight Pergantian Jam
+
+Konteks (2026-11-19, menuju pameran 23 Nov 2026): bel sekolah perlu
+berbunyi di display. Rancangan awal (TTS dinamis yang merakit
+pengumuman dari potongan suara termasuk nama guru, disinkronkan dari
+HP) DIPANGKAS nyanpo demi kualitas + waktu: data suara TTS di HP
+tidak bisa dijamin ada/bagus, dan info per-kelas lebih jelas dibaca
+daripada didengar. Protokol nekios-core bertambah dua tipe perintah
+(`audio.konfigurasi`, `audio.tes`) dan dua field snapshot
+(`belAktif`, `belTerakhir`).
+
+Keputusan:
+
+- **Pengumuman bel = 16 berkas MP3 statis ter-bundel** di
+  `assets/audio/` (chime menyatu di awal tiap berkas; runtime memutar
+  tepat satu berkas per pengumuman — nol perakitan, nol sinkronisasi
+  suara, 100% offline). Pemetaan slot→berkas murni di
+  `lib/domain/bel.dart`: pelajaran memakai nomor jam ke-N; istirahat/
+  ISOMA/upacara berkas tetap; slot khusus dari labelnya (ROHIS/ROKRIS
+  → bel rohis; selainnya → bel kegiatan generik); akhir hari → bel
+  pulang. Nama berkas adalah kontrak: rekaman manusia boleh menimpa
+  berkas yang sama tanpa ubah kode.
+- **Deteksi transisi di DisplayStore**: bel diputuskan dari dua
+  snapshot keadaan berurutan (masuk slot baru / status menjadi
+  pulang). Loncat simulasi jam ikut memicu (jalur demo pameran),
+  KECUALI transisi akibat `clock.clear` dan `schedule.replace` —
+  keduanya ditelan satu kali lewat penanda, karena bukan momen bel.
+  Tick pertama setelah data dimuat tidak pernah berbunyi.
+- **Store tidak menyentuh audio**: store menerbitkan nama berkas ke
+  `streamBel`; lapisan aplikasi memutarnya lewat antarmuka
+  `PemutarBel` (implementasi `audioplayers`, dipilih karena resmi
+  mendukung Android/Windows/Linux). Kegagalan platform ditelan.
+- **Saklar `belAktif` persisten di display** (shared_preferences,
+  kunci `sekolah.belAktif`, bawaan aktif), diatur remote lewat
+  `audio.konfigurasi`. Nonaktif = pengumuman diam; `audio.tes` selalu
+  berbunyi (uji manual yang disengaja) memainkan pengumuman slot
+  berjalan (di luar slot: contoh jam ke-1). Pemutaran tercatat di
+  `belTerakhir` dan terkirim di snapshot sebagai bukti bunyi.
+- **Pengganti panggil guru = Floating Spotlight Pergantian Jam**:
+  panel melayang 60 detik pertama setiap masuk slot PELAJARAN baru,
+  menampilkan Kelas + Mapel + Guru slot itu untuk semua kelas.
+  Grid 4×3 = 12 kartu per halaman (dikunci nyanpo); kelas lebih dari
+  12 berpindah halaman otomatis membagi rata 60 detik. Semua
+  keadaan (tampil/hilang, halaman, sisa waktu) diturunkan murni dari
+  `KeadaanSpotlight` (slot + jamKe + mulaiEfektif) dan jam efektif —
+  tanpa timer di widget. Wilayah overlay menyisakan header jam dan
+  bar mading tetap terlihat. Spotlight tampil juga saat bel
+  nonaktif (visual bukan suara); masuk slot non-pelajaran
+  menghapusnya.

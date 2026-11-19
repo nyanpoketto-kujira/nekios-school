@@ -16,6 +16,7 @@ export 'material_blob_background.dart';
 export 'progress_slot.dart';
 export 'running_text.dart';
 export 'skala_tampilan.dart';
+export 'spotlight_pergantian.dart';
 export 'strip_status_bel.dart';
 export 'timeline_jendela.dart';
 export 'transisi.dart';

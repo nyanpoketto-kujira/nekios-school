@@ -29,6 +29,7 @@ import 'material_blob_background.dart';
 import 'progress_slot.dart';
 import 'running_text.dart';
 import 'skala_tampilan.dart';
+import 'spotlight_pergantian.dart';
 import 'strip_status_bel.dart';
 import 'timeline_jendela.dart';
 import 'transisi.dart';
@@ -72,6 +73,25 @@ class DisplayScreen extends StatelessWidget {
                           remoteTerhubung: store.remoteTerhubung,
                         ),
                       ],
+                    );
+                  },
+                ),
+                // Floating Spotlight Pergantian Jam (ADR-017): panel
+                // melayang 60 detik setiap masuk slot pelajaran baru.
+                // Wilayahnya menyisakan header jam (atas) dan bar
+                // mading (bawah) tetap terlihat.
+                ListenableBuilder(
+                  listenable: store,
+                  builder: (context, _) {
+                    if (!spotlightSedangTampil(store)) {
+                      return const SizedBox.shrink();
+                    }
+                    return Positioned(
+                      left: 40 * skala,
+                      right: 40 * skala,
+                      top: 168 * skala,
+                      bottom: 84 * skala,
+                      child: SpotlightPergantian(store: store),
                     );
                   },
                 ),
