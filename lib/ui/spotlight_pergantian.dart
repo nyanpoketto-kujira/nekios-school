@@ -8,7 +8,7 @@
 /// Berlangsung" di layar utama ([KartuKelasSekarang]): nama panjang
 /// mapel tampil utuh membungkus maksimal 2 baris tanpa terpotong,
 /// termasuk nama terpanjang (PJOK). Satu halaman menampung
-/// 4 kolom × 3 baris = 12 kartu; kelas lebih dari itu berpindah
+/// 3 kolom × 3 baris = 9 kartu; kelas lebih dari itu berpindah
 /// halaman otomatis membagi rata 60 detik.
 ///
 /// Semua keadaan diturunkan murni dari [DisplayStore.spotlight] +
@@ -23,12 +23,13 @@ import 'kartu_kelas.dart';
 import 'skala_tampilan.dart';
 import 'wavy_progress_bar.dart';
 
-/// Kapasitas kartu per halaman spotlight: grid 4 kolom × 3 baris.
-const int kKapasitasHalamanSpotlight = 12;
+/// Kapasitas kartu per halaman spotlight: grid 3 kolom × 3 baris
+/// (diubah dari 4×3 = 12 atas perintah nyanpo 2026-11-19 — layout
+/// spotlight menjadi 3x3).
+const int kKapasitasHalamanSpotlight = 9;
 
-/// Jumlah kolom maksimum grid spotlight (mengikuti grid kartu
-/// layar utama).
-const int kKolomSpotlight = 4;
+/// Jumlah kolom maksimum grid spotlight.
+const int kKolomSpotlight = 3;
 
 /// Lebar maksimum satu kartu spotlight (px desain, sebelum skala):
 /// selebar kartu "Sedang Berlangsung" di layar utama. Grid TIDAK
@@ -42,12 +43,13 @@ const double kLebarMaksKartuSpotlight = 440;
 const double kAspekKartuSpotlight = 1.45;
 
 /// Jumlah kolom spotlight untuk [jumlah] kartu pada satu halaman:
-/// sedikit kartu memakai kolom lebih sedikit supaya barisnya
-/// seimbang (6 kartu = 3×2, bukan 4+2 yang timpang).
+/// kolom dipilih supaya barisnya tidak lebih dari 3 dan susunannya
+/// seimbang — 6 kartu menjadi 2 kolom × 3 baris (bukan 3×2), sesuai
+/// layout 3x3. Sampai 3 kartu tampil sebaris penuh.
 int kolomSpotlight(int jumlah) {
-  if (jumlah <= kKolomSpotlight) return jumlah < 1 ? 1 : jumlah;
-  if (jumlah <= 6) return 3;
-  return kKolomSpotlight;
+  if (jumlah <= 3) return jumlah < 1 ? 1 : jumlah;
+  final k = (jumlah + 2) ~/ 3;
+  return k > kKolomSpotlight ? kKolomSpotlight : k;
 }
 
 /// Apakah spotlight harus tampil pada keadaan store saat ini.
@@ -191,22 +193,30 @@ class SpotlightPergantian extends StatelessWidget {
                               baris;
                       lebarSel = tinggiSel * kAspekKartuSpotlight;
                     }
+                    // Grid dikunci ke ukuran hasil hitung di atas:
+                    // tanpa ini GridView mengambil lebar penuh yang
+                    // tersedia sehingga ukuran sel menyimpang dari
+                    // hitungan (baris bawah bisa terpotong viewport).
                     return Center(
-                      child: GridView.count(
-                        crossAxisCount: kolom,
-                        mainAxisSpacing: jarak,
-                        crossAxisSpacing: jarak,
-                        childAspectRatio: lebarSel / tinggiSel,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          for (final kelas in tampil)
-                            KartuKelasSekarang(
-                              kelas: kelas,
-                              entri: sp.slot.entri[kelas.id]!,
-                              data: data,
-                            ),
-                        ],
+                      child: SizedBox(
+                        width: kolom * lebarSel + (kolom - 1) * jarak,
+                        height: baris * tinggiSel + (baris - 1) * jarak,
+                        child: GridView.count(
+                          crossAxisCount: kolom,
+                          mainAxisSpacing: jarak,
+                          crossAxisSpacing: jarak,
+                          childAspectRatio: lebarSel / tinggiSel,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: [
+                            for (final kelas in tampil)
+                              KartuKelasSekarang(
+                                kelas: kelas,
+                                entri: sp.slot.entri[kelas.id]!,
+                                data: data,
+                              ),
+                          ],
+                        ),
                       ),
                     );
                   },

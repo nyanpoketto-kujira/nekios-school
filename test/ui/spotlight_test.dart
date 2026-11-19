@@ -50,20 +50,28 @@ DateTime senin(int jam, int menit, [int detik = 0]) =>
 
 void main() {
   group('kolomSpotlight (murni)', () {
-    test('kolom seimbang mengikuti jumlah kartu', () {
+    test('kolom seimbang mengikuti jumlah kartu (layout 3x3)', () {
       expect(kolomSpotlight(1), 1);
-      expect(kolomSpotlight(4), 4);
-      expect(kolomSpotlight(5), 3);
-      expect(kolomSpotlight(6), 3);
-      expect(kolomSpotlight(7), 4);
-      expect(kolomSpotlight(12), 4);
+      expect(kolomSpotlight(3), 3);
+      expect(kolomSpotlight(4), 2);
+      expect(kolomSpotlight(5), 2);
+      expect(kolomSpotlight(6), 2);
+      expect(kolomSpotlight(7), 3);
+      expect(kolomSpotlight(9), 3);
     });
   });
 
   group('halamanSpotlight (murni)', () {
-    test('12 kelas ke bawah selalu 1 halaman', () {
+    test('9 kelas ke bawah selalu 1 halaman', () {
       expect(halamanSpotlight(6, 0), 0);
-      expect(halamanSpotlight(12, 59), 0);
+      expect(halamanSpotlight(9, 59), 0);
+    });
+
+    test('10 kelas: 2 halaman x 30 detik', () {
+      expect(halamanSpotlight(10, 0), 0);
+      expect(halamanSpotlight(10, 29), 0);
+      expect(halamanSpotlight(10, 30), 1);
+      expect(halamanSpotlight(10, 59), 1);
     });
 
     test('13 kelas: 2 halaman x 30 detik', () {
@@ -117,7 +125,8 @@ void main() {
       return store;
     }
 
-    testWidgets('6 kelas: semua kartu tampil di 1 halaman', (tester) async {
+    testWidgets('6 kelas: semua kartu tampil di 1 halaman, tersusun '
+        '2 kolom x 3 baris (layout 3x3)', (tester) async {
       tester.view.physicalSize = const Size(1920, 1080);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -129,15 +138,28 @@ void main() {
       }
       expect(find.textContaining('Halaman'), findsNothing);
       expect(spotlightSedangTampil(store), isTrue);
+      // Geometri 2 kolom x 3 baris: Kelas 1-2 sebaris, Kelas 3 di
+      // baris berikutnya (bukan sebaris dengan Kelas 1), Kelas 5-6
+      // di baris ketiga.
+      final p1 = tester.getTopLeft(find.text('Kelas 1'));
+      final p2 = tester.getTopLeft(find.text('Kelas 2'));
+      final p3 = tester.getTopLeft(find.text('Kelas 3'));
+      final p5 = tester.getTopLeft(find.text('Kelas 5'));
+      expect(p2.dy, p1.dy);
+      expect(p2.dx, greaterThan(p1.dx));
+      expect(p3.dy, greaterThan(p1.dy));
+      expect(p3.dx, p1.dx);
+      expect(p5.dy, greaterThan(p3.dy));
     });
 
-    testWidgets('13 kelas: halaman 1 berisi 12 kartu, halaman 2 sisanya, '
+    testWidgets('13 kelas: halaman 1 berisi 9 kartu, halaman 2 sisanya, '
         'lalu hilang setelah 60 detik', (tester) async {
       tester.view.physicalSize = const Size(1920, 1080);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       final store = await siapkan(tester, 13);
-      expect(find.text('Kelas 12'), findsOneWidget);
+      expect(find.text('Kelas 9'), findsOneWidget);
+      expect(find.text('Kelas 10'), findsNothing);
       expect(find.text('Kelas 13'), findsNothing);
       expect(find.text('Halaman 1 dari 2'), findsOneWidget);
 
