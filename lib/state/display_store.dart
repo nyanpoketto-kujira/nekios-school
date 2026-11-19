@@ -86,13 +86,14 @@ class DisplayStore extends ChangeNotifier {
   /// [KeadaanSpotlight.durasi] lewat dari `mulaiEfektif`.
   KeadaanSpotlight? spotlight;
 
-  final StreamController<String> _kontrolBel =
-      StreamController<String>.broadcast();
+  final StreamController<List<String>> _kontrolBel =
+      StreamController<List<String>>.broadcast();
 
-  /// Aliran perintah putar bel: nama berkas aset (mis.
-  /// `audio/bel_jam_3.mp3`) yang harus diputar lapisan aplikasi
-  /// lewat pemutar platform. Store sendiri tidak menyentuh audio.
-  Stream<String> get streamBel => _kontrolBel.stream;
+  /// Aliran perintah putar bel: rangkaian potongan aset (chunk,
+  /// mis. chime + info + angka + chime akhir) yang harus diputar
+  /// berurutan oleh lapisan aplikasi lewat pemutar platform. Store
+  /// sendiri tidak menyentuh audio.
+  Stream<List<String>> get streamBel => _kontrolBel.stream;
 
   /// Telan satu deteksi transisi berikutnya: diatur saat event yang
   /// menggeser keadaan BUKAN karena bel wajar (jadwal diganti,
@@ -184,7 +185,10 @@ class DisplayStore extends ChangeNotifier {
         : '${sesudah.hariIni?.nama}|${sesudah.indeksAktif}';
     if (slotBaru != null && kunciSesudah != kunciSebelum) {
       final berkas = berkasBelUntukSlot(slotBaru, sesudah.jamKeAktif);
-      if (berkas != null) _bunyi(berkas, sesudah.sekarang);
+      final rangkaian = rangkaianBelUntukSlot(slotBaru, sesudah.jamKeAktif);
+      if (berkas != null && rangkaian != null) {
+        _bunyi(berkas, rangkaian, sesudah.sekarang);
+      }
       spotlight = slotBaru.adalahPelajaran
           ? KeadaanSpotlight(
               slot: slotBaru,
@@ -195,18 +199,19 @@ class DisplayStore extends ChangeNotifier {
     } else if (slotBaru == null &&
         sesudah.status == StatusSekolah.pulang &&
         sebelum.status != StatusSekolah.pulang) {
-      _bunyi(kBerkasBelPulang, sesudah.sekarang);
+      _bunyi(kBerkasBelPulang, kRangkaianBelPulang, sesudah.sekarang);
       spotlight = null;
     }
   }
 
-  /// Minta pemutaran [berkas] ke lapisan aplikasi + catat sebagai
-  /// bel terakhir. Dihormati saklar [belAktif]: nonaktif = diam
-  /// (dan tidak tercatat sebagai bel yang berbunyi).
-  void _bunyi(String berkas, DateTime pada) {
+  /// Minta pemutaran [rangkaian] ke lapisan aplikasi + catat nama
+  /// logisnya [berkas] sebagai bel terakhir. Dihormati saklar
+  /// [belAktif]: nonaktif = diam (dan tidak tercatat sebagai bel
+  /// yang berbunyi).
+  void _bunyi(String berkas, List<String> rangkaian, DateTime pada) {
     if (!belAktif) return;
     belTerakhir = (berkas: berkas, pada: pada);
-    _kontrolBel.add(berkas);
+    _kontrolBel.add(rangkaian);
   }
 
   /// Uji suara bel (paket `audio.tes`): putar pengumuman slot yang
@@ -219,8 +224,12 @@ class DisplayStore extends ChangeNotifier {
             ? null
             : berkasBelUntukSlot(slot, k!.jamKeAktif)) ??
         kBerkasBelContoh;
+    final rangkaian = (slot == null
+            ? null
+            : rangkaianBelUntukSlot(slot, k!.jamKeAktif)) ??
+        kRangkaianBelContoh;
     belTerakhir = (berkas: berkas, pada: k?.sekarang ?? DateTime.now());
-    _kontrolBel.add(berkas);
+    _kontrolBel.add(rangkaian);
   }
 
   void _hitungUlang() {

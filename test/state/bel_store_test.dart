@@ -66,7 +66,7 @@ JadwalData dataUji() {
 DateTime senin(int jam, int menit, [int detik = 0]) =>
     DateTime(2026, 11, 16, jam, menit, detik);
 
-/// Rig store bel: kumpulkan semua perintah putar dari streamBel.
+/// Rig store bel: kumpulkan semua rangkaian putar dari streamBel.
 class RigBel {
   RigBel({bool belAktif = true, void Function(bool)? simpan})
     : store = DisplayStore(belAktifAwal: belAktif, simpanBelAktif: simpan) {
@@ -74,8 +74,8 @@ class RigBel {
   }
 
   final DisplayStore store;
-  final List<String> bunyi = [];
-  late final StreamSubscription<String> _langganan;
+  final List<List<String>> bunyi = [];
+  late final StreamSubscription<List<String>> _langganan;
 
   Future<void> muat(DateTime now) async {
     store.terima(ScheduleReplaced(dataUji()));
@@ -99,6 +99,34 @@ class RigBel {
   }
 }
 
+// Rangkaian chunk yang diharapkan (pola ADR-017 revisi chunking).
+List<String> rkJam(int n) => [
+  'audio/cnk_chime_awal.mp3',
+  'audio/cnk_info_jam.mp3',
+  'audio/cnk_angka_$n.mp3',
+  'audio/cnk_chime_akhir.mp3',
+];
+const rkIstirahat = [
+  'audio/cnk_chime_awal.mp3',
+  'audio/cnk_info_istirahat.mp3',
+  'audio/cnk_chime_akhir.mp3',
+];
+const rkRohis = [
+  'audio/cnk_chime_awal.mp3',
+  'audio/cnk_info_rohis.mp3',
+  'audio/cnk_chime_akhir.mp3',
+];
+const rkUpacara = [
+  'audio/cnk_chime_awal.mp3',
+  'audio/cnk_info_upacara.mp3',
+  'audio/cnk_chime_akhir.mp3',
+];
+const rkPulang = [
+  'audio/cnk_chime_awal.mp3',
+  'audio/cnk_info_pulang.mp3',
+  'audio/cnk_chime_akhir.mp3',
+];
+
 void main() {
   group('DisplayStore bel (ADR-017)', () {
     test('masuk jam ke-1: bel jam 1 + spotlight terisi', () async {
@@ -108,7 +136,7 @@ void main() {
       expect(rig.bunyi, isEmpty);
 
       await rig.tick(senin(7, 0));
-      expect(rig.bunyi, ['audio/bel_jam_1.mp3']);
+      expect(rig.bunyi, [rkJam(1)]);
       expect(rig.store.belTerakhir?.berkas, 'audio/bel_jam_1.mp3');
       expect(rig.store.spotlight?.jamKe, 1);
     });
@@ -140,14 +168,14 @@ void main() {
       await rig.tick(senin(11, 15)); // pulang
       await rig.tick(senin(11, 16)); // tidak mengulang
       expect(rig.bunyi, [
-        'audio/bel_jam_1.mp3',
-        'audio/bel_jam_2.mp3',
-        'audio/bel_istirahat.mp3',
-        'audio/bel_jam_3.mp3',
-        'audio/bel_rohis.mp3',
-        'audio/bel_upacara.mp3',
-        'audio/bel_jam_4.mp3',
-        'audio/bel_pulang.mp3',
+        rkJam(1),
+        rkJam(2),
+        rkIstirahat,
+        rkJam(3),
+        rkRohis,
+        rkUpacara,
+        rkJam(4),
+        rkPulang,
       ]);
     });
 
@@ -180,7 +208,7 @@ void main() {
       addTearDown(rig.tutup);
       await rig.muat(senin(7, 10)); // sudah di dalam jam ke-1
       await rig.terima(const TesBelDiminta());
-      expect(rig.bunyi, ['audio/bel_jam_1.mp3']);
+      expect(rig.bunyi, [rkJam(1)]);
     });
 
     test('TesBelDiminta di luar jam slot memutar contoh jam ke-1', () async {
@@ -188,7 +216,7 @@ void main() {
       addTearDown(rig.tutup);
       await rig.muat(senin(6, 30)); // sebelum masuk
       await rig.terima(const TesBelDiminta());
-      expect(rig.bunyi, ['audio/bel_jam_1.mp3']);
+      expect(rig.bunyi, [rkJam(1)]);
     });
 
     test('loncat simulasi ke slot lain MEMICU bel (jalur demo)', () async {
@@ -201,7 +229,7 @@ void main() {
       await rig.terima(ClockSimulated(const Duration(minutes: 40)));
       // terima menghitung ulang dengan nowSistem terakhir (07.10) +
       // offset 40m = 07.50 -> transisi ke jam ke-2.
-      expect(rig.bunyi, ['audio/bel_jam_2.mp3']);
+      expect(rig.bunyi, [rkJam(2)]);
     });
 
     test('ClockSimulationCleared MENELAN transisi kembali', () async {

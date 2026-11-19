@@ -697,6 +697,25 @@ Keputusan:
   (Sempat keliru diartikan sebagai susunan seimbang 2 kolom × 3
   baris; dikoreksi nyanpo malam yang sama: 3x3 berarti 3 kolom ×
   3 baris.)
+  **Revisi 2026-11-19 malam (perintah nyanpo):** audio pengumuman
+  diubah dari 16 berkas utuh menjadi RANGKAIAN POTONGAN (chunk) —
+  konsep asli nyanpo "Concatenative Audio Chunking": setiap
+  pengumuman diputar berurutan sebagai chime awal + info + angka +
+  chime akhir. Potongan bersama (chime, frasa info) hanya ada satu
+  berkas untuk semua pengumuman — tidak ada suara yang direkam/
+  tersimpan berulang, dan mengganti suara atau chime cukup menimpa
+  berkas potongannya. Potongan dipotong dari rekaman pengumuman
+  yang sama (suara MAI_01 varian A): chunk info jam memuat "Saatnya
+  jam pelajaran", chunk angka memuat ekor kalimat per nomor persis
+  seperti terekam ("ke…/kesatu…" + "dimulai."); pengumuman non-jam
+  adalah satu chunk info utuh. Chunk angka tersedia 1–10 (seluruh
+  jam nyata); angka 11–20 menunggu generate dari layanan TTS asal
+  (tidak tercatat) bila suatu saat dibutuhkan. `streamBel` kini
+  menerbitkan `List<String>`; `PemutarBel` memutar rangkaian
+  berurutan lewat `onPlayerComplete` (penanda generasi mencegah
+  peristiwa rangkaian lama memajukan rangkaian baru). Nama berkas
+  logis di `belTerakhir`/snapshot TIDAK berubah — protokol dan
+  remote tidak terpengaruh.
 
 ## ADR-018 — Build Linux CI memasang GStreamer untuk audioplayers (2026-11-19)
 

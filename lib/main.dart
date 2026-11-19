@@ -166,7 +166,7 @@ class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
   late final PemutarBel _pemutarBel;
   StreamSubscription<DisplayEvent>? _langganan;
   StreamSubscription<DisplayEvent>? _langgananRemote;
-  StreamSubscription<String>? _langgananBel;
+  StreamSubscription<List<String>>? _langgananBel;
   Timer? _timer;
 
   @override
@@ -180,7 +180,7 @@ class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
     // (ADR-017). Pemutar menelan kegagalannya sendiri.
     _pemutarBel = widget.pemutarBel ?? PemutarBelAudioplayers();
     _langgananBel = _store.streamBel.listen(
-      (berkas) => unawaited(_pemutarBel.putar(berkas)),
+      (rangkaian) => unawaited(_pemutarBel.putar(rangkaian)),
     );
     _sumber = AssetScheduleSource();
     _langganan = _sumber.events.listen(_store.terima);
