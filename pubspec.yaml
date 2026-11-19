@@ -63,7 +63,7 @@ dependencies:
   nekios_core:
     git:
       url: https://github.com/nyanpoketto-kujira/nekios-core.git
-      ref: main
+      ref: feat/audio-bel
 
 dev_dependencies:
   flutter_test:
