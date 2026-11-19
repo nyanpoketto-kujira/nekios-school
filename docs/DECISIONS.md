@@ -690,3 +690,17 @@ Keputusan:
   layar; lebar kartu dibatasi selebar kartu layar utama dan grid
   dipusatkan — tidak dipaksa memenuhi lebar layar — supaya tidak
   melebar berlebihan.
+
+## ADR-018 — Build Linux CI memasang GStreamer untuk audioplayers (2026-11-19)
+
+- **Konteks:** PR Audio Bel (ADR-017) menambah dependensi
+  `audioplayers`. Build Linux CI gagal di langkah CMake:
+  `audioplayers_linux` mewajibkan paket `gstreamer-1.0` lewat
+  pkg-config, yang belum dipasang job `build-linux`.
+- **Keputusan:** langkah "Install Linux build dependencies" di
+  `.github/workflows/build.yml` menambah `libgstreamer1.0-dev` dan
+  `libgstreamer-plugins-base1.0-dev`. Konsekuensi sisi target: bundle
+  Linux kini menaut pustaka runtime GStreamer — mesin Linux tujuan
+  perlu `libgstreamer1.0-0` + `libgstreamer-plugins-base1.0-0`
+  (dan plugin pemutar MP3) agar pemutar bel bisa dimuat; build
+  Windows dan Android tidak terpengaruh.
