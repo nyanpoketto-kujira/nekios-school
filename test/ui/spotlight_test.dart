@@ -1,4 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show RenderParagraph;
+import 'package:flutter/services.dart' show FontLoader;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nekios_school/domain/domain.dart';
 import 'package:nekios_school/sources/sources.dart';
@@ -48,7 +53,55 @@ JadwalData dataUji(
 DateTime senin(int jam, int menit, [int detik = 0]) =>
     DateTime(2026, 11, 16, jam, menit, detik);
 
+/// Font uji bawaan flutter_test jauh lebih lebar daripada Roboto
+/// asli, jadi pemeriksaan "teks muat 2 baris" hanya bermakna bila
+/// Roboto asli (dari cache font material SDK Flutter) berhasil
+/// dimuat. Terverifikasi terpisah: dengan Roboto asli, nama PJOK
+/// (44 karakter) muat 2 baris bahkan pada lebar isi kartu 300px.
+bool _robotoAsliDimuat = false;
+
+Future<bool> _muatRobotoAsli() async {
+  final kandidat = <String>[];
+  final envRoot = Platform.environment['FLUTTER_ROOT'];
+  if (envRoot != null) {
+    kandidat.add('$envRoot/bin/cache/artifacts/material_fonts');
+  }
+  var dir = File(Platform.resolvedExecutable).parent;
+  for (var i = 0; i < 8; i++) {
+    kandidat.add('${dir.path}/bin/cache/artifacts/material_fonts');
+    dir = dir.parent;
+  }
+  for (final k in kandidat) {
+    if (!File('$k/Roboto-Regular.ttf').existsSync()) continue;
+    final loader = FontLoader('Roboto');
+    for (final w in ['Regular', 'Medium', 'Bold']) {
+      final f = File('$k/Roboto-$w.ttf');
+      if (f.existsSync()) {
+        final b = f.readAsBytesSync();
+        loader.addFont(Future.value(ByteData.view(b.buffer)));
+      }
+    }
+    await loader.load();
+    return true;
+  }
+  return false;
+}
+
+/// Penjaga pemotongan senyap: teks yang melampaui maxLines tidak
+/// memicu exception — periksa RenderParagraph satu per satu. Hanya
+/// dijalankan bila Roboto asli termuat (lihat [_robotoAsliDimuat]).
+void _pastikanTidakTerpotong(WidgetTester tester, String teks) {
+  if (!_robotoAsliDimuat) return;
+  for (final e in find.text(teks).evaluate()) {
+    final rp = e.renderObject! as RenderParagraph;
+    expect(rp.didExceedMaxLines, isFalse);
+  }
+}
+
 void main() {
+  setUpAll(() async {
+    _robotoAsliDimuat = await _muatRobotoAsli();
+  });
   group('kolomSpotlight (murni)', () {
     test('kolom seimbang mengikuti jumlah kartu (layout 3x3)', () {
       expect(kolomSpotlight(1), 1);
@@ -95,6 +148,7 @@ void main() {
       int jumlahKelas, {
       String kodeMapel = 'DDBP',
       String namaMapel = 'Dasar-Dasar Pemrograman',
+      double skala = 1,
     }) async {
       final store = DisplayStore();
       addTearDown(store.dispose);
@@ -109,7 +163,7 @@ void main() {
         MaterialApp(
           theme: AppTheme.darkTheme,
           home: SkalaTampilan(
-            skala: 1,
+            skala: skala,
             child: Scaffold(
               // Sama seperti pemasangan di DisplayScreen: overlay
               // dibangun ulang mengikuti notifikasi store per detik.
@@ -194,6 +248,31 @@ void main() {
         findsNWidgets(6),
       );
       expect(tester.takeException(), isNull);
+      _pastikanTidakTerpotong(
+          tester, 'Pendidikan Jasmani, Olahraga, dan Kesehatan');
+    });
+
+    testWidgets(
+        'PJOK juga utuh di jendela pendek (1280x620, skala aplikasi '
+        '0.574 seperti rig Xvfb) — lebar kartu tidak ikut menyusut',
+        (tester) async {
+      tester.view.physicalSize = const Size(1280, 620);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await siapkan(
+        tester,
+        6,
+        kodeMapel: 'PJOK',
+        namaMapel: 'Pendidikan Jasmani, Olahraga, dan Kesehatan',
+        skala: 0.574,
+      );
+      expect(
+        find.text('Pendidikan Jasmani, Olahraga, dan Kesehatan'),
+        findsNWidgets(6),
+      );
+      expect(tester.takeException(), isNull);
+      _pastikanTidakTerpotong(
+          tester, 'Pendidikan Jasmani, Olahraga, dan Kesehatan');
     });
   });
 }

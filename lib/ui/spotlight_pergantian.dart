@@ -188,10 +188,14 @@ class SpotlightPergantian extends StatelessWidget {
                     final tinggiPerlu =
                         baris * tinggiSel + (baris - 1) * jarak;
                     if (tinggiPerlu > constraints.maxHeight) {
+                      // Hanya TINGGI yang menyusut; lebar dipertahankan
+                      // supaya area teks kartu tidak menyempit (nama
+                      // mapel panjang harus tetap cukup 2 baris —
+                      // terbukti terpotong di rig bila lebar ikut
+                      // menyusut mengikuti rasio).
                       tinggiSel =
                           (constraints.maxHeight - (baris - 1) * jarak) /
                               baris;
-                      lebarSel = tinggiSel * kAspekKartuSpotlight;
                     }
                     // Grid dikunci ke ukuran hasil hitung di atas:
                     // tanpa ini GridView mengambil lebar penuh yang
