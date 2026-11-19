@@ -692,9 +692,11 @@ Keputusan:
   melebar berlebihan.
   **Revisi 2026-11-19 sore (perintah nyanpo):** layout grid diubah
   menjadi 3x3 — kapasitas satu halaman 9 kartu (sebelumnya 4 kolom
-  × 3 baris = 12), kolom maksimum 3, dan pemilihan kolom membuat
-  baris tidak lebih dari 3: 6 kelas kini tampil 2 kolom × 3 baris
-  (sebelumnya 3×2) supaya spotlight mengisi layar lebih tegak.
+  × 3 baris = 12) dan grid selalu selebar 3 kolom supaya 9 kelas
+  bisa tampil sekaligus; 6 kelas tampil 3 kolom × 2 baris.
+  (Sempat keliru diartikan sebagai susunan seimbang 2 kolom × 3
+  baris; dikoreksi nyanpo malam yang sama: 3x3 berarti 3 kolom ×
+  3 baris.)
 
 ## ADR-018 — Build Linux CI memasang GStreamer untuk audioplayers (2026-11-19)
 

@@ -103,13 +103,12 @@ void main() {
     _robotoAsliDimuat = await _muatRobotoAsli();
   });
   group('kolomSpotlight (murni)', () {
-    test('kolom seimbang mengikuti jumlah kartu (layout 3x3)', () {
+    test('grid selalu 3 kolom (layout 3x3, muat 9 sekaligus)', () {
       expect(kolomSpotlight(1), 1);
+      expect(kolomSpotlight(2), 2);
       expect(kolomSpotlight(3), 3);
-      expect(kolomSpotlight(4), 2);
-      expect(kolomSpotlight(5), 2);
-      expect(kolomSpotlight(6), 2);
-      expect(kolomSpotlight(7), 3);
+      expect(kolomSpotlight(4), 3);
+      expect(kolomSpotlight(6), 3);
       expect(kolomSpotlight(9), 3);
     });
   });
@@ -180,7 +179,7 @@ void main() {
     }
 
     testWidgets('6 kelas: semua kartu tampil di 1 halaman, tersusun '
-        '2 kolom x 3 baris (layout 3x3)', (tester) async {
+        '3 kolom x 2 baris (grid 3x3)', (tester) async {
       tester.view.physicalSize = const Size(1920, 1080);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -192,18 +191,18 @@ void main() {
       }
       expect(find.textContaining('Halaman'), findsNothing);
       expect(spotlightSedangTampil(store), isTrue);
-      // Geometri 2 kolom x 3 baris: Kelas 1-2 sebaris, Kelas 3 di
-      // baris berikutnya (bukan sebaris dengan Kelas 1), Kelas 5-6
-      // di baris ketiga.
+      // Geometri 3 kolom x 2 baris: Kelas 1-2-3 sebaris, Kelas 4
+      // membuka baris kedua tepat di bawah Kelas 1.
       final p1 = tester.getTopLeft(find.text('Kelas 1'));
       final p2 = tester.getTopLeft(find.text('Kelas 2'));
       final p3 = tester.getTopLeft(find.text('Kelas 3'));
-      final p5 = tester.getTopLeft(find.text('Kelas 5'));
+      final p4 = tester.getTopLeft(find.text('Kelas 4'));
       expect(p2.dy, p1.dy);
+      expect(p3.dy, p1.dy);
       expect(p2.dx, greaterThan(p1.dx));
-      expect(p3.dy, greaterThan(p1.dy));
-      expect(p3.dx, p1.dx);
-      expect(p5.dy, greaterThan(p3.dy));
+      expect(p3.dx, greaterThan(p2.dx));
+      expect(p4.dy, greaterThan(p1.dy));
+      expect(p4.dx, p1.dx);
     });
 
     testWidgets('13 kelas: halaman 1 berisi 9 kartu, halaman 2 sisanya, '

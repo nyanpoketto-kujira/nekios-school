@@ -43,13 +43,12 @@ const double kLebarMaksKartuSpotlight = 440;
 const double kAspekKartuSpotlight = 1.45;
 
 /// Jumlah kolom spotlight untuk [jumlah] kartu pada satu halaman:
-/// kolom dipilih supaya barisnya tidak lebih dari 3 dan susunannya
-/// seimbang — 6 kartu menjadi 2 kolom × 3 baris (bukan 3×2), sesuai
-/// layout 3x3. Sampai 3 kartu tampil sebaris penuh.
+/// grid selalu selebar 3 kolom (layout 3x3, muat 9 kartu sekaligus)
+/// — 6 kartu tampil 3 kolom × 2 baris. Kurang dari 3 kartu tampil
+/// sebaris mengikuti jumlahnya.
 int kolomSpotlight(int jumlah) {
-  if (jumlah <= 3) return jumlah < 1 ? 1 : jumlah;
-  final k = (jumlah + 2) ~/ 3;
-  return k > kKolomSpotlight ? kKolomSpotlight : k;
+  if (jumlah <= kKolomSpotlight) return jumlah < 1 ? 1 : jumlah;
+  return kKolomSpotlight;
 }
 
 /// Apakah spotlight harus tampil pada keadaan store saat ini.
