@@ -12,10 +12,12 @@
 library;
 
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'sources/sources.dart';
 import 'state/state.dart';
@@ -46,8 +48,53 @@ Future<void> aktifkanModeKios() async {
   }
 }
 
+/// Platform desktop yang didukung kios jendela pameran: Windows
+/// dan Linux (perangkat stand pameran hanya bisa salah satu dari
+/// keduanya — tahap Desktop Pameran, ADR-015). macOS tidak
+/// ditargetkan; Android/iOS memakai jalur immersive [SystemChrome]
+/// seperti sebelumnya.
+bool adalahPlatformDesktop([String? sistemOperasi]) {
+  final os = sistemOperasi ?? Platform.operatingSystem;
+  return os == 'windows' || os == 'linux';
+}
+
+/// Siapkan jendela desktop untuk pameran: fullscreen tanpa title
+/// bar sejak aplikasi dibuka.
+///
+/// [SystemChrome] immersive tidak berpengaruh di desktop, jadi
+/// fullscreen diatur lewat window_manager SEBELUM [runApp] —
+/// jendela tidak pernah tampil dalam keadaan berjendela biasa.
+/// Title bar disembunyikan permanen (termasuk setelah keluar
+/// fullscreen) agar tampilan tetap bersih ala TV; jalan keluar
+/// fullscreen untuk operator ada di [_KiosDesktop] (Esc/F11).
+///
+/// Kegagalan platform TIDAK boleh menggagalkan startup (pola
+/// ADR-012): semua dibungkus try/catch, aplikasi tetap jalan.
+Future<void> siapkanJendelaDesktop() async {
+  try {
+    await windowManager.ensureInitialized();
+    const opsi = WindowOptions(
+      size: Size(1280, 720),
+      title: 'nekios-school',
+      titleBarStyle: TitleBarStyle.hidden,
+      windowButtonVisibility: false,
+      fullScreen: true,
+    );
+    await windowManager.waitUntilReadyToShow(opsi, () async {
+      await windowManager.setFullScreen(true);
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  } catch (e) {
+    debugPrint('Siapkan jendela desktop gagal: $e');
+  }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (adalahPlatformDesktop()) {
+    await siapkanJendelaDesktop();
+  }
   await aktifkanModeKios();
   runApp(const NekiosSchoolApp());
 }
@@ -113,11 +160,62 @@ class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
 
   @override
   Widget build(BuildContext context) {
+    final layar = DisplayScreen(store: _store);
     return MaterialApp(
       title: 'nekios-school',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      home: DisplayScreen(store: _store),
+      // Di desktop, display dibungkus jalan keluar fullscreen
+      // untuk operator; di Android tampil apa adanya.
+      home: adalahPlatformDesktop() ? _KiosDesktop(child: layar) : layar,
+    );
+  }
+}
+
+/// Pembungkus kios desktop: jalan keluar fullscreen untuk operator
+/// stand (ADR-015).
+///
+/// - **F11**: mengaktifkan/mematikan fullscreen.
+/// - **Esc**: keluar dari fullscreen (jendela tetap tanpa title
+///   bar; tutup aplikasi lewat Alt+F4 / tombol OS dari taskbar).
+///
+/// Kegagalan platform ditelan + dicatat: display tidak boleh
+/// terganggu hanya karena perintah jendela gagal.
+class _KiosDesktop extends StatelessWidget {
+  const _KiosDesktop({required this.child});
+
+  final Widget child;
+
+  Future<void> _jalankan(Future<void> Function() aksi) async {
+    try {
+      await aksi();
+    } catch (e) {
+      debugPrint('Perintah jendela kios gagal: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      autofocus: true,
+      onKeyEvent: (node, event) {
+        if (event is! KeyDownEvent) return KeyEventResult.ignored;
+        if (event.logicalKey == LogicalKeyboardKey.f11) {
+          unawaited(
+            _jalankan(() async {
+              final penuh = await windowManager.isFullScreen();
+              await windowManager.setFullScreen(!penuh);
+            }),
+          );
+          return KeyEventResult.handled;
+        }
+        if (event.logicalKey == LogicalKeyboardKey.escape) {
+          unawaited(_jalankan(() => windowManager.setFullScreen(false)));
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+      child: child,
     );
   }
 }

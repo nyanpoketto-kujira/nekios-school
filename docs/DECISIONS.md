@@ -566,3 +566,41 @@ granularitas indikator koneksi = interval periksa (1 detik);
 logo hanya bisa dipasang dari remote (belum ada pemilih logo
 lokal); dan sesuai keputusan protokol v1, belum ada
 autentikasi — diasumsikan LAN pameran terpercaya.
+
+## ADR-015: Desktop pameran — kios fullscreen Windows/Linux + build CI (2026-11-19)
+
+Konteks: perangkat stand pameran sekolah (23/24 Nov 2026) hanya
+bisa Windows atau Linux desktop — bukan Android TV. Audit
+2026-11-19 menemukan: runner `windows/` & `linux/` ada tapi masih
+template mentah (jendela 1280×720 + title bar), CI hanya
+menghasilkan APK, dan mode kios ADR-012 (`SystemChrome`
+immersive) tidak berpengaruh di desktop.
+
+Keputusan:
+
+- **Fullscreen desktop lewat `window_manager`** (satu-satunya
+  dependensi baru): di `main()`, khusus platform Windows/Linux
+  (`adalahPlatformDesktop`), `siapkanJendelaDesktop()` berjalan
+  SEBELUM `runApp` — jendela dibuka langsung fullscreen,
+  `TitleBarStyle.hidden`, tombol jendela disembunyikan. Android
+  tidak berubah sama sekali (jalur immersive + wakelock ADR-012
+  tetap). Kegagalan platform ditelan + dicatat (pola ADR-012):
+  startup tidak pernah digagalkan urusan jendela.
+- **Jalan keluar operator**: home dibungkus `_KiosDesktop` hanya
+  di desktop — **F11** mengaktifkan/mematikan fullscreen, **Esc**
+  keluar dari fullscreen. Title bar tetap tersembunyi setelah
+  keluar fullscreen; menutup aplikasi lewat Alt+F4/taskbar.
+  Display tanpa field teks, jadi fokus keyboard aman dipegang
+  pembungkus.
+- **CI**: workflow diganti nama "Build" dan ditambah dua job
+  release mengikuti pola pemicu APK (PR/manual, retensi 14 hari):
+  `build-windows` (windows-latest → `flutter build windows
+  --release` → artefak `nekios-school-windows-x64.zip` berisi
+  bundle Release) dan `build-linux` (ubuntu-latest + dependensi
+  GTK dari dokumentasi Flutter → `flutter build linux --release`
+  → artefak `nekios-school-linux-x64.tar.gz` berisi bundle).
+  Keduanya mendukung `sim_now` seperti job APK.
+- **Server WebSocket 8920 tidak berubah**: murni dart:io dari
+  nekios-core, lintas platform. Catatan operasional Windows:
+  prompt Windows Firewall saat pertama jalan harus disetujui
+  (Allow, jaringan Private) agar remote bisa menyambung.

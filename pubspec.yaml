@@ -44,6 +44,11 @@ dependencies:
   # tv_display (Fase 5 finishing, ADR-012).
   wakelock_plus: ^1.2.8
 
+  # Kios desktop untuk pameran (Windows/Linux): fullscreen tanpa
+  # title bar sejak start — SystemChrome immersive hanya bekerja di
+  # Android/iOS (tahap Desktop Pameran, ADR-015).
+  window_manager: ^0.5.1
+
   # Protokol bersama ekosistem Nekios (envelope paket, codec,
   # server/klien WebSocket) — Fase R1, ADR-013. Repo PUBLIK, jadi CI
   # bisa me-resolve dependensi git HTTPS ini tanpa kredensial.

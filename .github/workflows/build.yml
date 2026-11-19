@@ -1,7 +1,8 @@
-name: Build APK
+name: Build
 
 # Pola mengikuti CI masjid-you (nekios-mosque): analyze + test di semua
-# push/PR ke main; APK x86_64 debug hanya untuk tes emulator (PR/manual).
+# push/PR ke main; APK x86_64 debug hanya untuk tes emulator (PR/manual);
+# build desktop Windows/Linux release untuk pameran (PR/manual, ADR-015).
 
 on:
   push:
@@ -98,4 +99,106 @@ jobs:
         with:
           name: nekios-school-apk-x64
           path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 14
+
+  build-windows:
+    name: Build Windows (x64, release, pameran)
+    # Build desktop untuk perangkat stand pameran (PR / manual).
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.4'
+          channel: stable
+
+      - name: Cache pub get
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-flutter-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-pub-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Windows (release)
+        shell: pwsh
+        run: |
+          $defineArgs = @()
+          if ("${{ inputs.sim_now }}" -ne "") {
+            $defineArgs = @("--dart-define=SIM_NOW=${{ inputs.sim_now }}")
+          }
+          flutter build windows --release @defineArgs
+
+      - name: Zip bundle
+        shell: pwsh
+        run: |
+          Compress-Archive `
+            -Path build/windows/x64/runner/Release/* `
+            -DestinationPath nekios-school-windows-x64.zip
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nekios-school-windows-x64
+          path: nekios-school-windows-x64.zip
+          retention-days: 14
+
+  build-linux:
+    name: Build Linux (x64, release, pameran)
+    # Build desktop untuk perangkat stand pameran (PR / manual).
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.4'
+          channel: stable
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+      - name: Cache pub get
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-flutter-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-pub-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Linux (release)
+        run: |
+          DEFINE_ARGS=""
+          if [ -n "${{ inputs.sim_now }}" ]; then
+            DEFINE_ARGS="--dart-define=SIM_NOW=${{ inputs.sim_now }}"
+          fi
+          flutter build linux \
+            --release \
+            $DEFINE_ARGS
+
+      - name: Tar bundle
+        run: |
+          tar -czf nekios-school-linux-x64.tar.gz \
+            -C build/linux/x64/release/bundle .
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nekios-school-linux-x64
+          path: nekios-school-linux-x64.tar.gz
           retention-days: 14
