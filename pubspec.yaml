@@ -49,6 +49,14 @@ dependencies:
   # Android/iOS (tahap Desktop Pameran, ADR-015).
   window_manager: ^0.5.1
 
+  # Pemutar audio bel sekolah (aset MP3 ter-bundel) — mendukung
+  # Android/Windows/Linux resmi (fitur Audio Bel, ADR-017).
+  audioplayers: ^6.4.0
+
+  # Persistensi lokal kecil di display: saklar belAktif yang diingat
+  # lintas restart aplikasi (ADR-017).
+  shared_preferences: ^2.3.2
+
   # Protokol bersama ekosistem Nekios (envelope paket, codec,
   # server/klien WebSocket) — Fase R1, ADR-013. Repo PUBLIK, jadi CI
   # bisa me-resolve dependensi git HTTPS ini tanpa kredensial.
@@ -75,6 +83,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/jadwal-tkj.json
+    - assets/audio/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -8,12 +8,40 @@
 /// menggambar — tidak menghitung, tidak menyentuh sumber data.
 library;
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../domain/domain.dart';
 import '../sources/events.dart';
 
+/// Keadaan "Floating Spotlight Pergantian Jam" (ADR-017): slot
+/// pelajaran yang baru dimulai + momen efektif mulainya. UI
+/// menurunkan tampil/hilang (60 detik), halaman aktif, dan sisa
+/// waktu murni dari nilai ini dan jam efektif — tanpa timer sendiri.
+class KeadaanSpotlight {
+  const KeadaanSpotlight({
+    required this.slot,
+    required this.jamKe,
+    required this.mulaiEfektif,
+  });
+
+  /// Slot pelajaran yang sedang disorot.
+  final Slot slot;
+
+  /// Nomor "Jam ke-N" slot ini.
+  final int jamKe;
+
+  /// Momen (jam efektif) spotlight mulai tampil.
+  final DateTime mulaiEfektif;
+
+  /// Lama spotlight tampil setiap pergantian jam.
+  static const Duration durasi = Duration(seconds: 60);
+}
+
 class DisplayStore extends ChangeNotifier {
+  DisplayStore({bool belAktifAwal = true, this.simpanBelAktif})
+    : belAktif = belAktifAwal;
   /// Data jadwal aktif; null sebelum [ScheduleReplaced] pertama.
   JadwalData? data;
 
@@ -38,6 +66,40 @@ class DisplayStore extends ChangeNotifier {
   /// menggerakkan indikator halus "Remote terhubung" di UI.
   bool remoteTerhubung = false;
 
+  /// Saklar bel sekolah (ADR-017): false = pengumuman tidak berbunyi
+  /// (spotlight pergantian jam tetap tampil — visual bukan suara).
+  /// Nilai awal dari penyimpanan persisten lewat konstruktor;
+  /// perubahan diteruskan ke [simpanBelAktif].
+  bool belAktif;
+
+  /// Penulis saklar bel persisten (komposisi aplikasi); null =
+  /// perubahan hanya berlaku sesi ini (dipakai test).
+  final void Function(bool aktif)? simpanBelAktif;
+
+  /// Pengumuman bel terakhir yang benar-benar diputar: nama berkas
+  /// aset + momen efektif pemutarannya. Masuk `state.snapshot` agar
+  /// remote (dan verifikasi) bisa membuktikan bel berbunyi.
+  ({String berkas, DateTime pada})? belTerakhir;
+
+  /// Spotlight pergantian jam yang aktif; null = tidak tampil.
+  /// Diatur deteksi transisi; UI menyembunyikannya sendiri setelah
+  /// [KeadaanSpotlight.durasi] lewat dari `mulaiEfektif`.
+  KeadaanSpotlight? spotlight;
+
+  final StreamController<List<String>> _kontrolBel =
+      StreamController<List<String>>.broadcast();
+
+  /// Aliran perintah putar bel: rangkaian potongan aset (chunk,
+  /// mis. chime + info + angka + chime akhir) yang harus diputar
+  /// berurutan oleh lapisan aplikasi lewat pemutar platform. Store
+  /// sendiri tidak menyentuh audio.
+  Stream<List<String>> get streamBel => _kontrolBel.stream;
+
+  /// Telan satu deteksi transisi berikutnya: diatur saat event yang
+  /// menggeser keadaan BUKAN karena bel wajar (jadwal diganti,
+  /// simulasi diakhiri) — momen-momen itu bukan bunyi bel.
+  bool _telanTransisi = false;
+
   DateTime? _nowSistemTerakhir;
 
   /// Jam efektif yang sedang ditampilkan: momen yang dipakai
@@ -54,6 +116,9 @@ class DisplayStore extends ChangeNotifier {
     switch (event) {
       case ScheduleReplaced(:final data):
         this.data = data;
+        // Jadwal diganti = keadaan bisa meloncat; itu bukan bunyi
+        // bel (ADR-017).
+        _telanTransisi = true;
       case MadingChanged(:final teks):
         mading = teks;
       case ClockSimulated(:final offset):
@@ -62,12 +127,22 @@ class DisplayStore extends ChangeNotifier {
       case ClockSimulationCleared():
         offsetSimulasi = Duration.zero;
         simulasiAktif = false;
+        // Kembali ke jam asli menggeser keadaan ke slot waktu nyata;
+        // bukan bunyi bel (ADR-017).
+        _telanTransisi = true;
       case LogoChanged(:final bytes):
         logoBytes = bytes;
+      case BelKonfigurasiChanged(:final aktif):
+        belAktif = aktif;
+        simpanBelAktif?.call(aktif);
+      case TesBelDiminta():
+        mintaTesBel();
       case RemoteConnectionChanged(:final terhubung):
         remoteTerhubung = terhubung;
     }
+    final sebelum = keadaan;
     _hitungUlang();
+    _periksaTransisi(sebelum, keadaan);
     notifyListeners();
   }
 
@@ -82,9 +157,79 @@ class DisplayStore extends ChangeNotifier {
     final sebelum = keadaan;
     _hitungUlang();
     final sesudah = keadaan;
+    _periksaTransisi(sebelum, sesudah);
     if (!_snapshotSama(sebelum, sesudah)) {
       notifyListeners();
     }
+  }
+
+  /// Deteksi transisi bel dari dua snapshot berurutan (ADR-017).
+  ///
+  /// Bel berbunyi saat display MASUK slot baru (identitas slot =
+  /// hari + indeks berubah) atau saat hari berakhir (status menjadi
+  /// pulang dari status lain). Loncat simulasi jam ikut memicu —
+  /// itulah jalur demo pameran — kecuali transisi yang ditelan
+  /// [_telanTransisi] (ganti jadwal / akhiri simulasi).
+  void _periksaTransisi(KeadaanTampilan? sebelum, KeadaanTampilan? sesudah) {
+    if (_telanTransisi) {
+      _telanTransisi = false;
+      return;
+    }
+    if (sebelum == null || sesudah == null) return;
+    final slotBaru = sesudah.slotAktif;
+    final kunciSebelum = sebelum.slotAktif == null
+        ? null
+        : '${sebelum.hariIni?.nama}|${sebelum.indeksAktif}';
+    final kunciSesudah = slotBaru == null
+        ? null
+        : '${sesudah.hariIni?.nama}|${sesudah.indeksAktif}';
+    if (slotBaru != null && kunciSesudah != kunciSebelum) {
+      final berkas = berkasBelUntukSlot(slotBaru, sesudah.jamKeAktif);
+      final rangkaian = rangkaianBelUntukSlot(slotBaru, sesudah.jamKeAktif);
+      if (berkas != null && rangkaian != null) {
+        _bunyi(berkas, rangkaian, sesudah.sekarang);
+      }
+      spotlight = slotBaru.adalahPelajaran
+          ? KeadaanSpotlight(
+              slot: slotBaru,
+              jamKe: sesudah.jamKeAktif ?? 0,
+              mulaiEfektif: sesudah.sekarang,
+            )
+          : null;
+    } else if (slotBaru == null &&
+        sesudah.status == StatusSekolah.pulang &&
+        sebelum.status != StatusSekolah.pulang) {
+      _bunyi(kBerkasBelPulang, kRangkaianBelPulang, sesudah.sekarang);
+      spotlight = null;
+    }
+  }
+
+  /// Minta pemutaran [rangkaian] ke lapisan aplikasi + catat nama
+  /// logisnya [berkas] sebagai bel terakhir. Dihormati saklar
+  /// [belAktif]: nonaktif = diam (dan tidak tercatat sebagai bel
+  /// yang berbunyi).
+  void _bunyi(String berkas, List<String> rangkaian, DateTime pada) {
+    if (!belAktif) return;
+    belTerakhir = (berkas: berkas, pada: pada);
+    _kontrolBel.add(rangkaian);
+  }
+
+  /// Uji suara bel (paket `audio.tes`): putar pengumuman slot yang
+  /// sedang berjalan — di luar jam slot, putar contoh jam ke-1.
+  /// Selalu berbunyi, juga saat [belAktif] nonaktif.
+  void mintaTesBel() {
+    final k = keadaan;
+    final slot = k?.slotAktif;
+    final berkas = (slot == null
+            ? null
+            : berkasBelUntukSlot(slot, k!.jamKeAktif)) ??
+        kBerkasBelContoh;
+    final rangkaian = (slot == null
+            ? null
+            : rangkaianBelUntukSlot(slot, k!.jamKeAktif)) ??
+        kRangkaianBelContoh;
+    belTerakhir = (berkas: berkas, pada: k?.sekarang ?? DateTime.now());
+    _kontrolBel.add(rangkaian);
   }
 
   void _hitungUlang() {
@@ -139,6 +284,13 @@ class DisplayStore extends ChangeNotifier {
             },
       'belBerikutnya': k?.belBerikutnya?.toIso8601String(),
       'sisaKeBelDetik': k?.sisaKeBel?.inSeconds,
+      'belAktif': belAktif,
+      'belTerakhir': belTerakhir == null
+          ? null
+          : {
+              'berkas': belTerakhir!.berkas,
+              'pada': belTerakhir!.pada.toIso8601String(),
+            },
       'jadwal': d == null
           ? null
           : {
@@ -151,6 +303,12 @@ class DisplayStore extends ChangeNotifier {
               'hariAktif': k?.hariIni?.nama,
             },
     };
+  }
+
+  @override
+  void dispose() {
+    unawaited(_kontrolBel.close());
+    super.dispose();
   }
 
   bool _snapshotSama(KeadaanTampilan? a, KeadaanTampilan? b) {

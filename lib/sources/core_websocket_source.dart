@@ -12,6 +12,8 @@
 /// | `clock.simulate`   | [ClockSimulated] (ISO absolut → offset)      |
 /// | `clock.clear`      | [ClockSimulationCleared]                     |
 /// | `logo.set`         | [LogoChanged] (base64; kosong/null = hapus)  |
+/// | `audio.konfigurasi`| [BelKonfigurasiChanged] (saklar bel)         |
+/// | `audio.tes`        | [TesBelDiminta]; dibalas `ack` saja          |
 /// | `ping`             | dibalas `state.snapshot` dari store          |
 ///
 /// Perintah yang berhasil dibalas `ack` lalu `state.snapshot`
@@ -177,6 +179,13 @@ class CoreWebSocketSource implements ScheduleSource {
         _balasSukses(masuk);
       case TipePaket.logoSet:
         _gantiLogo(masuk);
+      case TipePaket.audioKonfigurasi:
+        _aturBel(masuk);
+      case TipePaket.audioTes:
+        _emit(const TesBelDiminta());
+        // Uji suara tidak mengubah keadaan: cukup `ack` (PROTOCOL
+        // core untuk audio.tes), tanpa snapshot susulan.
+        _balasAman(masuk, NekiosPacket.ack(ofType: masuk.paket.type));
       case TipePaket.ping:
         _balasAman(masuk, _paketSnapshot());
       default:
@@ -217,6 +226,21 @@ class CoreWebSocketSource implements ScheduleSource {
       return;
     }
     _emit(ScheduleReplaced(data));
+    _balasSukses(masuk);
+  }
+
+  void _aturBel(PaketMasuk masuk) {
+    final aktif = masuk.paket.payload?['belAktif'];
+    if (aktif is! bool) {
+      _balasAman(
+        masuk,
+        NekiosPacket.error(
+          'Payload audio.konfigurasi wajib berisi "belAktif" (bool).',
+        ),
+      );
+      return;
+    }
+    _emit(BelKonfigurasiChanged(aktif));
     _balasSukses(masuk);
   }
 

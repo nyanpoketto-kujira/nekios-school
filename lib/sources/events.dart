@@ -56,6 +56,22 @@ final class LogoChanged extends DisplayEvent {
   final Uint8List? bytes;
 }
 
+/// Saklar bel sekolah diatur dari remote (paket `audio.konfigurasi`,
+/// ADR-017). Store menyimpan nilai baru dan meneruskannya ke
+/// penyimpanan persisten lewat callback komposisi aplikasi.
+final class BelKonfigurasiChanged extends DisplayEvent {
+  const BelKonfigurasiChanged(this.aktif);
+
+  final bool aktif;
+}
+
+/// Remote meminta uji suara bel (paket `audio.tes`, ADR-017): putar
+/// pengumuman slot yang sedang berjalan. Selalu diputar — juga saat
+/// bel nonaktif — karena ini uji manual yang disengaja.
+final class TesBelDiminta extends DisplayEvent {
+  const TesBelDiminta();
+}
+
 /// Status koneksi remote berubah (Fase R1): [terhubung] true saat
 /// ada klien WebSocket tersambung ke sumber remote, false saat
 /// klien terakhir putus. Diterbitkan sumber remote sendiri dari

@@ -4,6 +4,7 @@
 /// diuji sebagai unit test dan dipakai ulang sumber data mana pun.
 library;
 
+export 'bel.dart';
 export 'mesin.dart';
 export 'models.dart';
 export 'validasi.dart';

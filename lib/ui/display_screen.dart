@@ -29,6 +29,7 @@ import 'material_blob_background.dart';
 import 'progress_slot.dart';
 import 'running_text.dart';
 import 'skala_tampilan.dart';
+import 'spotlight_pergantian.dart';
 import 'strip_status_bel.dart';
 import 'timeline_jendela.dart';
 import 'transisi.dart';
@@ -72,6 +73,20 @@ class DisplayScreen extends StatelessWidget {
                           remoteTerhubung: store.remoteTerhubung,
                         ),
                       ],
+                    );
+                  },
+                ),
+                // Spotlight Pergantian Jam (ADR-017): tampilan layar
+                // penuh 60 detik setiap masuk slot pelajaran baru,
+                // menutupi seluruh layar utama selama tampil.
+                ListenableBuilder(
+                  listenable: store,
+                  builder: (context, _) {
+                    if (!spotlightSedangTampil(store)) {
+                      return const SizedBox.shrink();
+                    }
+                    return Positioned.fill(
+                      child: SpotlightPergantian(store: store),
                     );
                   },
                 ),

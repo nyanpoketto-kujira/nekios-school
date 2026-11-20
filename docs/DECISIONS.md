@@ -631,3 +631,102 @@ Keputusan:
   tidak portabel tidak boleh terkirim diam-diam.
 - PC yang sudah memasang redistributable tidak terpengaruh: salinan
   app-local dan salinan sistem berasal dari runtime yang sama.
+
+## ADR-017 — Audio Bel statis ter-bundel + Spotlight Pergantian Jam layar penuh
+
+Konteks (2026-11-19, menuju pameran 23 Nov 2026): bel sekolah perlu
+berbunyi di display. Rancangan awal (TTS dinamis yang merakit
+pengumuman dari potongan suara termasuk nama guru, disinkronkan dari
+HP) DIPANGKAS nyanpo demi kualitas + waktu: data suara TTS di HP
+tidak bisa dijamin ada/bagus, dan info per-kelas lebih jelas dibaca
+daripada didengar. Protokol nekios-core bertambah dua tipe perintah
+(`audio.konfigurasi`, `audio.tes`) dan dua field snapshot
+(`belAktif`, `belTerakhir`).
+
+Keputusan:
+
+- **Pengumuman bel = 16 berkas MP3 statis ter-bundel** di
+  `assets/audio/` (chime menyatu di awal tiap berkas; runtime memutar
+  tepat satu berkas per pengumuman — nol perakitan, nol sinkronisasi
+  suara, 100% offline). Pemetaan slot→berkas murni di
+  `lib/domain/bel.dart`: pelajaran memakai nomor jam ke-N; istirahat/
+  ISOMA/upacara berkas tetap; slot khusus dari labelnya (ROHIS/ROKRIS
+  → bel rohis; selainnya → bel kegiatan generik); akhir hari → bel
+  pulang. Nama berkas adalah kontrak: rekaman manusia boleh menimpa
+  berkas yang sama tanpa ubah kode.
+- **Deteksi transisi di DisplayStore**: bel diputuskan dari dua
+  snapshot keadaan berurutan (masuk slot baru / status menjadi
+  pulang). Loncat simulasi jam ikut memicu (jalur demo pameran),
+  KECUALI transisi akibat `clock.clear` dan `schedule.replace` —
+  keduanya ditelan satu kali lewat penanda, karena bukan momen bel.
+  Tick pertama setelah data dimuat tidak pernah berbunyi.
+- **Store tidak menyentuh audio**: store menerbitkan nama berkas ke
+  `streamBel`; lapisan aplikasi memutarnya lewat antarmuka
+  `PemutarBel` (implementasi `audioplayers`, dipilih karena resmi
+  mendukung Android/Windows/Linux). Kegagalan platform ditelan.
+- **Saklar `belAktif` persisten di display** (shared_preferences,
+  kunci `sekolah.belAktif`, bawaan aktif), diatur remote lewat
+  `audio.konfigurasi`. Nonaktif = pengumuman diam; `audio.tes` selalu
+  berbunyi (uji manual yang disengaja) memainkan pengumuman slot
+  berjalan (di luar slot: contoh jam ke-1). Pemutaran tercatat di
+  `belTerakhir` dan terkirim di snapshot sebagai bukti bunyi.
+- **Pengganti panggil guru = Spotlight Pergantian Jam**: tampilan
+  60 detik pertama setiap masuk slot PELAJARAN baru, menampilkan
+  Kelas + Mapel + Guru slot itu untuk semua kelas. Grid 4 kolom,
+  12 kartu per halaman (dikunci nyanpo); kelas lebih dari 12
+  berpindah halaman otomatis membagi rata 60 detik. Semua keadaan
+  (tampil/hilang, halaman, sisa waktu) diturunkan murni dari
+  `KeadaanSpotlight` (slot + jamKe + mulaiEfektif) dan jam efektif —
+  tanpa timer di widget. Spotlight tampil juga saat bel nonaktif
+  (visual bukan suara); masuk slot non-pelajaran menghapusnya.
+  **Revisi 2026-11-19 (perintah nyanpo, dari bukti rig):** bentuk
+  panel melayang diganti LAYAR PENUH menutupi seluruh tampilan, dan
+  kartu spotlight memakai widget yang sama persis dengan kartu
+  "Sedang Berlangsung" layar utama (`KartuKelasSekarang`) — kartu
+  padat khusus spotlight terbukti meluap (overflow piksel font asli)
+  dan memotong nama mapel panjang; kartu utama membungkus nama
+  mapel utuh maksimal 2 baris tanpa terpotong. Baris grid mengikuti
+  isi halaman (1–3) supaya sedikit kelas tampil besar memenuhi
+  layar; lebar kartu dibatasi selebar kartu layar utama dan grid
+  dipusatkan — tidak dipaksa memenuhi lebar layar — supaya tidak
+  melebar berlebihan.
+  **Revisi 2026-11-19 sore (perintah nyanpo):** layout grid diubah
+  menjadi 3x3 — kapasitas satu halaman 9 kartu (sebelumnya 4 kolom
+  × 3 baris = 12) dan grid selalu selebar 3 kolom supaya 9 kelas
+  bisa tampil sekaligus; 6 kelas tampil 3 kolom × 2 baris.
+  (Sempat keliru diartikan sebagai susunan seimbang 2 kolom × 3
+  baris; dikoreksi nyanpo malam yang sama: 3x3 berarti 3 kolom ×
+  3 baris.)
+  **Revisi 2026-11-19 malam (perintah nyanpo):** audio pengumuman
+  diubah dari 16 berkas utuh menjadi RANGKAIAN POTONGAN (chunk) —
+  konsep asli nyanpo "Concatenative Audio Chunking": setiap
+  pengumuman diputar berurutan sebagai chime awal + info + angka +
+  chime akhir. Potongan bersama (chime, frasa info) hanya ada satu
+  berkas untuk semua pengumuman — tidak ada suara yang direkam/
+  tersimpan berulang, dan mengganti suara atau chime cukup menimpa
+  berkas potongannya. Potongan dipotong dari rekaman pengumuman
+  yang sama (suara MAI_01 varian A): chunk info jam memuat "Saatnya
+  jam pelajaran", chunk angka memuat ekor kalimat per nomor persis
+  seperti terekam ("ke…/kesatu…" + "dimulai."); pengumuman non-jam
+  adalah satu chunk info utuh. Chunk angka tersedia 1–10 (seluruh
+  jam nyata); angka 11–20 menunggu generate dari layanan TTS asal
+  (tidak tercatat) bila suatu saat dibutuhkan. `streamBel` kini
+  menerbitkan `List<String>`; `PemutarBel` memutar rangkaian
+  berurutan lewat `onPlayerComplete` (penanda generasi mencegah
+  peristiwa rangkaian lama memajukan rangkaian baru). Nama berkas
+  logis di `belTerakhir`/snapshot TIDAK berubah — protokol dan
+  remote tidak terpengaruh.
+
+## ADR-018 — Build Linux CI memasang GStreamer untuk audioplayers (2026-11-19)
+
+- **Konteks:** PR Audio Bel (ADR-017) menambah dependensi
+  `audioplayers`. Build Linux CI gagal di langkah CMake:
+  `audioplayers_linux` mewajibkan paket `gstreamer-1.0` lewat
+  pkg-config, yang belum dipasang job `build-linux`.
+- **Keputusan:** langkah "Install Linux build dependencies" di
+  `.github/workflows/build.yml` menambah `libgstreamer1.0-dev` dan
+  `libgstreamer-plugins-base1.0-dev`. Konsekuensi sisi target: bundle
+  Linux kini menaut pustaka runtime GStreamer — mesin Linux tujuan
+  perlu `libgstreamer1.0-0` + `libgstreamer-plugins-base1.0-0`
+  (dan plugin pemutar MP3) agar pemutar bel bisa dimuat; build
+  Windows dan Android tidak terpengaruh.

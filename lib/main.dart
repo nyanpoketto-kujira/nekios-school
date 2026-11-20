@@ -16,6 +16,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -90,17 +91,52 @@ Future<void> siapkanJendelaDesktop() async {
   }
 }
 
+/// Kunci penyimpanan saklar bel (ADR-017).
+const String _kunciBelAktif = 'sekolah.belAktif';
+
+/// Baca saklar bel tersimpan; bawaan aktif. Kegagalan baca tidak
+/// boleh menggagalkan startup (pola ADR-012) — jatuh ke aktif.
+Future<bool> _muatBelAktif() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_kunciBelAktif) ?? true;
+  } catch (e) {
+    debugPrint('Baca saklar bel tersimpan gagal: $e');
+    return true;
+  }
+}
+
+/// Simpan saklar bel; kegagalan ditelan + dicatat (sesi ini tetap
+/// berlaku, hanya tidak persisten).
+Future<void> _simpanBelAktif(bool aktif) async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_kunciBelAktif, aktif);
+  } catch (e) {
+    debugPrint('Simpan saklar bel gagal: $e');
+  }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (adalahPlatformDesktop()) {
     await siapkanJendelaDesktop();
   }
   await aktifkanModeKios();
-  runApp(const NekiosSchoolApp());
+  final belAktif = await _muatBelAktif();
+  runApp(
+    NekiosSchoolApp(belAktifAwal: belAktif, simpanBelAktif: _simpanBelAktif),
+  );
 }
 
 class NekiosSchoolApp extends StatefulWidget {
-  const NekiosSchoolApp({super.key, this.sumberRemote});
+  const NekiosSchoolApp({
+    super.key,
+    this.sumberRemote,
+    this.pemutarBel,
+    this.belAktifAwal = true,
+    this.simpanBelAktif,
+  });
 
   /// Sumber remote pengganti untuk test. Bawaan (null) memakai
   /// [CoreWebSocketSource] sungguhan; widget test menginjeksi
@@ -108,6 +144,16 @@ class NekiosSchoolApp extends StatefulWidget {
   /// tidak bisa hidup di zona FakeAsync testWidgets — perilaku
   /// servernya sendiri diuji di test integrasi sumber.
   final ScheduleSource? sumberRemote;
+
+  /// Pemutar bel pengganti untuk test; bawaan memakai
+  /// [PemutarBelAudioplayers] sungguhan.
+  final PemutarBel? pemutarBel;
+
+  /// Saklar bel awal (dari penyimpanan persisten di `main`).
+  final bool belAktifAwal;
+
+  /// Penulis saklar bel persisten; null = tidak persisten (test).
+  final void Function(bool aktif)? simpanBelAktif;
 
   @override
   State<NekiosSchoolApp> createState() => _NekiosSchoolAppState();
@@ -117,14 +163,25 @@ class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
   late final DisplayStore _store;
   late final AssetScheduleSource _sumber;
   late final ScheduleSource _sumberRemote;
+  late final PemutarBel _pemutarBel;
   StreamSubscription<DisplayEvent>? _langganan;
   StreamSubscription<DisplayEvent>? _langgananRemote;
+  StreamSubscription<List<String>>? _langgananBel;
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _store = DisplayStore();
+    _store = DisplayStore(
+      belAktifAwal: widget.belAktifAwal,
+      simpanBelAktif: widget.simpanBelAktif,
+    );
+    // Store memutuskan berkas bel; lapisan aplikasi yang memutarnya
+    // (ADR-017). Pemutar menelan kegagalannya sendiri.
+    _pemutarBel = widget.pemutarBel ?? PemutarBelAudioplayers();
+    _langgananBel = _store.streamBel.listen(
+      (rangkaian) => unawaited(_pemutarBel.putar(rangkaian)),
+    );
     _sumber = AssetScheduleSource();
     _langganan = _sumber.events.listen(_store.terima);
     unawaited(_sumber.start());
@@ -150,6 +207,7 @@ class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_langgananBel?.cancel() ?? Future<void>.value());
     unawaited(_langganan?.cancel() ?? Future<void>.value());
     unawaited(_langgananRemote?.cancel() ?? Future<void>.value());
     unawaited(_sumber.dispose());
