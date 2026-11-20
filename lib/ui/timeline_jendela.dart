@@ -245,33 +245,46 @@ class _BarisSlot extends StatelessWidget {
       children: [
         SizedBox(
           width: 235 * s,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${slot.mulai}–${slot.selesai}',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  color: warnaWaktu,
-                  fontWeight: FontWeight.bold,
-                  fontSize: (aktif ? 28 : 20) * s,
-                  height: 1.05,
-                ),
-              ),
-              if (labelStatus.isNotEmpty) ...[
-                SizedBox(height: 3 * s),
+          // FittedBox scaleDown = jaminan anti-luber: tinggi baris
+          // datang dari bagi flex (fraksional), sedangkan kolom waktu
+          // ini tingginya tetap (jam + label status). Pada komposisi
+          // jendela Rabu siang (ISOMA selesai + pelajaran selesai +
+          // aktif), jatah flex baris selesai jatuh ~0,01–2 px di
+          // bawah tinggi kolom → "BOTTOM OVERFLOWED BY 0.0145 PIXELS"
+          // di TV. Bila ruang cukup skalanya tepat 1 (tampilan tak
+          // berubah); bila sempit, kolom menyusut sepersekian persen
+          // — tak kasatmata, tapi tidak pernah meluber.
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
-                  labelStatus,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: warnaLabel,
+                  '${slot.mulai}–${slot.selesai}',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: warnaWaktu,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 0.7,
-                    fontSize: 12 * s,
-                    height: 1.0,
+                    fontSize: (aktif ? 28 : 20) * s,
+                    height: 1.05,
                   ),
                 ),
+                if (labelStatus.isNotEmpty) ...[
+                  SizedBox(height: 3 * s),
+                  Text(
+                    labelStatus,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: warnaLabel,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.7,
+                      fontSize: 12 * s,
+                      height: 1.0,
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
         // Wilayah chip baris ini: SATU switcher level-halaman
@@ -402,28 +415,34 @@ class _ChipKelas extends StatelessWidget {
         borderRadius: BorderRadius.circular(16 * s),
       ),
       alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            entri!.mapel,
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: warnaKode,
-              fontWeight: FontWeight.bold,
-              fontSize: (aktif ? 24 : 19) * s,
-              height: 1.0,
+      // Kelas perlindungan yang sama seperti kolom waktu: isi chip
+      // (kode + nama guru) tingginya tetap di dalam baris flex
+      // fraksional — scaleDown menjamin tidak pernah meluber.
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              entri!.mapel,
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: warnaKode,
+                fontWeight: FontWeight.bold,
+                fontSize: (aktif ? 24 : 19) * s,
+                height: 1.0,
+              ),
             ),
-          ),
-          SizedBox(height: 1 * s),
-          Text(
-            guru != null ? namaPendekGuru(guru) : 'KG ${entri!.kg}',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: warnaGuru,
-              fontSize: (aktif ? 17 : 14) * s,
-              height: 1.0,
+            SizedBox(height: 1 * s),
+            Text(
+              guru != null ? namaPendekGuru(guru) : 'KG ${entri!.kg}',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: warnaGuru,
+                fontSize: (aktif ? 17 : 14) * s,
+                height: 1.0,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
