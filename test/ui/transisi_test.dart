@@ -76,7 +76,7 @@ void main() {
 
   group('Transisi cascade sekuensial (ADR-011)', () {
     testWidgets(
-        'rotasi 4→2: tengah transisi semua kartu lama & baru hadir, '
+        'rotasi 4→4: tengah transisi semua kartu lama & baru hadir, '
         'cascade berurutan dari indeks 0', (tester) async {
       tester.view.physicalSize = const Size(1920, 1080);
       tester.view.devicePixelRatio = 1.0;
@@ -93,58 +93,59 @@ void main() {
       // Pola baru terpasang: switcher level-halaman + elemen.
       expect(find.byType(TransisiHalaman), findsWidgets);
       expect(find.byType(ElemenHalaman), findsWidgets);
-      expect(find.text('Bahasa Indonesia'), findsOneWidget);
+      expect(find.text('Informatika'), findsOneWidget);
 
       // Picu rotasi 12 detik, lalu berhenti di awal transisi
       // (250ms dari 1200ms ≈ progres 0,21): jendela indeks 0
-      // (0–0,28 untuk n=4; 0–0,54 untuk n=2) sedang berjalan,
-      // jendela indeks terakhir belum mulai (mulai 0,72 / 0,46).
+      // (mulai 0 untuk n=4) sedang berjalan, jendela indeks
+      // terakhir belum mulai (mulai 0,72).
       await tester.pump(const Duration(seconds: 12));
       await tester.pump(const Duration(milliseconds: 250));
 
-      // Koeksistensi PENUH: keempat kartu halaman lama dan kedua
-      // kartu halaman baru sama-sama di tree — tidak ada kartu
-      // yang hilang seketika seperti pola per-slot dulu.
+      // Koeksistensi PENUH: keempat kartu halaman lama dan
+      // keempat kartu halaman baru sama-sama di tree — tidak ada
+      // kartu yang hilang seketika seperti pola per-slot dulu.
       for (final nama in [
+        'X TKR',
+        'XI TKR',
+        'XII TKR',
+        'X TSM',
+        'XI TSM',
+        'XII TSM',
         'X TKJ A',
         'X TKJ B',
-        'XI TKJ A',
-        'XI TKJ B',
-        'XII TKJ A',
-        'XII TKJ B',
       ]) {
         expect(find.text(nama), findsWidgets, reason: nama);
       }
       // Chip timeline pun koeksis: chip lama & baru hadir bersama.
-      expect(find.text('Bu Sumiati'), findsWidgets);
-      expect(find.text('Pak Rudi'), findsWidgets);
+      expect(find.text('Bu Meizialisa'), findsWidgets);
+      expect(find.text('Bu Erni'), findsWidgets);
 
       // Sifat SEKUENSIAL terukur dari opasitas elemen:
       // - indeks 0 kedua halaman sedang bertukar (0 < t < 1);
-      expect(_opasitasElemen(tester, find.text('X TKJ A').first),
+      expect(_opasitasElemen(tester, find.text('X TKR').first),
           allOf(greaterThan(0.0), lessThan(1.0)));
-      expect(_opasitasElemen(tester, find.text('XII TKJ A').first),
+      expect(_opasitasElemen(tester, find.text('XI TSM').first),
           allOf(greaterThan(0.0), lessThan(1.0)));
       // - indeks terakhir halaman lama masih UTUH (belum keluar);
-      expect(_opasitasElemen(tester, find.text('XI TKJ B').first),
+      expect(_opasitasElemen(tester, find.text('X TSM').first),
           closeTo(1.0, 0.001));
-      expect(_opasitasElemen(tester, find.text('Bu Sumiati').first),
+      expect(_opasitasElemen(tester, find.text('Bu Meizialisa').first),
           closeTo(1.0, 0.001));
       // - indeks terakhir halaman baru BELUM muncul.
-      expect(_opasitasElemen(tester, find.text('XII TKJ B').first),
+      expect(_opasitasElemen(tester, find.text('X TKJ B').first),
           closeTo(0.0, 0.001));
-      expect(_opasitasElemen(tester, find.text('Pak Rudi').first),
+      expect(_opasitasElemen(tester, find.text('Pak Yusuf').first),
           closeTo(0.0, 0.001));
 
       // Selesaikan transisi (total ≥1200ms): hanya halaman 2.
       await tester.pump(const Duration(milliseconds: 1000));
       await tester.pump();
       expect(tester.takeException(), isNull);
-      expect(find.byType(KartuKelasSekarang), findsNWidgets(2));
-      expect(find.text('Bahasa Inggris'), findsOneWidget);
-      expect(find.text('Bahasa Indonesia'), findsNothing);
-      expect(find.text('Ilmu Pengetahuan Alam dan Sosial'), findsNothing);
-      expect(find.text('Bu Sumiati'), findsNothing);
+      expect(find.byType(KartuKelasSekarang), findsNWidgets(4));
+      expect(find.text('Matematika'), findsOneWidget);
+      expect(find.text('Informatika'), findsNothing);
+      expect(find.text('Bu Meizialisa'), findsNothing);
     });
 
     testWidgets(
@@ -167,60 +168,64 @@ void main() {
       Finder diTimeline(String teks) =>
           find.descendant(of: timeline, matching: find.text(teks));
 
-      // Posisi diam chip kolom 0 baris pertama (X TKJ A, 07.30)
+      // Posisi diam chip kolom 0 baris aktif (X TKR, 09.00)
       // sebelum rotasi — pembanding gerak meluncur nanti.
-      final dyEvaDiam = tester.getTopLeft(diTimeline('Bu Eva').first).dy;
+      final dyTriaDiam = tester.getTopLeft(diTimeline('Tria').first).dy;
 
       // Picu rotasi, berhenti di 250ms (progres ±0,21) — titik
-      // yang sama dengan test kartu di atas.
+      // yang sama dengan test kartu di atas. Singgah dulu di
+      // 90ms untuk mengukur chip masuk kolom 0: jendela indeks 0
+      // (n=4) pendek (±340ms), jadi di 250ms luncurannya hampir
+      // selesai dan sisa jaraknya tak terukur.
       await tester.pump(const Duration(seconds: 12));
-      await tester.pump(const Duration(milliseconds: 250));
+      await tester.pump(const Duration(milliseconds: 90));
+      final dyErniTengah =
+          tester.getTopLeft(diTimeline('Bu Erni').first).dy;
+      await tester.pump(const Duration(milliseconds: 160));
 
       // KOLOM TERAKHIR LAMA (indeks 3 dari 4, jendela mulai 0,72):
       // belum bergerak DI MANA PUN — kepala kolom utuh, dan chip
       // kolom itu di baris pertama maupun terakhir sama-sama
       // utuh. Bila satu baris saja mulai lebih dulu (switcher
       // per baris tidak sinkron), salah satu angka ini < 1.
-      expect(_opasitasElemen(tester, diTimeline('XI TKJ B')),
+      expect(_opasitasElemen(tester, diTimeline('X TSM')),
           closeTo(1.0, 0.001));
-      expect(_opasitasElemen(tester, diTimeline('Bu Sumiati').first),
+      expect(_opasitasElemen(tester, diTimeline('Bu Meizialisa').first),
           closeTo(1.0, 0.001));
-      expect(_opasitasElemen(tester, diTimeline('Bu Sumiati').last),
+      expect(_opasitasElemen(tester, diTimeline('Bu Meizialisa').last),
           closeTo(1.0, 0.001));
 
-      // KOLOM TERAKHIR BARU (indeks 1 dari 2, jendela mulai
-      // 0,46): belum muncul di baris mana pun.
-      expect(_opasitasElemen(tester, diTimeline('Pak Rudi').first),
+      // KOLOM TERAKHIR BARU (indeks 3 dari 4, jendela mulai
+      // 0,72): belum muncul di baris mana pun.
+      expect(_opasitasElemen(tester, diTimeline('Pak Yusuf').first),
           closeTo(0.0, 0.001));
-      expect(_opasitasElemen(tester, diTimeline('Pak Rudi').last),
+      expect(_opasitasElemen(tester, diTimeline('Pak Yusuf').last),
           closeTo(0.0, 0.001));
 
       // KOLOM 0 SEDANG BERTUKAR di semua lapis timeline, dengan
       // opasitas yang SAMA antara kepala kolom dan chip baris
-      // pertama: jendela cascade & momen mulai mereka satu —
+      // aktif: jendela cascade & momen mulai mereka satu —
       // sinkron dengan kartu ke-0 (test sebelumnya).
-      final opasKepala0 = _opasitasElemen(tester, diTimeline('X TKJ A'));
-      final opasChip0 = _opasitasElemen(tester, diTimeline('Bu Eva').first);
+      final opasKepala0 = _opasitasElemen(tester, diTimeline('X TKR'));
+      final opasChip0 = _opasitasElemen(tester, diTimeline('Tria').first);
       expect(opasKepala0, allOf(greaterThan(0.0), lessThan(1.0)));
       expect(opasChip0, closeTo(opasKepala0, 0.02));
 
       // GERAK MELUNCUR terukur dari posisi render, bukan cuma
       // fade: chip keluar kolom 0 sudah tenggelam jauh dari
       // posisi diamnya (geser desain 30 satuan), dan chip masuk
-      // kolom 0 (XII TKJ A baris aktif) masih di bawah posisi
+      // kolom 0 (XI TSM baris aktif 09.00) masih di bawah posisi
       // akhirnya — ia naik meluncur ke tempatnya.
-      expect(tester.getTopLeft(diTimeline('Bu Eva').first).dy,
-          greaterThan(dyEvaDiam + 10));
-      final dyDosfriyatiTengah =
-          tester.getTopLeft(diTimeline('Bu Dosfriyati').first).dy;
+      expect(tester.getTopLeft(diTimeline('Tria').first).dy,
+          greaterThan(dyTriaDiam + 10));
 
       // Selesaikan transisi: chip masuk tepat di posisi akhir.
       await tester.pump(const Duration(milliseconds: 1000));
       await tester.pump();
       expect(tester.takeException(), isNull);
-      expect(tester.getTopLeft(diTimeline('Bu Dosfriyati').first).dy,
-          lessThan(dyDosfriyatiTengah - 2));
-      expect(diTimeline('Bu Sumiati'), findsNothing);
+      expect(tester.getTopLeft(diTimeline('Bu Erni').first).dy,
+          lessThan(dyErniTengah - 2));
+      expect(diTimeline('Bu Meizialisa'), findsNothing);
     });
 
     testWidgets('status: Pelajaran → ISOMA lewat fade-through layar',

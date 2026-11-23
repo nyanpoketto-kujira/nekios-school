@@ -177,24 +177,25 @@ void main() {
       expect(ukuranHalamanRotasi, 4);
     });
 
-    test('6 kelas TKJ menjadi 2 halaman isi [4, 2]', () {
+    test('18 kelas semua jurusan menjadi 5 halaman isi [4, 4, 4, 4, 2]',
+        () {
       final halaman = halamanRotasi(data.kelas);
-      expect(halaman.length, 2);
+      expect(halaman.length, 5);
       expect(
         halaman[0].map((k) => k.id),
-        ['X-TKJ-A', 'X-TKJ-B', 'XI-TKJ-A', 'XI-TKJ-B'],
+        ['X-TKR', 'XI-TKR', 'XII-TKR', 'X-TSM'],
       );
       expect(
-        halaman[1].map((k) => k.id),
-        ['XII-TKJ-A', 'XII-TKJ-B'],
+        halaman[4].map((k) => k.id),
+        ['XI-TET', 'XII-TET'],
       );
     });
 
     test('mengurutkan berdasar urutan walau input acak', () {
       final acak = [...data.kelas.reversed];
-      final halaman = halamanRotasi(acak, perHalaman: 6);
-      expect(halaman.single.first.id, 'X-TKJ-A');
-      expect(halaman.single.last.id, 'XII-TKJ-B');
+      final halaman = halamanRotasi(acak, perHalaman: 18);
+      expect(halaman.single.first.id, 'X-TKR');
+      expect(halaman.single.last.id, 'XII-TET');
     });
 
     // Paging adaptif (ADR-010): jumlah kelas berapa pun harus

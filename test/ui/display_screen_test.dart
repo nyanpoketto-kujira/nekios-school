@@ -58,27 +58,27 @@ void main() {
       expect(find.text('SEDANG BERLANGSUNG'), findsNWidgets(2));
 
       // Kartu halaman 1 (paging 4-per-halaman, ADR-010):
-      // X TKJ A, X TKJ B, XI TKJ A, XI TKJ B.
-      expect(find.text('Ilmu Pengetahuan Alam dan Sosial'), findsOneWidget);
+      // X TKR, XI TKR, XII TKR, X TSM.
+      expect(find.text('Informatika'), findsOneWidget);
+      expect(find.text('Projek Kreatif dan Kewirausahaan'), findsOneWidget);
+      expect(find.text('Pemeliharaan Kelistrikan'), findsOneWidget);
       expect(find.text('Dasar-Dasar Program Keahlian'), findsOneWidget);
-      expect(find.text('Bahasa Indonesia'), findsOneWidget);
-      expect(find.text('Konsentrasi Keahlian TKJ'), findsOneWidget);
-      expect(find.text('Bahasa Inggris'), findsNothing);
+      expect(find.text('Matematika'), findsNothing);
       expect(find.text('XII TKJ A'), findsNothing);
 
-      // Rotasi 12 detik → halaman 2 = sisa 2 kelas (XII TKJ A,
-      // XII TKJ B). Pump harus melewati durasi cascade 1200ms
+      // Rotasi 12 detik → halaman 2 (XI TSM, XII TSM, X TKJ A,
+      // X TKJ B). Pump harus melewati durasi cascade 1200ms
       // (ADR-011) agar halaman lama benar-benar sudah pergi.
       await tester.pump(const Duration(seconds: 12));
       await tester.pump(const Duration(milliseconds: 1300));
-      expect(find.text('Bahasa Inggris'), findsOneWidget);
-      expect(find.text('Konsentrasi Keahlian TKJ'), findsOneWidget);
-      expect(find.text('Ilmu Pengetahuan Alam dan Sosial'), findsNothing);
+      expect(find.text('Matematika'), findsOneWidget);
+      expect(find.text('Ilmu Pengetahuan Alam dan Sosial'), findsOneWidget);
+      expect(find.text('Informatika'), findsNothing);
     });
 
     testWidgets(
-        'paging adaptif: halaman 1 isi 4 kartu sama lebar; halaman 2 '
-        'isi 2 kartu sama lebar & memenuhi baris (ADR-010)',
+        'paging adaptif: halaman 1 isi 4 kartu sama lebar; halaman '
+        'terakhir isi 2 kartu sama lebar & memenuhi baris (ADR-010)',
         (tester) async {
       aturLayarTv(tester);
       final store = storePada(DateTime(2026, 11, 17, 9, 20, 24));
@@ -118,10 +118,13 @@ void main() {
       // Halaman 1: 4 kartu merata.
       cekMerata(lebarKartu(), 4);
 
-      // Halaman 2: sisa 2 kartu — keduanya melebar merata memenuhi
-      // baris (bukan menyusut ke lebar 4-kolom).
-      await tester.pump(const Duration(seconds: 12));
-      await tester.pump(const Duration(milliseconds: 1300));
+      // Halaman terakhir (ke-5 dari 18 kelas): sisa 2 kartu —
+      // keduanya melebar merata memenuhi baris (bukan menyusut
+      // ke lebar 4-kolom). Empat rotasi dari halaman 1.
+      for (var i = 0; i < 4; i++) {
+        await tester.pump(const Duration(seconds: 12));
+        await tester.pump(const Duration(milliseconds: 1300));
+      }
       await tester.pump();
       expect(tester.takeException(), isNull);
       cekMerata(lebarKartu(), 2);

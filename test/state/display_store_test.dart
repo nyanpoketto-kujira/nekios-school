@@ -180,7 +180,7 @@ void main() {
       expect(snapshot['sisaKeBelDetik'], 24 * 60 + 36);
       final jadwal = snapshot['jadwal'] as Map<String, dynamic>;
       expect(jadwal['sekolah'], 'SMKN 1 UKUI');
-      expect(jadwal['jumlahKelas'], 6);
+      expect(jadwal['jumlahKelas'], 18);
       expect(jadwal['jumlahHari'], 5);
       expect(jadwal['hariAktif'], 'selasa');
     });

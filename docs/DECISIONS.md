@@ -761,3 +761,28 @@ Keputusan:
   perlu `libgstreamer1.0-0` + `libgstreamer-plugins-base1.0-0`
   (dan plugin pemutar MP3) agar pemutar bel bisa dimuat; build
   Windows dan Android tidak terpengaruh.
+
+## ADR-019 — Jadwal meluas ke semua jurusan dari file induk resmi (2026-11-23)
+
+- **Konteks:** data bawaan semula hanya 6 kelas TKJ, didekode dari
+  foto jadwal induk cetak. Pada hari pameran 2026-11-23 nyanpo
+  mengunggah file induk digital resmi (`Jadwal_Ganjil_2026-2027-2.xls`,
+  semua jurusan SMKN 1 Ukui) dan memerintahkan data diperbaiki
+  sekaligus diperluas ke semua kelas (X–XII, semua jurusan) dan
+  di-load-test ke TV yang sedang berjalan.
+- **Keputusan:** dokumen jadwal kini memuat **18 kelas** (TKR, TSM,
+  TKJ A/B, Akuntansi, TET × X–XII) hasil konversi terprogram dari
+  file induk + audit diff terhadap data TKJ lama: dari 282 sel TKJ
+  hanya 7 berbeda — 5 sel Selasa XII TKJ B yang kolom KG-nya dulu
+  terpotong foto kini terkonfirmasi **KG 33 (Yusuf Hendra, S.Kom)**
+  untuk jam ke-6 s.d. 10 (bukan KG 6 seharian), plus 2 sel XI TKJ B
+  (Kamis 12.45 dan Jumat 10.40) yang mengikuti file resmi. Kode mapel
+  diseragamkan ke kode app (DDPK→DDBP, B.INDO→B.IND, dst.); 20 mapel
+  jurusan lain ditambahkan dengan nama panjang + warna. Nama panjang
+  KK digenerikkan menjadi "Konsentrasi Keahlian" (dipakai semua
+  jurusan). `meta.jurusan` kini frasa utuh "Semua Jurusan" dan
+  subjudul header menampilkannya apa adanya (tanpa awalan "Jurusan").
+  Tanpa perubahan skema/engine: validator §7, paging 4-per-halaman
+  (kini 5 halaman), dan spotlight 3×3 memang sudah agnostik jumlah
+  kelas — terbukti oleh tes load `schedule.replace` ke TV berjalan
+  (ter-ack, snapshot `jumlahKelas: 18`) pada hari pameran.

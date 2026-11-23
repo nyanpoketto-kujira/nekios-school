@@ -40,14 +40,15 @@ class HeaderSekolah extends StatelessWidget {
 
   /// Subjudul ringkas yang muat penuh di kolom nama: label semester
   /// dari judul data (tanpa awalan "Jadwal Pembelajaran"), tahun
-  /// pelajaran dengan pemisah '/', lalu jurusan. Contoh hasil:
-  /// "Semester Ganjil 2026/2027 • Jurusan TKJ".
+  /// pelajaran dengan pemisah '/', lalu keterangan jurusan dari
+  /// data (sudah berupa frasa utuh, mis. "Semua Jurusan"). Contoh
+  /// hasil: "Semester Ganjil 2026/2027 • Semua Jurusan".
   String get _subjudul {
     final kata = data.judul.split(' ');
     final labelSemester =
         kata.length > 2 ? kata.sublist(2).join(' ') : data.judul;
     final tahun = data.tahunPelajaran.replaceAll('-', '/');
-    return '$labelSemester $tahun • Jurusan ${data.jurusan}';
+    return '$labelSemester $tahun • ${data.jurusan}';
   }
 
   @override

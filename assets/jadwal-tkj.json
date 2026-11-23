@@ -3,40 +3,99 @@
     "sekolah": "SMKN 1 UKUI",
     "judul": "Jadwal Pembelajaran Semester Ganjil",
     "tahunPelajaran": "2026-2027",
-    "jurusan": "TKJ",
-    "sumber": "Foto jadwal induk cetak, decode 2026-11-17. Draf: nama dan kode bertanda terverifikasi=false belum dikonfirmasi sekolah.",
-    "arsitektur": "workspace/your_files/arsitektur-data-nekios-school.md"
+    "jurusan": "Semua Jurusan",
+    "sumber": "File jadwal induk resmi Jadwal_Ganjil_2026-2027-2.xls (diunggah nyanpo 2026-11-23), konversi otomatis + audit diff vs data TKJ terverifikasi."
   },
   "kelas": [
     {
+      "id": "X-TKR",
+      "nama": "X TKR",
+      "urutan": 1
+    },
+    {
+      "id": "XI-TKR",
+      "nama": "XI TKR",
+      "urutan": 2
+    },
+    {
+      "id": "XII-TKR",
+      "nama": "XII TKR",
+      "urutan": 3
+    },
+    {
+      "id": "X-TSM",
+      "nama": "X TSM",
+      "urutan": 4
+    },
+    {
+      "id": "XI-TSM",
+      "nama": "XI TSM",
+      "urutan": 5
+    },
+    {
+      "id": "XII-TSM",
+      "nama": "XII TSM",
+      "urutan": 6
+    },
+    {
       "id": "X-TKJ-A",
       "nama": "X TKJ A",
-      "urutan": 1
+      "urutan": 7
     },
     {
       "id": "X-TKJ-B",
       "nama": "X TKJ B",
-      "urutan": 2
+      "urutan": 8
     },
     {
       "id": "XI-TKJ-A",
       "nama": "XI TKJ A",
-      "urutan": 3
+      "urutan": 9
     },
     {
       "id": "XI-TKJ-B",
       "nama": "XI TKJ B",
-      "urutan": 4
+      "urutan": 10
     },
     {
       "id": "XII-TKJ-A",
       "nama": "XII TKJ A",
-      "urutan": 5
+      "urutan": 11
     },
     {
       "id": "XII-TKJ-B",
       "nama": "XII TKJ B",
-      "urutan": 6
+      "urutan": 12
+    },
+    {
+      "id": "X-AKUN",
+      "nama": "X AKUN",
+      "urutan": 13
+    },
+    {
+      "id": "XI-AKUN",
+      "nama": "XI AKUN",
+      "urutan": 14
+    },
+    {
+      "id": "XII-AKUN",
+      "nama": "XII AKUN",
+      "urutan": 15
+    },
+    {
+      "id": "X-TET",
+      "nama": "X TET",
+      "urutan": 16
+    },
+    {
+      "id": "XI-TET",
+      "nama": "XI TET",
+      "urutan": 17
+    },
+    {
+      "id": "XII-TET",
+      "nama": "XII TET",
+      "urutan": 18
     }
   ],
   "guru": [
@@ -244,7 +303,7 @@
     },
     {
       "kode": "KK",
-      "namaPanjang": "Konsentrasi Keahlian TKJ",
+      "namaPanjang": "Konsentrasi Keahlian",
       "warna": "#D9A097"
     },
     {
@@ -296,13 +355,111 @@
       "kode": "PEMINATAN",
       "namaPanjang": "Mapel Peminatan Kejuruan",
       "warna": "#D77FA1"
+    },
+    {
+      "kode": "A.KEUANGAN",
+      "namaPanjang": "Akuntansi Keuangan",
+      "warna": "#96784F"
+    },
+    {
+      "kode": "ADM.PAJAK",
+      "namaPanjang": "Administrasi Pajak",
+      "warna": "#A68B5B"
+    },
+    {
+      "kode": "AKDASAR",
+      "namaPanjang": "Akuntansi Dasar dan Perbankan Dasar",
+      "warna": "#A89B5B"
+    },
+    {
+      "kode": "BBN",
+      "namaPanjang": "Bahan Bakar Nabati",
+      "warna": "#6FA287"
+    },
+    {
+      "kode": "ETIKA",
+      "namaPanjang": "Etika Profesi",
+      "warna": "#9B8EC4"
+    },
+    {
+      "kode": "K3LH",
+      "namaPanjang": "Keselamatan, Kesehatan Kerja, dan Lingkungan Hidup",
+      "warna": "#C08552"
+    },
+    {
+      "kode": "KELISTRIKAN",
+      "namaPanjang": "Kelistrikan",
+      "warna": "#7D8FA6"
+    },
+    {
+      "kode": "KOMP.AK",
+      "namaPanjang": "Komputer Akuntansi",
+      "warna": "#6B9080"
+    },
+    {
+      "kode": "P.CHASIS",
+      "namaPanjang": "Perawatan Chasis",
+      "warna": "#8795A5"
+    },
+    {
+      "kode": "P.ENGINE",
+      "namaPanjang": "Perawatan Engine",
+      "warna": "#5F7A8A"
+    },
+    {
+      "kode": "P.LISTRIK",
+      "namaPanjang": "Pemeliharaan Kelistrikan",
+      "warna": "#93A5BB"
+    },
+    {
+      "kode": "P.SASIS",
+      "namaPanjang": "Perawatan Sasis",
+      "warna": "#7A8B99"
+    },
+    {
+      "kode": "PAL/IP",
+      "namaPanjang": "Praktikum Akuntansi Lembaga/Instansi Pemerintah",
+      "warna": "#7A6FA0"
+    },
+    {
+      "kode": "PAPJDM",
+      "namaPanjang": "Praktikum Akuntansi Perusahaan Jasa, Dagang, dan Manufaktur",
+      "warna": "#8A6FA8"
+    },
+    {
+      "kode": "PEM.MESIN",
+      "namaPanjang": "Pemeliharaan Mesin",
+      "warna": "#4F6B7D"
+    },
+    {
+      "kode": "PLTBG",
+      "namaPanjang": "Pembangkit Listrik Tenaga Biogas",
+      "warna": "#4E937A"
+    },
+    {
+      "kode": "R.BIOGAS",
+      "namaPanjang": "Reaktor Biogas",
+      "warna": "#5FA88F"
+    },
+    {
+      "kode": "SASIS",
+      "namaPanjang": "Pemeliharaan Sasis",
+      "warna": "#6E8296"
+    },
+    {
+      "kode": "SPREADSHEET",
+      "namaPanjang": "Spreadsheet",
+      "warna": "#5B8A72"
+    },
+    {
+      "kode": "TERMOKIMIA",
+      "namaPanjang": "Termokimia",
+      "warna": "#B08968"
     }
   ],
   "hari": [
     {
       "nama": "senin",
-      "statusDecode": "lengkap-dari-foto",
-      "catatan": "Data Senin dikoreksi/dilengkapi langsung oleh nyanpo 2026-11-17 (otoritatif). Slot pembuka 07.15-08.00 tipe upacara.",
       "slots": [
         {
           "mulai": "07.15",
@@ -315,6 +472,30 @@
           "selesai": "08.45",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "IPAS",
+              "kg": 34
+            },
+            "XI-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "XII-TKR": {
+              "mapel": "PKK",
+              "kg": 27
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-TSM": {
+              "mapel": "P.SASIS",
+              "kg": 23
+            },
             "X-TKJ-A": {
               "mapel": "IPAS",
               "kg": 7
@@ -338,6 +519,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XI-AKUN": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XII-AKUN": {
+              "mapel": "ADM.PAJAK",
+              "kg": 36
+            },
+            "X-TET": {
+              "mapel": "SEJARAH",
+              "kg": 26
+            },
+            "XI-TET": {
+              "mapel": "PKK",
+              "kg": 32
+            },
+            "XII-TET": {
+              "mapel": "B.ING",
+              "kg": 8
             }
           }
         },
@@ -346,6 +551,30 @@
           "selesai": "09.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "IPAS",
+              "kg": 34
+            },
+            "XI-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "XII-TKR": {
+              "mapel": "PKK",
+              "kg": 27
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-TSM": {
+              "mapel": "P.SASIS",
+              "kg": 23
+            },
             "X-TKJ-A": {
               "mapel": "IPAS",
               "kg": 7
@@ -369,6 +598,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XI-AKUN": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XII-AKUN": {
+              "mapel": "ADM.PAJAK",
+              "kg": 36
+            },
+            "X-TET": {
+              "mapel": "SEJARAH",
+              "kg": 26
+            },
+            "XI-TET": {
+              "mapel": "PKK",
+              "kg": 32
+            },
+            "XII-TET": {
+              "mapel": "B.ING",
+              "kg": 8
             }
           }
         },
@@ -377,6 +630,30 @@
           "selesai": "10.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "IPAS",
+              "kg": 34
+            },
+            "XI-TKR": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XII-TKR": {
+              "mapel": "PKK",
+              "kg": 27
+            },
+            "X-TSM": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TSM": {
+              "mapel": "SASIS",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "P.SASIS",
+              "kg": 23
+            },
             "X-TKJ-A": {
               "mapel": "IPAS",
               "kg": 7
@@ -400,6 +677,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XI-AKUN": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XII-AKUN": {
+              "mapel": "ADM.PAJAK",
+              "kg": 36
+            },
+            "X-TET": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TET": {
+              "mapel": "PKK",
+              "kg": 32
+            },
+            "XII-TET": {
+              "mapel": "MTK",
+              "kg": 12
             }
           }
         },
@@ -414,6 +715,30 @@
           "selesai": "11.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-TKR": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XII-TKR": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "X-TSM": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TSM": {
+              "mapel": "SASIS",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "P.SASIS",
+              "kg": 23
+            },
             "X-TKJ-A": {
               "mapel": "B.ING",
               "kg": 8
@@ -437,6 +762,30 @@
             "XII-TKJ-B": {
               "mapel": "PKK",
               "kg": 35
+            },
+            "X-AKUN": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XI-AKUN": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XII-AKUN": {
+              "mapel": "ADM.PAJAK",
+              "kg": 36
+            },
+            "X-TET": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TET": {
+              "mapel": "PKK",
+              "kg": 32
+            },
+            "XII-TET": {
+              "mapel": "MTK",
+              "kg": 12
             }
           }
         },
@@ -445,6 +794,30 @@
           "selesai": "12.00",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-TKR": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XII-TKR": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "X-TSM": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TSM": {
+              "mapel": "SASIS",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "P.SASIS",
+              "kg": 23
+            },
             "X-TKJ-A": {
               "mapel": "B.ING",
               "kg": 8
@@ -468,6 +841,30 @@
             "XII-TKJ-B": {
               "mapel": "PKK",
               "kg": 35
+            },
+            "X-AKUN": {
+              "mapel": "BMR",
+              "kg": 7
+            },
+            "XI-AKUN": {
+              "mapel": "BMR",
+              "kg": 19
+            },
+            "XII-AKUN": {
+              "mapel": "KOMP.AK",
+              "kg": 25
+            },
+            "X-TET": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TET": {
+              "mapel": "PKK",
+              "kg": 32
+            },
+            "XII-TET": {
+              "mapel": "MTK",
+              "kg": 12
             }
           }
         },
@@ -482,6 +879,30 @@
           "selesai": "13.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-TKR": {
+              "mapel": "SEJARAH",
+              "kg": 15
+            },
+            "XII-TKR": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "X-TSM": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-TSM": {
+              "mapel": "SASIS",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
             "X-TKJ-A": {
               "mapel": "MTK",
               "kg": 24
@@ -505,6 +926,30 @@
             "XII-TKJ-B": {
               "mapel": "PKK",
               "kg": 35
+            },
+            "X-AKUN": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "XI-AKUN": {
+              "mapel": "BMR",
+              "kg": 19
+            },
+            "XII-AKUN": {
+              "mapel": "KOMP.AK",
+              "kg": 25
+            },
+            "X-TET": {
+              "mapel": "BMR",
+              "kg": 7
+            },
+            "XI-TET": {
+              "mapel": "PEMINATAN",
+              "kg": 29
+            },
+            "XII-TET": {
+              "mapel": "BBN",
+              "kg": 27
             }
           }
         },
@@ -513,6 +958,30 @@
           "selesai": "14.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TKR": {
+              "mapel": "SEJARAH",
+              "kg": 15
+            },
+            "XII-TKR": {
+              "mapel": "PEM.MESIN",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-TSM": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
             "X-TKJ-A": {
               "mapel": "MTK",
               "kg": 24
@@ -536,6 +1005,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "XI-AKUN": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-AKUN": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "X-TET": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-TET": {
+              "mapel": "PEMINATAN",
+              "kg": 29
+            },
+            "XII-TET": {
+              "mapel": "BBN",
+              "kg": 27
             }
           }
         },
@@ -544,6 +1037,30 @@
           "selesai": "15.00",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TKR": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKR": {
+              "mapel": "PEM.MESIN",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-TSM": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
             "X-TKJ-A": {
               "mapel": "MTK",
               "kg": 24
@@ -567,6 +1084,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "SEJARAH",
+              "kg": 30
+            },
+            "XI-AKUN": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-AKUN": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "X-TET": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-TET": {
+              "mapel": "PEMINATAN",
+              "kg": 29
+            },
+            "XII-TET": {
+              "mapel": "BBN",
+              "kg": 27
             }
           }
         },
@@ -575,6 +1116,30 @@
           "selesai": "15.45",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TKR": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKR": {
+              "mapel": "PEM.MESIN",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-TSM": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
             "X-TKJ-A": {
               "mapel": "MTK",
               "kg": 24
@@ -598,6 +1163,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "SEJARAH",
+              "kg": 30
+            },
+            "XI-AKUN": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-AKUN": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "X-TET": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-TET": {
+              "mapel": "PEMINATAN",
+              "kg": 29
+            },
+            "XII-TET": {
+              "mapel": "BBN",
+              "kg": 27
             }
           }
         }
@@ -605,14 +1194,36 @@
     },
     {
       "nama": "selasa",
-      "statusDecode": "lengkap-dari-foto",
-      "catatan": "Kolom XII TKJ B: KG terisi 6 mengikuti pola KK di foto, perlu verifikasi.",
       "slots": [
         {
           "mulai": "07.30",
           "selesai": "08.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-TSM": {
+              "mapel": "PKK",
+              "kg": 36
+            },
+            "XII-TSM": {
+              "mapel": "PEM.MESIN",
+              "kg": 4
+            },
             "X-TKJ-A": {
               "mapel": "IPAS",
               "kg": 7
@@ -636,6 +1247,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XI-AKUN": {
+              "mapel": "PEMINATAN",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 25
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 32
+            },
+            "XI-TET": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TET": {
+              "mapel": "PKK",
+              "kg": 29
             }
           }
         },
@@ -644,6 +1279,30 @@
           "selesai": "09.00",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-TSM": {
+              "mapel": "PKK",
+              "kg": 36
+            },
+            "XII-TSM": {
+              "mapel": "PEM.MESIN",
+              "kg": 4
+            },
             "X-TKJ-A": {
               "mapel": "IPAS",
               "kg": 7
@@ -667,6 +1326,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XI-AKUN": {
+              "mapel": "PEMINATAN",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 25
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 32
+            },
+            "XI-TET": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TET": {
+              "mapel": "PKK",
+              "kg": 29
             }
           }
         },
@@ -675,6 +1358,30 @@
           "selesai": "09.45",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "INFOR",
+              "kg": 32
+            },
+            "XI-TKR": {
+              "mapel": "PKK",
+              "kg": 31
+            },
+            "XII-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XII-TSM": {
+              "mapel": "PEMINATAN",
+              "kg": 36
+            },
             "X-TKJ-A": {
               "mapel": "IPAS",
               "kg": 7
@@ -698,6 +1405,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-AKUN": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 25
+            },
+            "X-TET": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "XI-TET": {
+              "mapel": "R.BIOGAS",
+              "kg": 11
+            },
+            "XII-TET": {
+              "mapel": "BBN",
+              "kg": 27
             }
           }
         },
@@ -706,6 +1437,30 @@
           "selesai": "10.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "INFOR",
+              "kg": 32
+            },
+            "XI-TKR": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XII-TSM": {
+              "mapel": "PEMINATAN",
+              "kg": 36
+            },
             "X-TKJ-A": {
               "mapel": "PJOK",
               "kg": 16
@@ -729,6 +1484,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "INFOR",
+              "kg": 32
+            },
+            "XI-AKUN": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-AKUN": {
+              "mapel": "PEMINATAN",
+              "kg": 35
+            },
+            "X-TET": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "XI-TET": {
+              "mapel": "R.BIOGAS",
+              "kg": 11
+            },
+            "XII-TET": {
+              "mapel": "BBN",
+              "kg": 27
             }
           }
         },
@@ -743,6 +1522,30 @@
           "selesai": "11.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "XI-TKR": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TKR": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TSM": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XII-TSM": {
+              "mapel": "PEM.MESIN",
+              "kg": 4
+            },
             "X-TKJ-A": {
               "mapel": "PJOK",
               "kg": 16
@@ -766,6 +1569,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-AKUN": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-AKUN": {
+              "mapel": "PEMINATAN",
+              "kg": 35
+            },
+            "X-TET": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TET": {
+              "mapel": "PLTBG",
+              "kg": 32
+            },
+            "XII-TET": {
+              "mapel": "BBN",
+              "kg": 27
             }
           }
         },
@@ -774,6 +1601,30 @@
           "selesai": "12.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "XI-TKR": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TKR": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TSM": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TSM": {
+              "mapel": "KELISTRIKAN",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "PEM.MESIN",
+              "kg": 4
+            },
             "X-TKJ-A": {
               "mapel": "PJOK",
               "kg": 16
@@ -796,7 +1647,31 @@
             },
             "XII-TKJ-B": {
               "mapel": "KK",
-              "kg": 6
+              "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "PEMINATAN",
+              "kg": 35
+            },
+            "X-TET": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TET": {
+              "mapel": "PLTBG",
+              "kg": 32
+            },
+            "XII-TET": {
+              "mapel": "BBN",
+              "kg": 27
             }
           }
         },
@@ -811,6 +1686,30 @@
           "selesai": "13.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "XII-TKR": {
+              "mapel": "PKN",
+              "kg": 2
+            },
+            "X-TSM": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TSM": {
+              "mapel": "KELISTRIKAN",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "PEM.MESIN",
+              "kg": 4
+            },
             "X-TKJ-A": {
               "mapel": "SENBUD",
               "kg": 20
@@ -833,7 +1732,31 @@
             },
             "XII-TKJ-B": {
               "mapel": "KK",
-              "kg": 6
+              "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "AKDASAR",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "PEMINATAN",
+              "kg": 35
+            },
+            "X-TET": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-TET": {
+              "mapel": "PLTBG",
+              "kg": 32
+            },
+            "XII-TET": {
+              "mapel": "PLTBG",
+              "kg": 29
             }
           }
         },
@@ -842,6 +1765,30 @@
           "selesai": "14.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "XII-TKR": {
+              "mapel": "PKN",
+              "kg": 2
+            },
+            "X-TSM": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TSM": {
+              "mapel": "KELISTRIKAN",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "PEM.MESIN",
+              "kg": 4
+            },
             "X-TKJ-A": {
               "mapel": "SENBUD",
               "kg": 20
@@ -864,7 +1811,31 @@
             },
             "XII-TKJ-B": {
               "mapel": "KK",
-              "kg": 6
+              "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "AKDASAR",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "X-TET": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-TET": {
+              "mapel": "PLTBG",
+              "kg": 32
+            },
+            "XII-TET": {
+              "mapel": "PLTBG",
+              "kg": 29
             }
           }
         },
@@ -873,6 +1844,30 @@
           "selesai": "15.00",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XI-TKR": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "X-TSM": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TSM": {
+              "mapel": "SEJARAH",
+              "kg": 15
+            },
+            "XII-TSM": {
+              "mapel": "PKK",
+              "kg": 35
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -895,7 +1890,31 @@
             },
             "XII-TKJ-B": {
               "mapel": "KK",
-              "kg": 6
+              "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "AKDASAR",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "X-TET": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TET": {
+              "mapel": "BBN",
+              "kg": 27
+            },
+            "XII-TET": {
+              "mapel": "PKN",
+              "kg": 1
             }
           }
         },
@@ -904,6 +1923,30 @@
           "selesai": "15.45",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XI-TKR": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "X-TSM": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-TSM": {
+              "mapel": "SEJARAH",
+              "kg": 15
+            },
+            "XII-TSM": {
+              "mapel": "PKK",
+              "kg": 35
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -926,7 +1969,31 @@
             },
             "XII-TKJ-B": {
               "mapel": "KK",
-              "kg": 6
+              "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "K3LH",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "X-TET": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TET": {
+              "mapel": "BBN",
+              "kg": 27
+            },
+            "XII-TET": {
+              "mapel": "PKN",
+              "kg": 1
             }
           }
         }
@@ -934,14 +2001,36 @@
     },
     {
       "nama": "rabu",
-      "statusDecode": "lengkap-dari-foto",
-      "catatan": "Data Rabu dari nyanpo 2026-11-17 (otoritatif).",
       "slots": [
         {
           "mulai": "07.30",
           "selesai": "08.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "BMR",
+              "kg": 34
+            },
+            "XII-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-TSM": {
+              "mapel": "PEMINATAN",
+              "kg": 36
+            },
             "X-TKJ-A": {
               "mapel": "PAI",
               "kg": 17
@@ -965,6 +2054,30 @@
             "XII-TKJ-B": {
               "mapel": "B.ING",
               "kg": 5
+            },
+            "X-AKUN": {
+              "mapel": "SPREADSHEET",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "ADM.PAJAK",
+              "kg": 25
+            },
+            "XII-AKUN": {
+              "mapel": "PAL/IP",
+              "kg": 30
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 32
+            },
+            "XI-TET": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-TET": {
+              "mapel": "R.BIOGAS",
+              "kg": 11
             }
           }
         },
@@ -973,6 +2086,30 @@
           "selesai": "09.00",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-TSM": {
+              "mapel": "PEMINATAN",
+              "kg": 36
+            },
             "X-TKJ-A": {
               "mapel": "PAI",
               "kg": 17
@@ -996,6 +2133,30 @@
             "XII-TKJ-B": {
               "mapel": "B.ING",
               "kg": 5
+            },
+            "X-AKUN": {
+              "mapel": "SPREADSHEET",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "ADM.PAJAK",
+              "kg": 25
+            },
+            "XII-AKUN": {
+              "mapel": "PAL/IP",
+              "kg": 30
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 32
+            },
+            "XI-TET": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-TET": {
+              "mapel": "R.BIOGAS",
+              "kg": 11
             }
           }
         },
@@ -1004,6 +2165,30 @@
           "selesai": "09.45",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TSM": {
+              "mapel": "PKN",
+              "kg": 1
+            },
             "X-TKJ-A": {
               "mapel": "PAI",
               "kg": 17
@@ -1027,6 +2212,30 @@
             "XII-TKJ-B": {
               "mapel": "B.ING",
               "kg": 5
+            },
+            "X-AKUN": {
+              "mapel": "SPREADSHEET",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "ADM.PAJAK",
+              "kg": 25
+            },
+            "XII-AKUN": {
+              "mapel": "PAL/IP",
+              "kg": 30
+            },
+            "X-TET": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-TET": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-TET": {
+              "mapel": "R.BIOGAS",
+              "kg": 11
             }
           }
         },
@@ -1035,6 +2244,30 @@
           "selesai": "10.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "XII-TKR": {
+              "mapel": "BMR",
+              "kg": 20
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TSM": {
+              "mapel": "PKN",
+              "kg": 1
+            },
             "X-TKJ-A": {
               "mapel": "BMR",
               "kg": 26
@@ -1058,6 +2291,30 @@
             "XII-TKJ-B": {
               "mapel": "B.ING",
               "kg": 5
+            },
+            "X-AKUN": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-AKUN": {
+              "mapel": "A.KEUANGAN",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "PAL/IP",
+              "kg": 30
+            },
+            "X-TET": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-TET": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-TET": {
+              "mapel": "R.BIOGAS",
+              "kg": 11
             }
           }
         },
@@ -1072,6 +2329,30 @@
           "selesai": "11.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "INFOR",
+              "kg": 32
+            },
+            "XI-TKR": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "X-TSM": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TSM": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TSM": {
+              "mapel": "PAI",
+              "kg": 17
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1095,6 +2376,30 @@
             "XII-TKJ-B": {
               "mapel": "BMR",
               "kg": 20
+            },
+            "X-AKUN": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-AKUN": {
+              "mapel": "A.KEUANGAN",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 31
+            },
+            "XI-TET": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-TET": {
+              "mapel": "PLTBG",
+              "kg": 29
             }
           }
         },
@@ -1103,6 +2408,30 @@
           "selesai": "12.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "INFOR",
+              "kg": 32
+            },
+            "XI-TKR": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "X-TSM": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TSM": {
+              "mapel": "KELISTRIKAN",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "PAI",
+              "kg": 17
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1126,6 +2455,30 @@
             "XII-TKJ-B": {
               "mapel": "MTK",
               "kg": 24
+            },
+            "X-AKUN": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-AKUN": {
+              "mapel": "A.KEUANGAN",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 31
+            },
+            "XI-TET": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-TET": {
+              "mapel": "PLTBG",
+              "kg": 29
             }
           }
         },
@@ -1140,6 +2493,30 @@
           "selesai": "13.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "SEJARAH",
+              "kg": 19
+            },
+            "XI-TKR": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "X-TSM": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TSM": {
+              "mapel": "KELISTRIKAN",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "PAI",
+              "kg": 17
+            },
             "X-TKJ-A": {
               "mapel": "INFOR",
               "kg": 32
@@ -1163,6 +2540,30 @@
             "XII-TKJ-B": {
               "mapel": "MTK",
               "kg": 24
+            },
+            "X-AKUN": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-AKUN": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-AKUN": {
+              "mapel": "A.KEUANGAN",
+              "kg": 30
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 31
+            },
+            "XI-TET": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-TET": {
+              "mapel": "PLTBG",
+              "kg": 29
             }
           }
         },
@@ -1171,6 +2572,30 @@
           "selesai": "14.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "SEJARAH",
+              "kg": 19
+            },
+            "XI-TKR": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TKR": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "X-TSM": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TSM": {
+              "mapel": "KELISTRIKAN",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "BMR",
+              "kg": 20
+            },
             "X-TKJ-A": {
               "mapel": "INFOR",
               "kg": 32
@@ -1194,6 +2619,30 @@
             "XII-TKJ-B": {
               "mapel": "MTK",
               "kg": 24
+            },
+            "X-AKUN": {
+              "mapel": "INFOR",
+              "kg": 34
+            },
+            "XI-AKUN": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-AKUN": {
+              "mapel": "A.KEUANGAN",
+              "kg": 30
+            },
+            "X-TET": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 31
+            },
+            "XII-TET": {
+              "mapel": "PAI",
+              "kg": 17
             }
           }
         },
@@ -1202,6 +2651,30 @@
           "selesai": "15.00",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "XI-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "XII-TKR": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "X-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TSM": {
+              "mapel": "SASIS",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "P.SASIS",
+              "kg": 23
+            },
             "X-TKJ-A": {
               "mapel": "B.IND",
               "kg": 13
@@ -1225,6 +2698,30 @@
             "XII-TKJ-B": {
               "mapel": "PKN",
               "kg": 1
+            },
+            "X-AKUN": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-AKUN": {
+              "mapel": "SEJARAH",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "A.KEUANGAN",
+              "kg": 30
+            },
+            "X-TET": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 31
+            },
+            "XII-TET": {
+              "mapel": "PAI",
+              "kg": 17
             }
           }
         },
@@ -1233,6 +2730,30 @@
           "selesai": "15.45",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "XI-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "XII-TKR": {
+              "mapel": "MTK",
+              "kg": 2
+            },
+            "X-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TSM": {
+              "mapel": "SASIS",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "P.SASIS",
+              "kg": 23
+            },
             "X-TKJ-A": {
               "mapel": "B.IND",
               "kg": 13
@@ -1256,6 +2777,30 @@
             "XII-TKJ-B": {
               "mapel": "PKN",
               "kg": 1
+            },
+            "X-AKUN": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-AKUN": {
+              "mapel": "SEJARAH",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "A.KEUANGAN",
+              "kg": 30
+            },
+            "X-TET": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 31
+            },
+            "XII-TET": {
+              "mapel": "PAI",
+              "kg": 17
             }
           }
         }
@@ -1263,14 +2808,36 @@
     },
     {
       "nama": "kamis",
-      "statusDecode": "lengkap-dari-foto",
-      "catatan": "Data Kamis dari nyanpo 2026-11-17 (otoritatif).",
       "slots": [
         {
           "mulai": "07.30",
           "selesai": "08.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TKR": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-TKR": {
+              "mapel": "PEMINATAN",
+              "kg": 29
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "BMR",
+              "kg": 19
+            },
+            "XII-TSM": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1294,6 +2861,30 @@
             "XII-TKJ-B": {
               "mapel": "B.IND",
               "kg": 13
+            },
+            "X-AKUN": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-AKUN": {
+              "mapel": "PKK",
+              "kg": 30
+            },
+            "XII-AKUN": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "X-TET": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TET": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TET": {
+              "mapel": "B.ING",
+              "kg": 8
             }
           }
         },
@@ -1302,6 +2893,30 @@
           "selesai": "09.00",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TKR": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XII-TKR": {
+              "mapel": "PEMINATAN",
+              "kg": 29
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "PKK",
+              "kg": 36
+            },
+            "XII-TSM": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1325,6 +2940,30 @@
             "XII-TKJ-B": {
               "mapel": "B.IND",
               "kg": 13
+            },
+            "X-AKUN": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-AKUN": {
+              "mapel": "PKK",
+              "kg": 30
+            },
+            "XII-AKUN": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "X-TET": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TET": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TET": {
+              "mapel": "B.ING",
+              "kg": 8
             }
           }
         },
@@ -1333,6 +2972,30 @@
           "selesai": "09.45",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TKR": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TKR": {
+              "mapel": "PEMINATAN",
+              "kg": 29
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "PKK",
+              "kg": 36
+            },
+            "XII-TSM": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
             "X-TKJ-A": {
               "mapel": "PKN",
               "kg": 1
@@ -1356,6 +3019,30 @@
             "XII-TKJ-B": {
               "mapel": "B.IND",
               "kg": 13
+            },
+            "X-AKUN": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XI-AKUN": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-AKUN": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "X-TET": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TET": {
+              "mapel": "BBN",
+              "kg": 27
+            },
+            "XII-TET": {
+              "mapel": "BMR",
+              "kg": 20
             }
           }
         },
@@ -1364,6 +3051,30 @@
           "selesai": "10.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TKR": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TKR": {
+              "mapel": "PEMINATAN",
+              "kg": 29
+            },
+            "X-TSM": {
+              "mapel": "DDBP",
+              "kg": 4
+            },
+            "XI-TSM": {
+              "mapel": "PKK",
+              "kg": 36
+            },
+            "XII-TSM": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
             "X-TKJ-A": {
               "mapel": "PKN",
               "kg": 1
@@ -1387,6 +3098,30 @@
             "XII-TKJ-B": {
               "mapel": "PEMINATAN",
               "kg": 3
+            },
+            "X-AKUN": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-AKUN": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-AKUN": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "X-TET": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TET": {
+              "mapel": "BBN",
+              "kg": 27
+            },
+            "XII-TET": {
+              "mapel": "B.IND",
+              "kg": 28
             }
           }
         },
@@ -1401,6 +3136,30 @@
           "selesai": "11.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-TKR": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "X-TSM": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TSM": {
+              "mapel": "PEMINATAN",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
             "X-TKJ-A": {
               "mapel": "SEJARAH",
               "kg": 32
@@ -1424,6 +3183,30 @@
             "XII-TKJ-B": {
               "mapel": "PEMINATAN",
               "kg": 3
+            },
+            "X-AKUN": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-AKUN": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-AKUN": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 31
+            },
+            "XI-TET": {
+              "mapel": "BBN",
+              "kg": 27
+            },
+            "XII-TET": {
+              "mapel": "B.IND",
+              "kg": 28
             }
           }
         },
@@ -1432,6 +3215,30 @@
           "selesai": "12.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-TKR": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "X-TSM": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TSM": {
+              "mapel": "PEMINATAN",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
             "X-TKJ-A": {
               "mapel": "SEJARAH",
               "kg": 32
@@ -1455,6 +3262,30 @@
             "XII-TKJ-B": {
               "mapel": "PEMINATAN",
               "kg": 3
+            },
+            "X-AKUN": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-AKUN": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-AKUN": {
+              "mapel": "PKK",
+              "kg": 22
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 31
+            },
+            "XI-TET": {
+              "mapel": "SEJARAH",
+              "kg": 30
+            },
+            "XII-TET": {
+              "mapel": "B.IND",
+              "kg": 28
             }
           }
         },
@@ -1469,6 +3300,30 @@
           "selesai": "13.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-TKR": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TSM": {
+              "mapel": "BMR",
+              "kg": 26
+            },
+            "XI-TSM": {
+              "mapel": "PEMINATAN",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
             "X-TKJ-A": {
               "mapel": "B.ING",
               "kg": 8
@@ -1482,8 +3337,8 @@
               "kg": 3
             },
             "XI-TKJ-B": {
-              "mapel": "PEMINATAN",
-              "kg": 6
+              "mapel": "KK",
+              "kg": 21
             },
             "XII-TKJ-A": {
               "mapel": "KK",
@@ -1492,6 +3347,30 @@
             "XII-TKJ-B": {
               "mapel": "PEMINATAN",
               "kg": 3
+            },
+            "X-AKUN": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XI-AKUN": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 25
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 31
+            },
+            "XI-TET": {
+              "mapel": "SEJARAH",
+              "kg": 30
+            },
+            "XII-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 11
             }
           }
         },
@@ -1500,6 +3379,30 @@
           "selesai": "14.15",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XII-TKR": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TSM": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "XI-TSM": {
+              "mapel": "PEMINATAN",
+              "kg": 18
+            },
+            "XII-TSM": {
+              "mapel": "PKK",
+              "kg": 35
+            },
             "X-TKJ-A": {
               "mapel": "B.ING",
               "kg": 8
@@ -1523,6 +3426,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XI-AKUN": {
+              "mapel": "PKK",
+              "kg": 30
+            },
+            "XII-AKUN": {
+              "mapel": "PAPJDM",
+              "kg": 25
+            },
+            "X-TET": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TET": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XII-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 11
             }
           }
         },
@@ -1531,6 +3458,30 @@
           "selesai": "15.00",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "XII-TKR": {
+              "mapel": "PEM.MESIN",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "XI-TSM": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TSM": {
+              "mapel": "PKK",
+              "kg": 35
+            },
             "X-TKJ-A": {
               "mapel": "B.IND",
               "kg": 13
@@ -1554,6 +3505,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "XI-AKUN": {
+              "mapel": "PKK",
+              "kg": 30
+            },
+            "XII-AKUN": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TET": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TET": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XII-TET": {
+              "mapel": "PEMINATAN",
+              "kg": 29
             }
           }
         },
@@ -1562,6 +3537,30 @@
           "selesai": "15.45",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "XII-TKR": {
+              "mapel": "PEM.MESIN",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "XI-TSM": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TSM": {
+              "mapel": "PKK",
+              "kg": 35
+            },
             "X-TKJ-A": {
               "mapel": "B.IND",
               "kg": 13
@@ -1585,6 +3584,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 6
+            },
+            "X-AKUN": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "XI-AKUN": {
+              "mapel": "PKK",
+              "kg": 30
+            },
+            "XII-AKUN": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TET": {
+              "mapel": "IPAS",
+              "kg": 9
+            },
+            "XI-TET": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XII-TET": {
+              "mapel": "PEMINATAN",
+              "kg": 29
             }
           }
         }
@@ -1592,8 +3615,6 @@
     },
     {
       "nama": "jumat",
-      "statusDecode": "lengkap-dari-foto",
-      "catatan": "Data Jumat dari nyanpo 2026-11-17 (otoritatif). Slot pembuka ROHIS/ROKRIS, ISOMA/Sholat Jumat panjang 11.55-13.30, penutup Kokurikuler/Ekstrakurikuler.",
       "slots": [
         {
           "mulai": "07.15",
@@ -1606,6 +3627,30 @@
           "selesai": "08.40",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XI-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "XII-TKR": {
+              "mapel": "PKK",
+              "kg": 27
+            },
+            "X-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TSM": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TSM": {
+              "mapel": "PEM.MESIN",
+              "kg": 4
+            },
             "X-TKJ-A": {
               "mapel": "INFOR",
               "kg": 32
@@ -1629,6 +3674,30 @@
             "XII-TKJ-B": {
               "mapel": "PAI",
               "kg": 17
+            },
+            "X-AKUN": {
+              "mapel": "K3LH",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "PEMINATAN",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TET": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-TET": {
+              "mapel": "R.BIOGAS",
+              "kg": 11
+            },
+            "XII-TET": {
+              "mapel": "PEMINATAN",
+              "kg": 29
             }
           }
         },
@@ -1637,6 +3706,30 @@
           "selesai": "09.05",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XI-TKR": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
+            "XII-TKR": {
+              "mapel": "PKK",
+              "kg": 27
+            },
+            "X-TSM": {
+              "mapel": "MTK",
+              "kg": 12
+            },
+            "XI-TSM": {
+              "mapel": "B.ING",
+              "kg": 5
+            },
+            "XII-TSM": {
+              "mapel": "PEM.MESIN",
+              "kg": 4
+            },
             "X-TKJ-A": {
               "mapel": "INFOR",
               "kg": 32
@@ -1660,6 +3753,30 @@
             "XII-TKJ-B": {
               "mapel": "PAI",
               "kg": 17
+            },
+            "X-AKUN": {
+              "mapel": "K3LH",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "PEMINATAN",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "B.ING",
+              "kg": 8
+            },
+            "X-TET": {
+              "mapel": "SENBUD",
+              "kg": 20
+            },
+            "XI-TET": {
+              "mapel": "R.BIOGAS",
+              "kg": 11
+            },
+            "XII-TET": {
+              "mapel": "PEMINATAN",
+              "kg": 29
             }
           }
         },
@@ -1668,6 +3785,30 @@
           "selesai": "09.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "IPAS",
+              "kg": 34
+            },
+            "XI-TKR": {
+              "mapel": "PEMINATAN",
+              "kg": 32
+            },
+            "XII-TKR": {
+              "mapel": "PEM.MESIN",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TSM": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1691,6 +3832,30 @@
             "XII-TKJ-B": {
               "mapel": "PAI",
               "kg": 17
+            },
+            "X-AKUN": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-AKUN": {
+              "mapel": "KOMP.AK",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "KOMP.AK",
+              "kg": 25
+            },
+            "X-TET": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TET": {
+              "mapel": "BMR",
+              "kg": 19
+            },
+            "XII-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 11
             }
           }
         },
@@ -1699,6 +3864,30 @@
           "selesai": "09.55",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "IPAS",
+              "kg": 34
+            },
+            "XI-TKR": {
+              "mapel": "PEMINATAN",
+              "kg": 32
+            },
+            "XII-TKR": {
+              "mapel": "PEM.MESIN",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "XI-TSM": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1722,6 +3911,30 @@
             "XII-TKJ-B": {
               "mapel": "PKK",
               "kg": 35
+            },
+            "X-AKUN": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-AKUN": {
+              "mapel": "KOMP.AK",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "KOMP.AK",
+              "kg": 25
+            },
+            "X-TET": {
+              "mapel": "B.ING",
+              "kg": 15
+            },
+            "XI-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 31
+            },
+            "XII-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 11
             }
           }
         },
@@ -1730,6 +3943,30 @@
           "selesai": "10.20",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "IPAS",
+              "kg": 34
+            },
+            "XI-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "XII-TKR": {
+              "mapel": "PEM.MESIN",
+              "kg": 18
+            },
+            "X-TSM": {
+              "mapel": "SEJARAH",
+              "kg": 19
+            },
+            "XI-TSM": {
+              "mapel": "P.ENGINE",
+              "kg": 23
+            },
+            "XII-TSM": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1753,6 +3990,30 @@
             "XII-TKJ-B": {
               "mapel": "PKK",
               "kg": 35
+            },
+            "X-AKUN": {
+              "mapel": "PJOK",
+              "kg": 16
+            },
+            "XI-AKUN": {
+              "mapel": "KOMP.AK",
+              "kg": 36
+            },
+            "XII-AKUN": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 32
+            },
+            "XI-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 31
+            },
+            "XII-TET": {
+              "mapel": "TERMOKIMIA",
+              "kg": 11
             }
           }
         },
@@ -1767,6 +4028,30 @@
           "selesai": "11.05",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "BMR",
+              "kg": 26
+            },
+            "XI-TKR": {
+              "mapel": "P.CHASIS",
+              "kg": 4
+            },
+            "XII-TKR": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "X-TSM": {
+              "mapel": "SEJARAH",
+              "kg": 19
+            },
+            "XI-TSM": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-TSM": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1781,7 +4066,7 @@
             },
             "XI-TKJ-B": {
               "mapel": "PEMINATAN",
-              "kg": 21
+              "kg": 6
             },
             "XII-TKJ-A": {
               "mapel": "KK",
@@ -1790,6 +4075,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "ETIKA",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "PAL/IP",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "PKN",
+              "kg": 1
+            },
+            "X-TET": {
+              "mapel": "DDBP",
+              "kg": 32
+            },
+            "XI-TET": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TET": {
+              "mapel": "PKK",
+              "kg": 29
             }
           }
         },
@@ -1798,6 +4107,30 @@
           "selesai": "11.30",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "PEMINATAN",
+              "kg": 32
+            },
+            "XII-TKR": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "X-TSM": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TSM": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-TSM": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1821,6 +4154,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "ETIKA",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "PAL/IP",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "BMR",
+              "kg": 20
+            },
+            "X-TET": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "XI-TET": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TET": {
+              "mapel": "PKK",
+              "kg": 29
             }
           }
         },
@@ -1829,6 +4186,30 @@
           "selesai": "11.55",
           "tipe": "pelajaran",
           "entri": {
+            "X-TKR": {
+              "mapel": "DDBP",
+              "kg": 23
+            },
+            "XI-TKR": {
+              "mapel": "PEMINATAN",
+              "kg": 32
+            },
+            "XII-TKR": {
+              "mapel": "PAI",
+              "kg": 17
+            },
+            "X-TSM": {
+              "mapel": "B.IND",
+              "kg": 28
+            },
+            "XI-TSM": {
+              "mapel": "B.IND",
+              "kg": 13
+            },
+            "XII-TSM": {
+              "mapel": "P.LISTRIK",
+              "kg": 18
+            },
             "X-TKJ-A": {
               "mapel": "DDBP",
               "kg": 6
@@ -1852,6 +4233,30 @@
             "XII-TKJ-B": {
               "mapel": "KK",
               "kg": 33
+            },
+            "X-AKUN": {
+              "mapel": "ETIKA",
+              "kg": 22
+            },
+            "XI-AKUN": {
+              "mapel": "PAL/IP",
+              "kg": 35
+            },
+            "XII-AKUN": {
+              "mapel": "BMR",
+              "kg": 20
+            },
+            "X-TET": {
+              "mapel": "MTK",
+              "kg": 24
+            },
+            "XI-TET": {
+              "mapel": "PAI",
+              "kg": 14
+            },
+            "XII-TET": {
+              "mapel": "PKK",
+              "kg": 29
             }
           }
         },

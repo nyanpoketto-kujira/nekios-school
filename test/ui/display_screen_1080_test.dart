@@ -71,10 +71,10 @@ void main() {
         // Konten kunci tampil utuh.
         expect(find.text('SMKN 1 UKUI'), findsOneWidget);
         expect(find.text('24:36'), findsOneWidget);
-        expect(find.text('Bahasa Indonesia'), findsOneWidget);
+        expect(find.text('Informatika'), findsOneWidget);
         // Subjudul header versi ringkas (tidak lagi terpotong).
         expect(
-          find.text('Semester Ganjil 2026/2027 • Jurusan TKJ'),
+          find.text('Semester Ganjil 2026/2027 • Semua Jurusan'),
           findsOneWidget,
         );
         // Strip: teks tengah ringkas, tidak menabrak countdown.
@@ -82,13 +82,14 @@ void main() {
         // Paging adaptif (ADR-010): halaman 1 berisi 4 kartu.
         expect(find.byType(KartuKelasSekarang), findsNWidgets(4));
 
-        // Rotasi ke halaman 2 (sisa 2 kartu) pun tidak boleh
-        // overflow. Pump melewati durasi cascade 1200ms (ADR-011).
+        // Rotasi ke halaman 2 (4 kartu berikutnya) pun tidak
+        // boleh overflow. Pump melewati durasi cascade 1200ms
+        // (ADR-011).
         await tester.pump(const Duration(seconds: 12));
         await tester.pump(const Duration(milliseconds: 1300));
         expect(tester.takeException(), isNull);
-        expect(find.text('Bahasa Inggris'), findsOneWidget);
-        expect(find.byType(KartuKelasSekarang), findsNWidgets(2));
+        expect(find.text('Matematika'), findsOneWidget);
+        expect(find.byType(KartuKelasSekarang), findsNWidgets(4));
       });
     }
 

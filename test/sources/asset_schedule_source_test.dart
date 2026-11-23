@@ -18,7 +18,7 @@ void main() {
       expect(event, isA<ScheduleReplaced>());
       final data = (event as ScheduleReplaced).data;
       expect(data.sekolah, 'SMKN 1 UKUI');
-      expect(data.kelas.length, 6);
+      expect(data.kelas.length, 18);
       expect(data.hari.length, 5);
       expect(data.hariByNama('selasa')?.slots.length, 12);
     });

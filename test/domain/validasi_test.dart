@@ -21,9 +21,9 @@ void main() {
       expect(validasiJadwal(data), isEmpty);
     });
 
-    test('isi data sesuai harapan (6 kelas, 36 guru, 5 hari)', () {
+    test('isi data sesuai harapan (18 kelas, 36 guru, 5 hari)', () {
       final data = JadwalData.fromJson(muatJsonMentah());
-      expect(data.kelas.length, 6);
+      expect(data.kelas.length, 18);
       expect(data.guru.length, 36);
       expect(data.hari.length, 5);
       expect(data.sekolah, 'SMKN 1 UKUI');
@@ -64,7 +64,7 @@ void main() {
       final slot = (selasa['slots'] as List)[2];
       (slot['entri'] as Map).remove('XII-TKJ-B');
       final data = JadwalData.fromJson(json);
-      expect(validasiJadwal(data).join(' '), contains('tepat 6 entri'));
+      expect(validasiJadwal(data).join(' '), contains('tepat 18 entri'));
     });
 
     test('aturan 3: slot istirahat berisi entri ditolak', () {
