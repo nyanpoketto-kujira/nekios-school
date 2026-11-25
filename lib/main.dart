@@ -195,6 +195,19 @@ class _NekiosSchoolAppState extends State<NekiosSchoolApp> {
         CoreWebSocketSource(penyediaSnapshot: () => _store.snapshotPaket());
     _langgananRemote = _sumberRemote.events.listen(_store.terima);
     unawaited(_sumberRemote.start());
+    // BUILD PAMERAN (branch feat/pameran-galeri-mock — jangan
+    // di-merge): teks mading contoh ter-hardcode supaya display
+    // stand langsung hidup tanpa perlu remote. Operator tetap bisa
+    // menimpanya dari remote lewat mading.set seperti biasa.
+    _store.terima(
+      const MadingChanged(
+        'Selamat datang di Stand Pameran SMKN 1 Ukui • Layar ini '
+        'menampilkan jadwal 18 kelas secara langsung — bagian dari '
+        'Nekios, sistem display sekolah karya siswa TKJ • Jurusan: '
+        'TKJ • TKR • TSM • Akuntansi • Teknik Elektronika • '
+        'Terima kasih atas kunjungannya!',
+      ),
+    );
     _store.tick(_sekarang());
     _timer = Timer.periodic(
       const Duration(seconds: 1),

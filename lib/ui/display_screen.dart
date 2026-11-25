@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 
 import '../domain/domain.dart';
 import '../state/state.dart';
+import 'galeri_kegiatan.dart';
 import 'header_sekolah.dart';
 import 'hero_status.dart';
 import 'indikator_halaman.dart';
@@ -76,6 +77,11 @@ class DisplayScreen extends StatelessWidget {
                     );
                   },
                 ),
+                // Galeri Kegiatan (KHUSUS BUILD PAMERAN): foto
+                // kegiatan layar penuh yang tampil berkala di atas
+                // konten utama; Spotlight di bawah ini tetap
+                // menutupinya saat pergantian jam.
+                const Positioned.fill(child: GaleriKegiatan()),
                 // Spotlight Pergantian Jam (ADR-017): tampilan layar
                 // penuh 60 detik setiap masuk slot pelajaran baru,
                 // menutupi seluruh layar utama selama tampil.

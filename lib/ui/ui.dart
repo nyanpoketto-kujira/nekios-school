@@ -8,6 +8,7 @@ library;
 
 export 'display_screen.dart';
 export 'format.dart';
+export 'galeri_kegiatan.dart';
 export 'header_sekolah.dart';
 export 'hero_status.dart';
 export 'indikator_halaman.dart';
