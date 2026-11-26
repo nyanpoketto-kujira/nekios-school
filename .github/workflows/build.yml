@@ -221,3 +221,47 @@ jobs:
           name: nekios-school-linux-x64
           path: nekios-school-linux-x64.tar.gz
           retention-days: 14
+
+  # Job darurat (2026-11-26): APK release universal untuk Smart TV,
+  # hanya jalan saat workflow_dispatch — dipakai ketika display
+  # harus pindah ke TV Android dan tidak ada PC untuk build lokal.
+  build-apk-tv:
+    name: Build APK TV (release, universal)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.4'
+          channel: stable
+
+      - name: Cache pub get
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-flutter-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-pub-
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build APK release (universal)
+        run: flutter build apk --release
+
+      - name: Upload APK TV artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nekios-school-apk-tv
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 14
